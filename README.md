@@ -5,6 +5,7 @@
 **Status:** Session 1 (Initialization)
 
 ---
+This is a Test run for the group.
 
 ## 1. Business Objective
 *Replace this section with your project definition.*
