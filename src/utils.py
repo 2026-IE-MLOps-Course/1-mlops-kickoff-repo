@@ -71,19 +71,9 @@ def save_model(model, filepath: Path) -> None:
     - Persisting the exact trained Pipeline enables consistent inference and supports promotion across environments.
     """
     print(f"[utils.save_model] Saving model to: {filepath}")  # TODO: replace with logging later
+    
+    # Ensure the directory exists before writing
     filepath.parent.mkdir(parents=True, exist_ok=True)
-
-    # --------------------------------------------------------
-    # START STUDENT CODE
-    # --------------------------------------------------------
-    # TODO_STUDENT: Tune joblib parameters (compress) if model artifacts get large
-    # Why: Artifact size impacts storage costs and deployment latency
-    # Examples:
-    # 1. joblib.dump(model, filepath, compress=3)
-    # 2. joblib.dump(model, filepath)
-    # --------------------------------------------------------
-    # END STUDENT CODE
-    # --------------------------------------------------------
 
     joblib.dump(model, filepath)
 
