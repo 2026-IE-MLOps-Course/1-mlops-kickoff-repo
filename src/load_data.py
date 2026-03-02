@@ -1,13 +1,12 @@
 """
 Module: Data Loader
 -------------------
-Role: Ingest raw data from sources (CSV, SQL, API).
-Input: Path to file or connection string.
+Role: Ingest raw data from a CSV file.
+Input: Path to CSV.
 Output: pandas.DataFrame (Raw).
 """
 
 from pathlib import Path
-
 import pandas as pd
 
 from src.utils import load_csv
@@ -15,7 +14,7 @@ from src.utils import load_csv
 
 def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
     """
-    Load raw data from disk.
+    Load raw insurance data from disk.
 
     Contract:
       - Input: Path to a CSV file
@@ -30,7 +29,7 @@ def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
     if not raw_data_path.exists():
         raise FileNotFoundError(
             f"Raw data file not found at: {raw_data_path}. "
-            "Make sure you have the dataset in the expected location."
+            "Place the insurance CSV there or update config.yaml."
         )
 
     if not raw_data_path.is_file():

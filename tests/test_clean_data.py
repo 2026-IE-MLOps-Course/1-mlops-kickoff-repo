@@ -4,34 +4,60 @@ import pytest
 from src.clean_data import clean_dataframe
 
 
-def test_clean_dataframe_renames_rx_ds_and_dedupes():
+def test_clean_dataframe_happy_path_normalizes_and_dedupes():
     df_raw = pd.DataFrame(
         {
-            "rx ds": [10, 10],
-            "OD": [0, 0],
-            "A": [1, 1],
+            "age": [20, 20],
+            "sex": [" Male ", " Male "],
+            "bmi": [30.0, 30.0],
+            "children": [0, 0],
+            "smoker": ["No", "No"],
+            "region": [" Southwest ", " Southwest "],
+            "charges": [1000.0, 1000.0],
         }
     )
-    df_clean = clean_dataframe(df_raw, target_column="OD")
+    df_clean = clean_dataframe(df_raw, target_column="charges")
 
-    assert "rx_ds" in df_clean.columns
-    assert "rx ds" not in df_clean.columns
     assert len(df_clean) == 1
+    assert df_clean.loc[df_clean.index[0], "sex"] == "male"
+    assert df_clean.loc[df_clean.index[0], "smoker"] == "no"
+    assert df_clean.loc[df_clean.index[0], "region"] == "southwest"
 
 
-def test_clean_dataframe_requires_target():
-    df_raw = pd.DataFrame({"rx ds": [10], "A": [1]})
+def test_clean_dataframe_missing_required_columns_raises():
+    df_raw = pd.DataFrame({"age": [20], "charges": [1000.0]})
     with pytest.raises(ValueError):
-        clean_dataframe(df_raw, target_column="OD")
+        clean_dataframe(df_raw, target_column="charges")
 
 
-def test_clean_dataframe_coerces_binary_flags():
+def test_clean_dataframe_requires_target_present():
     df_raw = pd.DataFrame(
         {
-            "rx ds": [10, 20],
-            "OD": [0, 1],
-            "A": [True, False],
+            "age": [20],
+            "sex": ["male"],
+            "bmi": [30.0],
+            "children": [0],
+            "smoker": ["no"],
+            "region": ["southwest"],
+            "charges": [1000.0],
         }
     )
-    df_clean = clean_dataframe(df_raw, target_column="OD")
-    assert set(df_clean["A"].unique()) <= {0, 1}
+    with pytest.raises(ValueError):
+        clean_dataframe(df_raw, target_column="not_a_real_target")
+
+
+def test_clean_dataframe_numeric_casting():
+    df_raw = pd.DataFrame(
+        {
+            "age": ["20"],
+            "sex": ["male"],
+            "bmi": ["30.0"],
+            "children": ["0"],
+            "smoker": ["no"],
+            "region": ["southwest"],
+            "charges": ["1000.0"],
+        }
+    )
+    df_clean = clean_dataframe(df_raw, target_column="charges")
+    assert df_clean["age"].dtype.kind in {"i", "u", "f"}
+    assert df_clean["charges"].dtype.kind in {"i", "u", "f"}

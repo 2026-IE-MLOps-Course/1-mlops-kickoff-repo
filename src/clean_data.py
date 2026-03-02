@@ -1,24 +1,30 @@
 """
 Module: Data Cleaning
 ---------------------
-Role: Preprocessing, missing value imputation, and feature engineering.
+Role: Dataset-specific cleaning for the insurance dataset.
 Input: pandas.DataFrame (Raw).
-Output: pandas.DataFrame (Processed/Clean).
+Output: pandas.DataFrame (Clean).
 """
 
 import pandas as pd
 
 
+REQUIRED_COLUMNS = {"age", "sex", "bmi", "children", "smoker", "region", "charges"}
+CATEGORICAL_COLUMNS = {"sex", "smoker", "region"}
+NUMERIC_COLUMNS = {"age", "bmi", "children", "charges"}
+
+
 def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """
-    Clean raw data into a stable, model-ready tabular dataset.
+    Clean raw insurance data into a stable, model-ready dataset.
 
-    Key expectations for this project:
-      - Standardize column naming
-      - Rename 'rx ds' -> 'rx_ds' if present
-      - Preserve target column
-      - Remove duplicates
-      - Enforce binary 0/1 in flag columns when possible
+    Cleaning rules:
+      - Standardize column names (strip)
+      - Validate required columns exist
+      - Drop duplicate rows
+      - Coerce numeric columns to numeric (raise if impossible)
+      - Normalize categorical strings (lower/strip)
+      - Enforce target column exists and is numeric
     """
     if df_raw is None:
         raise ValueError("df_raw cannot be None")
@@ -31,33 +37,35 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
 
     df = df_raw.copy()
 
-    # 1) Standardize column names (strip whitespace)
+    # 1) Standardize column names
     df.columns = [str(c).strip() for c in df.columns]
 
-    # 2) Specific contract: rx ds -> rx_ds
-    if "rx ds" in df.columns and "rx_ds" not in df.columns:
-        df = df.rename(columns={"rx ds": "rx_ds"})
+    # 2) Validate schema
+    missing = REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing required columns: {sorted(missing)}")
 
-    # 3) Target must exist
+    # 3) Target validation
     if target_column not in df.columns:
         raise ValueError(
-            f"Target column '{target_column}' not found. "
-            f"Available columns: {list(df.columns)}"
+            f"Target column '{target_column}' not found. Available columns: {list(df.columns)}"
         )
 
-    # 4) Drop exact duplicates
+    # 4) Drop duplicates
     df = df.drop_duplicates()
 
-    # 5) Coerce target to int (assumes target is already 0/1-like)
-    df[target_column] = df[target_column].astype(int)
+    # 5) Normalize categoricals
+    for c in CATEGORICAL_COLUMNS:
+        df[c] = df[c].astype(str).str.strip().str.lower()
 
-    # 6) Coerce binary-ish flags to 0/1 when safe
-    exclude = {target_column, "rx_ds", "ID"}
-    candidates = [c for c in df.columns if c not in exclude]
+    # Optional: normalize common values
+    # sex: male/female, smoker: yes/no
+    # (keep it light so you don't break unexpected variants)
+    if "smoker" in df.columns:
+        df["smoker"] = df["smoker"].replace({"y": "yes", "n": "no"})
 
-    for c in candidates:
-        s = df[c].dropna()
-        if not s.empty and s.isin([0, 1, True, False]).all():
-            df[c] = df[c].astype(int)
+    # 6) Coerce numerics
+    for c in NUMERIC_COLUMNS:
+        df[c] = pd.to_numeric(df[c], errors="raise")
 
     return df

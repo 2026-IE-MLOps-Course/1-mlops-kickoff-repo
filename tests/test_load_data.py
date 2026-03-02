@@ -7,11 +7,12 @@ from src.load_data import load_raw_data
 
 
 def test_load_raw_data_happy_path(tmp_path: Path):
-    p = tmp_path / "raw.csv"
-    pd.DataFrame({"a": [1, 2], "b": [3, 4]}).to_csv(p, index=False)
+    p = tmp_path / "insurance.csv"
+    pd.DataFrame({"age": [20], "sex": ["male"], "bmi": [30.0], "children": [0],
+                  "smoker": ["no"], "region": ["southwest"], "charges": [1000.0]}).to_csv(p, index=False)
 
     df = load_raw_data(p)
-    assert df.shape == (2, 2)
+    assert df.shape == (1, 7)
 
 
 def test_load_raw_data_missing_file(tmp_path: Path):
