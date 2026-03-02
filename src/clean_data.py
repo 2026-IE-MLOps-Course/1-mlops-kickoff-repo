@@ -6,55 +6,58 @@ Input: pandas.DataFrame (Raw).
 Output: pandas.DataFrame (Processed/Clean).
 """
 
-"""
-Educational Goal:
-- Why this module exists in an MLOps system: Cleaning is dataset-specific and frequently changes; isolating it reduces regression risk.
-- Responsibility (separation of concerns): Transform raw DataFrame into a clean, model-ready tabular dataset (still pre-feature-engineering).
-- Pipeline contract (inputs and outputs): Input raw df + target column name; output cleaned df with target preserved.
-
-TODO: Replace print statements with standard library logging in a later session
-TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
-"""
-
 import pandas as pd
 
 
 def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """
-    Inputs:
-    - df_raw: Raw DataFrame.
-    - target_column: Name of the target column to preserve.
-    Outputs:
-    - df_clean: Cleaned DataFrame (baseline is identity copy).
-    Why this contract matters for reliable ML delivery:
-    - Separating cleaning from training prevents hidden notebook mutations and makes behavior reproducible across runs.
+    Clean raw data into a stable, model-ready tabular dataset.
+
+    Key expectations for this project:
+      - Standardize column naming
+      - Rename 'rx ds' -> 'rx_ds' if present
+      - Preserve target column
+      - Remove duplicates
+      - Enforce binary 0/1 in flag columns when possible
     """
-    print("[clean_data.clean_dataframe] Cleaning raw dataframe (baseline: identity copy)")  # TODO: replace with logging later
+    if df_raw is None:
+        raise ValueError("df_raw cannot be None")
+    if not isinstance(df_raw, pd.DataFrame):
+        raise TypeError("df_raw must be a pandas DataFrame")
+    if df_raw.empty:
+        raise ValueError("df_raw is empty")
+    if not target_column or not isinstance(target_column, str):
+        raise ValueError("target_column must be a non-empty string")
 
-    df_clean = df_raw.copy()
+    df = df_raw.copy()
 
-    # --------------------------------------------------------
-    # START STUDENT CODE
-    # --------------------------------------------------------
-    # TODO_STUDENT: Paste your notebook logic here to replace or extend the baseline
-    # Why: Cleaning depends on source quirks (missing values, outliers, deduplication, label fixes)
-    # Examples:
-    # 1. Drop rows with invalid target values, enforce types
-    # 2. Normalize text categories, impute missing numerical values
-    #
-    # Optional forcing function (leave commented)
-    # raise NotImplementedError("Student: You must implement this logic to proceed!")
-    #
-    # Placeholder (Remove this after implementing your code):
-    print("Warning: Student has not implemented this section yet")
-    # --------------------------------------------------------
-    # END STUDENT CODE
-    # --------------------------------------------------------
+    # 1) Standardize column names (strip whitespace)
+    df.columns = [str(c).strip() for c in df.columns]
 
-    # Minimal guardrail: ensure target exists if specified (do not mutate; validate.py handles required cols)
-    if target_column not in df_clean.columns:
-        print(
-            f"[clean_data.clean_dataframe] Warning: target_column '{target_column}' not found in dataframe columns"
-        )  # TODO: replace with logging later
+    # 2) Specific contract: rx ds -> rx_ds
+    if "rx ds" in df.columns and "rx_ds" not in df.columns:
+        df = df.rename(columns={"rx ds": "rx_ds"})
 
-    return df_clean
+    # 3) Target must exist
+    if target_column not in df.columns:
+        raise ValueError(
+            f"Target column '{target_column}' not found. "
+            f"Available columns: {list(df.columns)}"
+        )
+
+    # 4) Drop exact duplicates
+    df = df.drop_duplicates()
+
+    # 5) Coerce target to int (assumes target is already 0/1-like)
+    df[target_column] = df[target_column].astype(int)
+
+    # 6) Coerce binary-ish flags to 0/1 when safe
+    exclude = {target_column, "rx_ds", "ID"}
+    candidates = [c for c in df.columns if c not in exclude]
+
+    for c in candidates:
+        s = df[c].dropna()
+        if not s.empty and s.isin([0, 1, True, False]).all():
+            df[c] = df[c].astype(int)
+
+    return df
