@@ -22,6 +22,7 @@ def load_csv(filepath: Path) -> pd.DataFrame:
     Why this contract matters for reliable ML delivery:
     - Centralizing CSV reads makes pipelines more reproducible and easier to debug when file formats change.
     """
+    
     print(f"[utils.load_csv] Loading CSV from: {filepath}")  # TODO: replace with logging later
 
     if not filepath.exists():
@@ -50,20 +51,11 @@ def save_csv(df: pd.DataFrame, filepath: Path) -> None:
     Why this contract matters for reliable ML delivery:
     - Standardizing output locations makes downstream automation and reviews predictable (CI, reports, deployments).
     """
+    
     print(f"[utils.save_csv] Saving CSV to: {filepath}")  # TODO: replace with logging later
+    
+    # Ensure the directory exists before writing
     filepath.parent.mkdir(parents=True, exist_ok=True)
-
-    # --------------------------------------------------------
-    # START STUDENT CODE
-    # --------------------------------------------------------
-    # TODO_STUDENT: Decide whether to keep index, set float_format, or control NA serialization
-    # Why: Output formatting affects reproducibility and downstream ingestion
-    # Examples:
-    # 1. df.to_csv(filepath, index=False, float_format="%.6f")
-    # 2. df.to_csv(filepath, index=True)
-    # --------------------------------------------------------
-    # END STUDENT CODE
-    # --------------------------------------------------------
 
     df.to_csv(filepath, index=False)
 
