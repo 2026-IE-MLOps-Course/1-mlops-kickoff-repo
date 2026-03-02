@@ -89,16 +89,10 @@ def load_model(filepath: Path):
     """
     print(f"[utils.load_model] Loading model from: {filepath}")  # TODO: replace with logging later
 
-    # --------------------------------------------------------
-    # START STUDENT CODE
-    # --------------------------------------------------------
-    # TODO_STUDENT: Add compatibility handling if you change serialization strategy later
-    # Why: Teams sometimes migrate from joblib to other formats (e.g., ONNX) based on serving constraints
-    # Examples:
-    # 1. joblib.load(filepath)
-    # 2. (future) load ONNX runtime session
-    # --------------------------------------------------------
-    # END STUDENT CODE
-    # --------------------------------------------------------
+    if not filepath.exists():
+        raise FileNotFoundError(
+            f"Model file not found: {filepath}. "
+            "Train and save the model first (run `python -m src.main`)."
+        )
 
     return joblib.load(filepath)
