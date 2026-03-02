@@ -9,7 +9,6 @@ TODO: Any temporary or hardcoded variable or parameter will be imported from con
 """
 
 from pathlib import Path
-
 import joblib
 import pandas as pd
 
@@ -25,19 +24,20 @@ def load_csv(filepath: Path) -> pd.DataFrame:
     """
     print(f"[utils.load_csv] Loading CSV from: {filepath}")  # TODO: replace with logging later
 
-    # --------------------------------------------------------
-    # START STUDENT CODE
-    # --------------------------------------------------------
-    # TODO_STUDENT: Adjust read_csv parameters (dtype, parse_dates, encoding) if your dataset needs it
-    # Why: CSV dialect and schema assumptions vary by source systems
-    # Examples:
-    # 1. pd.read_csv(filepath, encoding="utf-8")
-    # 2. pd.read_csv(filepath, parse_dates=["event_time"])
-    # --------------------------------------------------------
-    # END STUDENT CODE
-    # --------------------------------------------------------
+    if not filepath.exists():
+        raise FileNotFoundError(
+            f"CSV file not found at: {filepath}."
+            "Check data ingestion or file paths."
+        )
 
-    return pd.read_csv(filepath)
+    df = pd.read_csv(filepath)
+
+    if df.empty:
+        raise ValueError(
+            f"CSV loaded but contains 0 rows: {filepath}"
+        )
+    
+    return df
 
 
 def save_csv(df: pd.DataFrame, filepath: Path) -> None:
