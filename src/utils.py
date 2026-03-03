@@ -1,33 +1,77 @@
+"""
+Module: Utilities
+-----------------
+Role: Shared helper functions for file I/O and model persistence.
+Input: File paths, DataFrames, model objects.
+Output: Loaded DataFrames, saved files, loaded models.
+"""
+
 from pathlib import Path
-import pandas as pd
+
 import joblib
+import pandas as pd
+
 
 def load_csv(filepath: Path) -> pd.DataFrame:
-    print(f"[utils] Loading CSV from: {filepath}")  # replace with logging later
+    """
+    Load a CSV file into a pandas DataFrame.
+
+    Args:
+        filepath: Path to the CSV file.
+
+    Returns:
+        Loaded DataFrame.
+
+    Raises:
+        FileNotFoundError: If CSV file does not exist.
+    """
+    filepath = Path(filepath)
     if not filepath.exists():
-        print(f"[utils] File not found. Creating dummy CSV at {filepath}")
-        dummy_df = pd.DataFrame({
-            "num_feature": [1.0, 2.0, 3.0, 4.0, 5.0],
-            "cat_feature": ["A", "B", "A", "B", "C"],
-            "target": [10, 20, 15, 25, 30]
-        })
-        filepath.parent.mkdir(parents=True, exist_ok=True)
-        dummy_df.to_csv(filepath, index=False)
-        print("[utils] Dummy CSV created. Replace with real NHL dataset.")
+        raise FileNotFoundError(f"CSV file not found: {filepath}")
     df = pd.read_csv(filepath)
     return df
 
+
 def save_csv(df: pd.DataFrame, filepath: Path) -> None:
-    print(f"[utils] Saving DataFrame to CSV at: {filepath}")  # TODO: replace with logging later
+    """
+    Save a DataFrame to a CSV file without the index.
+
+    Args:
+        df: DataFrame to save.
+        filepath: Destination file path.
+    """
+    filepath = Path(filepath)
     filepath.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(filepath, index=False)
 
+
 def save_model(model, filepath: Path) -> None:
-    print(f"[utils] Saving model to: {filepath}")  # TODO: replace with logging later
+    """
+    Serialize a model or pipeline to disk using joblib.
+
+    Args:
+        model: Trained model, pipeline, or transformer.
+        filepath: Destination file path.
+    """
+    filepath = Path(filepath)
     filepath.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, filepath)
 
+
 def load_model(filepath: Path):
-    print(f"[utils] Loading model from: {filepath}")  # TODO: replace with logging later
-    model = joblib.load(filepath)
-    return model
+    """
+    Deserialize a model or pipeline from disk.
+
+    Args:
+        filepath: Path to the serialized model.
+
+    Returns:
+        Loaded model or pipeline.
+
+    Raises:
+        FileNotFoundError: If model file does not exist.
+    """
+    filepath = Path(filepath)
+    if not filepath.exists():
+        raise FileNotFoundError(f"Model file not found: {filepath}")
+    return joblib.load(filepath)
