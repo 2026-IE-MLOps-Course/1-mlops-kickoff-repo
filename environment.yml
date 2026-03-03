@@ -1,0 +1,20 @@
+name: mlops-student-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.9
+  - pandas>=1.5
+  - numpy>=1.23
+  - scikit-learn>=1.2
+  - joblib>=1.2
+  - matplotlib>=3.6
+  - seaborn>=0.12
+  - statsmodels>=0.13
+  - scipy>=1.10
+  - pyyaml>=6.0
+  - jupyter
+  - ipykernel
+  - pytest>=7.0
+  - pytest-cov>=4.0
+  - pip
