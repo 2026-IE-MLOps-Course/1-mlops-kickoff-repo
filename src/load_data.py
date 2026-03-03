@@ -1,59 +1,63 @@
 """
-Module: Data Cleaning
----------------------
-Role: Compute target variable, remove leakage / identifier columns,
-      and handle missing values and duplicates.
-Input: Raw pandas DataFrame and the target column name.
-Output: Cleaned pandas DataFrame.
+Module: Data Loading
+--------------------
+Role: Load the raw CSV dataset into a pandas DataFrame.
+      If the file is missing, generate a small dummy dataset so the
+      pipeline can still run end-to-end during development.
+Input: Path to a CSV file.
+Output: Raw pandas DataFrame.
 """
 
+from pathlib import Path
+
+import numpy as np
 import pandas as pd
 
 
-def clean_dataframe(df_raw: pd.DataFrame,
-                    target_column: str) -> pd.DataFrame:
+def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
     """
-    Clean the raw NHL dataframe.
+    Load the raw NHL dataset from *raw_data_path*.
 
-    Steps:
-        1. Compute the target (Points = Goals + Primary_Assists +
-           Secondary_Assists) if component columns are present.
-        2. Drop identifier and target-leakage columns.
-        3. Remove rows with missing values and duplicate rows.
+    If the file does not exist a small dummy DataFrame is created and
+    saved so that the rest of the pipeline can be exercised without
+    the real data.
 
     Args:
-        df_raw: Raw DataFrame straight from load_data.
-        target_column: Name of the target column to create/use.
+        raw_data_path: Path to the raw CSV file.
 
     Returns:
-        Cleaned DataFrame ready for feature engineering and modeling.
+        Raw DataFrame (unmodified).
     """
-    print("[clean_data] Starting data cleaning")
-    df = df_raw.copy()
+    path = Path(raw_data_path)
 
-    # 1. Compute target from components if they exist
-    components = ["Goals", "Primary_Assists", "Secondary_Assists"]
-    if all(c in df.columns for c in components):
-        df[target_column] = (
-            df["Goals"] + df["Primary_Assists"] + df["Secondary_Assists"]
-        )
-        print(f"[clean_data] Computed '{target_column}' from {components}")
+    if path.exists():
+        print(f"[load_data] Loading CSV from {path}")
+        return pd.read_csv(path)
 
-    # 2. Drop identifier and leakage columns
-    leakage_cols = [
-        "Rank", "Name", "Team",
-        "Goals", "Assists", "Primary_Assists", "Secondary_Assists",
-    ]
-    to_drop = [c for c in leakage_cols if c in df.columns]
-    df = df.drop(columns=to_drop)
-    print(f"[clean_data] Dropped {len(to_drop)} leakage/identifier columns")
+    print(f"[load_data] {path} not found — generating dummy data")
+    np.random.seed(42)
+    n = 100
+    dummy = pd.DataFrame({
+        "Rank": range(1, n + 1),
+        "Name": [f"Player_{i}" for i in range(n)],
+        "Team": np.random.choice(["TOR", "MTL", "BOS", "NYR"], n),
+        "Pos": np.random.choice(["C", "L", "R", "D"], n),
+        "Goals": np.random.randint(0, 40, n),
+        "Assists": np.random.randint(0, 50, n),
+        "Primary_Assists": np.random.randint(0, 30, n),
+        "Secondary_Assists": np.random.randint(0, 20, n),
+        "Icetime_Minutes": np.random.uniform(200, 1400, n),
+        "Shot_Attempts": np.random.randint(50, 300, n),
+        "Faceoff_Win_Pct": np.random.uniform(30, 70, n),
+        "Takeaways": np.random.randint(0, 80, n),
+        "Giveaways": np.random.randint(0, 80, n),
+        "Shooting_Pct_On_Unblocked": np.random.uniform(0, 25, n),
+        "PIM_Drawn": np.random.randint(0, 30, n),
+        "Pct_Shift_Starts_Offensive_Zone": np.random.uniform(30, 70, n),
+        "On_Ice_Corsi_Pct": np.random.uniform(40, 60, n),
+    })
 
-    # 3. Handle missing values and duplicates
-    before = len(df)
-    df = df.dropna().drop_duplicates()
-    dropped = before - len(df)
-    if dropped > 0:
-        print(f"[clean_data] Dropped {dropped} rows (NaN or duplicates)")
-
-    print(f"[clean_data] Cleaning complete — {len(df)} rows, {len(df.columns)} columns")
-    return df
+    path.parent.mkdir(parents=True, exist_ok=True)
+    dummy.to_csv(path, index=False)
+    print(f"[load_data] Dummy data saved to {path}")
+    return dummy
