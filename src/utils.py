@@ -1,6 +1,7 @@
 """
 TODO: Replace print statements with standard library logging in a later session
-TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
+TODO: Any temp or hardcoded variable or parameter will be imported from
+config.yml in a later session
 """
 
 from pathlib import Path
@@ -15,10 +16,12 @@ def load_csv(filepath: Path) -> pd.DataFrame:
     Outputs:
     - df: Loaded pandas DataFrame.
     Why this contract matters for reliable ML delivery:
-    - Centralizing CSV reads makes pipelines more reproducible and easier to debug when file formats change.
+    - Centralizing CSV reads makes pipelines more reproducible and easier to
+    debug when file formats change.
     """
-    
-    print(f"[utils.load_csv] Loading CSV from: {filepath}")  # TODO: replace with logging later
+
+    # TODO: replace with logging later
+    print(f"[utils.load_csv] Loading CSV from: {filepath}")
 
     if not filepath.exists():
         raise FileNotFoundError(
@@ -32,7 +35,7 @@ def load_csv(filepath: Path) -> pd.DataFrame:
         raise ValueError(
             f"CSV loaded but contains 0 rows: {filepath}"
         )
-    
+
     return df
 
 
@@ -44,11 +47,13 @@ def save_csv(df: pd.DataFrame, filepath: Path) -> None:
     Outputs:
     - None (writes file as a side-effect).
     Why this contract matters for reliable ML delivery:
-    - Standardizing output locations makes downstream automation and reviews predictable (CI, reports, deployments).
+    - Standardizing output locations makes downstream automation and reviews
+    predictable (CI, reports, deployments).
     """
-    
-    print(f"[utils.save_csv] Saving CSV to: {filepath}")  # TODO: replace with logging later
-    
+
+    # TODO: replace with logging later
+    print(f"[utils.save_csv] Saving CSV to: {filepath}")
+
     # Ensure the directory exists before writing
     filepath.parent.mkdir(parents=True, exist_ok=True)
 
@@ -63,10 +68,12 @@ def save_model(model, filepath: Path) -> None:
     Outputs:
     - None (writes file as a side-effect).
     Why this contract matters for reliable ML delivery:
-    - Persisting the exact trained Pipeline enables consistent inference and supports promotion across environments.
+    - Persisting the exact trained Pipeline enables consistent inference and
+    supports promotion across environments.
     """
-    print(f"[utils.save_model] Saving model to: {filepath}")  # TODO: replace with logging later
-    
+    # TODO: replace with logging later
+    print(f"[utils.save_model] Saving model to: {filepath}")
+
     # Ensure the directory exists before writing
     filepath.parent.mkdir(parents=True, exist_ok=True)
 
@@ -80,9 +87,11 @@ def load_model(filepath: Path):
     Outputs:
     - model: Loaded model object.
     Why this contract matters for reliable ML delivery:
-    - Inference systems must load the same artifact format across training and serving to prevent drift in behavior.
+    - Inference systems must load the same artifact format across training and
+    serving to prevent drift in behavior.
     """
-    print(f"[utils.load_model] Loading model from: {filepath}")  # TODO: replace with logging later
+    # TODO: replace with logging later
+    print(f"[utils.load_model] Loading model from: {filepath}")
 
     if not filepath.exists():
         raise FileNotFoundError(
