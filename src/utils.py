@@ -1,9 +1,4 @@
 """
-Educational Goal:
-- Why this module exists in an MLOps system: Centralize simple I/O primitives (CSV + model artifacts) so pipeline steps stay focused on ML logic.
-- Responsibility (separation of concerns): This module only handles reading/writing. Business logic lives in load/clean/features/train/evaluate/infer.
-- Pipeline contract (inputs and outputs): Reliable persistence and retrieval of tabular data and trained models via stable functions.
-
 TODO: Replace print statements with standard library logging in a later session
 TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
 """
