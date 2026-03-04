@@ -68,7 +68,7 @@ def validate_schema(df: pd.DataFrame) -> None:
     if missing:
         raise ValueError(f"Dataset is missing required columns: {missing}")
 
-    print("✔ Schema check passed.")
+    logger.info("Schema check passed.")
 
 
 def validate_types(df: pd.DataFrame) -> None:
@@ -87,7 +87,7 @@ def validate_types(df: pd.DataFrame) -> None:
                 f"Column '{col}' has dtype '{actual}', expected '{expected}'."
             )
 
-    print("✔ Column types check passed.")
+    logger.info("Column types check passed.")
 
 
 def validate_missing(df: pd.DataFrame) -> None:
@@ -103,7 +103,7 @@ def validate_missing(df: pd.DataFrame) -> None:
         if df[col].isnull().any():
             raise ValueError(f"Dataset contains missing values in column '{col}'.")
 
-    print("✔ Missing values check passed.")
+    logger.info("Missing values check passed.")
 
 
 def validate_duplicates(df: pd.DataFrame) -> None:
@@ -119,7 +119,7 @@ def validate_duplicates(df: pd.DataFrame) -> None:
     if n_duplicates > 0:
         raise ValueError(f"Dataset contains {n_duplicates} duplicated row(s).")
 
-    print("✔ Duplicates check passed.")
+    logger.info("Duplicates check passed.")
 
 
 def validate_ranges(df: pd.DataFrame) -> None:
@@ -137,7 +137,7 @@ def validate_ranges(df: pd.DataFrame) -> None:
                 f"Column '{col}' contains negative values, expected >= 0."
             )
 
-    print("✔ Ranges check passed.")
+    logger.info("Ranges check passed.")
 
 
 def validate_target(df: pd.DataFrame) -> None:
@@ -156,7 +156,7 @@ def validate_target(df: pd.DataFrame) -> None:
             "Expected only 0 or 1."
         )
 
-    print("✔ Target column check passed.")
+    logger.info("Target column check passed.")
 
 
 def validate_dataframe(df: pd.DataFrame) -> bool:
@@ -187,7 +187,6 @@ def validate_dataframe(df: pd.DataFrame) -> bool:
 
 if __name__ == "__main__":
     import logging
-    from pathlib import Path
     from src.load_data import load_data
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
