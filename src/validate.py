@@ -68,6 +68,8 @@ def validate_schema(df: pd.DataFrame) -> None:
     if missing:
         raise ValueError(f"Dataset is missing required columns: {missing}")
 
+    print("✔ Schema check passed.")
+
 
 def validate_types(df: pd.DataFrame) -> None:
     """Check that each column has the expected data type.
@@ -85,6 +87,8 @@ def validate_types(df: pd.DataFrame) -> None:
                 f"Column '{col}' has dtype '{actual}', expected '{expected}'."
             )
 
+    print("✔ Column types check passed.")
+
 
 def validate_missing(df: pd.DataFrame) -> None:
     """Check that the DataFrame contains no missing values.
@@ -99,6 +103,8 @@ def validate_missing(df: pd.DataFrame) -> None:
         if df[col].isnull().any():
             raise ValueError(f"Dataset contains missing values in column '{col}'.")
 
+    print("✔ Missing values check passed.")
+
 
 def validate_duplicates(df: pd.DataFrame) -> None:
     """Check that the DataFrame contains no duplicated rows.
@@ -112,6 +118,8 @@ def validate_duplicates(df: pd.DataFrame) -> None:
     n_duplicates = df.duplicated().sum()
     if n_duplicates > 0:
         raise ValueError(f"Dataset contains {n_duplicates} duplicated row(s).")
+
+    print("✔ Duplicates check passed.")
 
 
 def validate_ranges(df: pd.DataFrame) -> None:
@@ -129,6 +137,8 @@ def validate_ranges(df: pd.DataFrame) -> None:
                 f"Column '{col}' contains negative values, expected >= 0."
             )
 
+    print("✔ Ranges check passed.")
+
 
 def validate_target(df: pd.DataFrame) -> None:
     """Check that the target column 'Churn' contains only values 0 or 1.
@@ -145,6 +155,8 @@ def validate_target(df: pd.DataFrame) -> None:
             f"Column 'Churn' contains invalid values: {invalid.unique().tolist()}. "
             "Expected only 0 or 1."
         )
+
+    print("✔ Target column check passed.")
 
 
 def validate_dataframe(df: pd.DataFrame) -> bool:
@@ -171,3 +183,15 @@ def validate_dataframe(df: pd.DataFrame) -> bool:
 
     logger.info("Dataset validation passed.")
     return True
+
+
+if __name__ == "__main__":
+    import logging
+    from pathlib import Path
+    from src.load_data import load_data
+
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
+
+    df = load_data()
+    result = validate_dataframe(df)
+    print("Validation result:", result)
