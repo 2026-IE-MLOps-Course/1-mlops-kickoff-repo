@@ -1,44 +1,47 @@
-# [Project Name: e.g., Retail Sales Forecasting]
-test_change
-other_branch_change
+# Spotify Popularity Prediction Pipeline
 
-**Author:** TODO_STUDENT (Your Group Name or number)  
-**Course:** MLOps: Master in Business Analytics and Data Sciense
+**Author:** Group 8  
+**Course:** MLOps: Master in Business Analytics and Data Science  
 **Status:** Session 1 (Initialization)
 
 ---
 
 ## 1. Business Objective
-*Replace this section with your project definition.*
 
-* **The Goal:** What business value does this model create?
-  > *Example: Reduce food waste by 10% by predicting daily bakery demand.*
+* **The Goal:**  
+  Develop a supervised machine learning model to predict Spotify track popularity (0–100) using measurable audio features such as energy, danceability, valence, tempo, acousticness, and loudness.
 
-* **The User:** Who consumes the output and how?
-  > *Example: Store managers receive a weekly PDF report on Monday mornings.*
+  The objective is to identify which audio characteristics are most strongly associated with higher popularity and to build a predictive system that supports data-driven ranking and promotion decisions.
+
+* **The User:**  
+  The primary users of this model are music streaming product teams, recommendation system engineers, and music analytics teams.
+
+  They would use predicted popularity scores to prioritize tracks within recommendation systems, optimize playlist ordering, and better understand the relationship between audio features and user engagement.
 
 ---
 
 ## 2. Success Metrics
-*How do we know if the project is successful?*
 
-* **Business KPI (The "Why"):**
-  > *Example: Reduce unsold inventory costs by $5,000/month.*
+* **Business KPI (The "Why"):**  
+  Improve recommendation and playlist engagement metrics by enabling more accurate ranking of tracks, with a target uplift of 3–5% in average listening time or track completion rate.
 
-* **Technical Metric (The "How"):**
-  > *Example: Model MAPE (Mean Absolute Percentage Error) < 15% on the test set.*
+* **Technical Metric (The "How"):**  
+  Achieve an RMSE that outperforms a baseline model (e.g., mean predictor or simple linear regression) and maintain stable MAE performance across validation splits.
 
-* **Acceptance Criteria:**
-  > *Example: The model must outperform the current "moving average" baseline.*
+* **Acceptance Criteria:**  
+  The model must outperform a defined baseline on RMSE and MAE, demonstrate stable performance across validation data, and produce reproducible predictions through the end-to-end pipeline executed via `src.main`.
 
 ---
 
 ## 3. The Data
 
-* **Source:** (e.g., Company Database, Kaggle CSV, API).
-* **Target Variable:** What specifically are you predicting/ classifying?
-* **Sensitive Info:** Are there emails, credit cards, or any PII (Personally Identifiable Information)?
-  > *⚠️ **WARNING:** If the dataset contains sensitive data, it must NEVER be committed to GitHub. Ensure `data/` is in your `.gitignore`.*
+* **Source:** SpotifyAudioFeaturesApril2019 (Kaggle)
+
+* **Target Variable:**  
+  `popularity` (numeric score from 0 to 100), representing the relative popularity of a track on Spotify.
+
+* **Sensitive Info:**  
+  The dataset does not contain personally identifiable information (PII). It consists solely of track-level audio features and metadata.
 
 ---
 
@@ -48,34 +51,34 @@ This project follows a strict separation between "Sandbox" (Notebooks) and "Prod
 
 ```text
 .
-├── README.md                # This file (Project definition)
+├── README.md                # Project definition
 ├── environment.yml          # Dependencies (Conda/Pip)
 ├── config.yaml              # Global configuration (paths, params)
 ├── .env                     # Secrets placeholder
 │
 ├── notebooks/               # Experimental sandbox
-│   └── yourbaseline.ipynb   # From previous work
+│   └── Final_Assignment.ipynb
 │
 ├── src/                     # Production code (The "Factory")
-│   ├── __init__.py          # Python package
-│   ├── load_data.py         # Ingest raw data
-│   ├── clean_data.py        # Preprocessing & cleaning
-│   ├── features.py          # Feature engineering
-│   ├── validate.py          # Data quality checks
-│   ├── train.py             # Model training & saving
-│   ├── evaluate.py          # Metrics & plotting
-│   ├── infer.py             # Inference logic
-│   └── main.py              # Pipeline orchestrator
+│   ├── __init__.py
+│   ├── load_data.py
+│   ├── clean_data.py
+│   ├── features.py
+│   ├── validate.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── infer.py
+│   └── main.py
 │
 ├── data/                    # Local storage (IGNORED by Git)
-│   ├── raw/                 # Immutable input data
-│   └── processed/           # Cleaned data ready for training
+│   ├── raw/
+│   └── processed/
 │
-├── models/                  # Serialized artifacts (IGNORED by Git)
+├── models/                  # Serialized model artifacts (IGNORED by Git)
 │
-├── reports/                 # Generated metrics, plots, and figures
+├── reports/                 # Generated metrics, predictions, and configs
 │
-└── tests/                   # Automated tests
+└── tests/                   # Automated test suite
 ```
 
 ## 5. Execution Model
