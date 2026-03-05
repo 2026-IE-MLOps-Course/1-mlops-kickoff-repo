@@ -1,14 +1,8 @@
 """
 Educational Goal:
-- Why this module exists in an MLOps system: Data validation acts as a quality gate
-  between raw ingestion and model training. It catches schema mismatches, empty
-  dataframes, and obvious data issues early — before they silently corrupt downstream
-  steps or produce misleading model metrics.
-- Responsibility (separation of concerns): This module only checks data quality and
-  raises errors or returns a boolean. It does NOT clean, transform, or load data.
-- Pipeline contract (inputs and outputs): Receives a cleaned pandas DataFrame and a
-  list of required column names. Returns True if the data passes all checks, or raises
-  ValueError immediately on the first failure (fail-fast pattern).
+- Why this module exists in an MLOps system: Data validation acts as a quality gate between ingestion and training (GIGO).
+- Responsibility (separation of concerns): Check schema/quality only. Do NOT clean, transform, or load data.
+- Pipeline contract (inputs and outputs): Receives a DataFrame + required columns. Returns True or raises ValueError (fail-fast).
 
 TODO: Replace print statements with standard library logging in a later session
 TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
@@ -22,102 +16,72 @@ def validate_dataframe(df: pd.DataFrame, required_columns: list) -> bool:
     Inputs:
     - df: A pandas DataFrame to validate (typically the cleaned DataFrame).
     - required_columns: A list of column name strings that must be present in df.
-
     Outputs:
     - True if all validation checks pass.
     - Raises ValueError immediately if any check fails (fail-fast).
-
     Why this contract matters for reliable ML delivery:
-    - Catching an empty DataFrame or a missing column here prevents cryptic errors
-      deep inside the feature engineering or training steps, which are much harder
-      to debug. A loud, early failure is always preferable to a silent wrong result.
-    - Passing required_columns as an argument (not hardcoding them) keeps this
-      function reusable across different datasets and projects.
+    - Early, clear failures reduce debugging time and prevent silent corruption of metrics/artifacts.
     """
-    print("validate_dataframe: Starting data validation checks...")  # TODO: replace with logging later
+    print("[validate.validate_dataframe] Starting data validation checks...")  # TODO: replace with logging later
 
-    # --- Baseline check 1: Fail fast on empty DataFrame ---
+    if df is None:
+        raise ValueError("Validation failed: df is None. Upstream step did not return a DataFrame.")
+
     if df.empty:
         raise ValueError(
-            "Validation failed: The DataFrame is empty. "
-            "Check your load_data and clean_data steps."
+            "Validation failed: The DataFrame is empty. Check your load_data and clean_data steps."
         )
-    print(f"validate_dataframe: DataFrame shape is {df.shape} — not empty.")  # TODO: replace with logging later
+    print(f"[validate.validate_dataframe] DataFrame shape: {df.shape}")  # TODO: replace with logging later
 
-    # --- Baseline check 2: Fail fast on missing required columns ---
     missing_cols = [col for col in required_columns if col not in df.columns]
     if missing_cols:
         raise ValueError(
-            f"Validation failed: The following required columns are missing from the "
-            f"DataFrame: {missing_cols}. "
+            f"Validation failed: Missing required columns: {missing_cols}. "
             f"Columns present: {df.columns.tolist()}"
         )
-    print(f"validate_dataframe: All required columns present: {required_columns}")  # TODO: replace with logging later
+    print("[validate.validate_dataframe] All required columns are present.")  # TODO: replace with logging later
 
     # --------------------------------------------------------
     # START STUDENT CODE
     # --------------------------------------------------------
+    # Student checks (kept), but guarded to avoid breaking other datasets/scaffolding.
 
-    # Check 1: No missing values in any column
-    for col in df.columns:
+    # Check 1: Missing values (simple + safer: only required columns)
+    for col in required_columns:
         if df[col].isnull().any():
-            raise ValueError(f"Validation failed: Column '{col}' contains missing values.")
-    print("validate_dataframe: No missing values found.")  # TODO: replace with logging later
+            raise ValueError(f"Validation failed: Required column '{col}' contains missing values.")
+    print("[validate.validate_dataframe] No missing values in required columns.")  # TODO: replace with logging later
 
     # Check 2: No duplicate rows
-    n_duplicates = df.duplicated().sum()
+    n_duplicates = int(df.duplicated().sum())
     if n_duplicates > 0:
         raise ValueError(f"Validation failed: Dataset contains {n_duplicates} duplicate row(s).")
-    print(f"validate_dataframe: No duplicate rows found.")  # TODO: replace with logging later
+    print("[validate.validate_dataframe] No duplicate rows found.")  # TODO: replace with logging later
 
-    # Check 3: Non-negative values in numeric columns
+    # Telecom-specific checks (run only if those columns exist)
     non_negative_cols = [
         "AccountWeeks", "DataUsage", "CustServCalls",
         "DayMins", "DayCalls", "MonthlyCharge", "OverageFee", "RoamMins",
     ]
-    for col in non_negative_cols:
-        if (df[col] < 0).any():
-            raise ValueError(f"Validation failed: Column '{col}' contains negative values.")
-    print("validate_dataframe: All numeric columns are non-negative.")  # TODO: replace with logging later
+    if set(non_negative_cols).issubset(df.columns):
+        for col in non_negative_cols:
+            if (df[col] < 0).any():
+                raise ValueError(f"Validation failed: Column '{col}' contains negative values.")
+        print("[validate.validate_dataframe] Telecom numeric columns are non-negative.")  # TODO: replace with logging later
 
-    # Check 4: Binary columns contain only 0 or 1
     binary_cols = ["Churn", "ContractRenewal", "DataPlan"]
-    for col in binary_cols:
-        invalid = df[col][~df[col].isin([0, 1])]
-        if not invalid.empty:
-            raise ValueError(
-                f"Validation failed: Column '{col}' contains values outside {{0, 1}}: "
-                f"{invalid.unique().tolist()}"
-            )
-    print("validate_dataframe: All binary columns contain only 0 and 1.")  # TODO: replace with logging later
-
+    if set(binary_cols).issubset(df.columns):
+        for col in binary_cols:
+            invalid = df.loc[~df[col].isin([0, 1]), col]
+            if not invalid.empty:
+                raise ValueError(
+                    f"Validation failed: Column '{col}' contains values outside {{0, 1}}: "
+                    f"{invalid.unique().tolist()}"
+                )
+        print("[validate.validate_dataframe] Telecom binary columns contain only 0/1.")  # TODO: replace with logging later
     # --------------------------------------------------------
     # END STUDENT CODE
     # --------------------------------------------------------
 
-    print("validate_dataframe: All validation checks passed.")  # TODO: replace with logging later
+    print("[validate.validate_dataframe] All validation checks passed.")  # TODO: replace with logging later
     return True
-
-
-if __name__ == "__main__":
-    from src.load_data import load_data
-
-    REQUIRED_COLUMNS = [
-        "Churn",
-        "AccountWeeks",
-        "ContractRenewal",
-        "DataPlan",
-        "DataUsage",
-        "CustServCalls",
-        "DayMins",
-        "DayCalls",
-        "MonthlyCharge",
-        "OverageFee",
-        "RoamMins",
-    ]
-
-    df = load_data()
-    print(f"Loaded dataset: {df.shape[0]} rows, {df.shape[1]} columns")
-
-    result = validate_dataframe(df, required_columns=REQUIRED_COLUMNS)
-    print(f"Validation result: {result}")
