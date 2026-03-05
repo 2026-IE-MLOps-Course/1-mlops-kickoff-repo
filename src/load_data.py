@@ -1,4 +1,10 @@
 """
+Module: Data Loader
+-------------------
+Role: Ingest raw data from sources (CSV, SQL, API).
+Input: Path to file or connection string.
+Output: pandas.DataFrame (Raw).
+""""""
 Educational Goal:
 - Why this module exists in an MLOps system: Ingesting raw data is the very first
   step of any ML pipeline. A dedicated loader enforces file-dependency checks,
