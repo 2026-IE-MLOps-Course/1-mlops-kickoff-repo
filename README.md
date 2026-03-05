@@ -75,11 +75,18 @@ This project follows a strict separation between "Sandbox" (Notebooks) and "Prod
 └── tests/                   # Automated tests
 ```
 
-## 5. Execution Model
+## 5. Setup & Execution
 
-The full machine learning pipeline will eventually be executable through:
+**1. Create and activate the environment:**
+```bash
+conda env create -f environment.yml
+conda activate test_env
+```
 
-`python src/main.py`
+**2. Run the pipeline:**
+```bash
+python -m src.main
+```
 
 
 
