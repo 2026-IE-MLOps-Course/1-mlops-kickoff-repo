@@ -82,6 +82,21 @@ This project follows a strict separation between "Sandbox" (Notebooks) and "Prod
 ```
 
 ## 5. Setup & Execution
+<<<<<< feature/main
+
+**1. Create and activate the environment:**
+```bash
+conda env create -f environment.yml
+conda activate test_env
+```
+
+**2. Run the pipeline:**
+```bash
+python -m src.main
+```
+
+=======
+>>>>>> dev
 
 **1. Create and activate the environment:**
 ```bash
