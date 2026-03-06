@@ -214,3 +214,7 @@ def train_model(
     print("[train_model] Training complete. Returning fitted Pipeline and test split.")  # TODO: replace with logging later
 
     return fitted_pipeline, X_test, y_test
+Role: Bundle preprocessing and algorithms into a single Pipeline and fit on training data.
+Input: pandas.DataFrame (Processed) + ColumnTransformer (Recipe).
+Output: Serialized scikit-learn Pipeline in `models/`.
+"""
