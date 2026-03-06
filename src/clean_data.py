@@ -6,7 +6,7 @@ Input: pandas.DataFrame (Raw).
 Output: pandas.DataFrame (Processed/Clean).
 """
 from src.load_data import load_data
-from _future_ import annotations
+from __future__ import annotations
 import pandas as pd
 
 
@@ -54,6 +54,6 @@ def clean_data(df=pd.DataFrame)-> pd.DataFrame:
 
     return df
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     clean_data(df)
-    print(df.head())*
+    print(df.head())
