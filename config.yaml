@@ -1,0 +1,10 @@
+# MLOps Project Configuration
+# This file will eventually control paths, hyperparameters, and toggles.
+
+data:
+  raw: "data/raw/dataset.csv"
+  processed: "data/processed/clean.csv"
+
+train:
+  test_size: 0.2
+  seed: 42

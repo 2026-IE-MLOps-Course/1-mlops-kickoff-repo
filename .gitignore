@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv/
+env/
+venv/
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.coverage
+dist/
+build/
+
+# OS and IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Local artifacts
+models/*
+!models/.gitkeep
+
+# Ignore data contents but keep folder structure
+data/*
+!data/raw/
+!data/processed/
+!data/inference/
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/inference/.gitkeep
