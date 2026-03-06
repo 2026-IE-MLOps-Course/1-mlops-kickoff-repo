@@ -10,4 +10,5 @@ dependencies:
   - numpy
   - scikit-learn
   - joblib
+  - matplotlib
   - jupyter

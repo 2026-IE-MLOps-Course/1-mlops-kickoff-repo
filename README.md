@@ -1,6 +1,6 @@
 # CUSTOMER CHURN ANALYSIS 
 
-**Author:** TODO_STUDENT (Your Group Name or number)  
+**Author:** Group 5 (Your Group Name or number)  
 **Course:** MLOps: Master in Business Analytics and Data Sciense
 **Status:** Session 1 (Initialization)
 
@@ -64,6 +64,7 @@ This project follows a strict separation between "Sandbox" (Notebooks) and "Prod
 │   ├── __init__.py          # Python package
 │   ├── load_data.py         # Ingest raw data
 │   ├── clean_data.py        # Preprocessing & cleaning
+│   ├── features.py          # Feature engineering
 │   ├── validate.py          # Data quality checks
 │   ├── train.py             # Model training & saving
 │   ├── evaluate.py          # Metrics & plotting
@@ -82,22 +83,6 @@ This project follows a strict separation between "Sandbox" (Notebooks) and "Prod
 ```
 
 ## 5. Setup & Execution
-<<<<<< feature/main
-
-**1. Create and activate the environment:**
-```bash
-conda env create -f environment.yml
-conda activate test_env
-```
-
-**2. Run the pipeline:**
-```bash
-python -m src.main
-```
-
-=======
->>>>>> dev
-
 **1. Create and activate the environment:**
 ```bash
 conda env create -f environment.yml

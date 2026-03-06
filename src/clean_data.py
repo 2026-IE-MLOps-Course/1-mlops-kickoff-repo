@@ -5,7 +5,6 @@ Role: Preprocessing, missing value imputation, and feature engineering.
 Input: pandas.DataFrame (Raw).
 Output: pandas.DataFrame (Processed/Clean).
 """
-from src.load_data import load_data
 from __future__ import annotations
 import pandas as pd
 
@@ -24,7 +23,7 @@ def clean_data(df=pd.DataFrame)-> pd.DataFrame:
         .str.replace(" ","_",regex=False)
     )
     #Trim whitespaces
-    obj_cols= df.select.dtypes(include="object").columns
+    obj_cols= df.select_dtypes(include="object").columns
     if len(obj_cols) >0:
         df[obj_cols]=(
                       df[obj_cols]
