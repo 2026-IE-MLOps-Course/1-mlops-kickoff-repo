@@ -200,14 +200,16 @@ Each team member owns ~2 modules + their tests. Commit early, commit often, and 
 
 ---
 
-## Team Module Ownership (template)
+## Team Module Ownership 
+| Member              | File |
+|---------------------|------|
 
-| Member | Modules | Tests |
-|---|---|---|
-| Member A | `load_data.py`, `clean_data.py` | `test_load_data.py`, `test_clean_data.py` |
-| Member B | `validate.py`, `features.py` | `test_validate.py`, `test_features.py` |
-| Member C | `train.py`, `evaluate.py` | `test_train.py`, `test_evaluate.py` |
-| Member D | `infer.py`, `main.py`, `utils.py` | `test_infer.py`, `test_main.py`, `test_utils.py` |
+| MOHAMMAD ALKHAN     |  `config.yaml`, `environment.yml`, `README.md`, `01_voyageiq_analysis_vExp.iynb`, `test_utils.py`, `test_validate.py` |
+| MICHAEL CONCEPCION  | `test_clean_data.py`, `test_evaluate.py` , `test_features.py` |
+| CLAUDIA MOLINER     | `infer.py`, `load_data.py` , `main.py` |
+| NICKLAS URBAN       | `train.py`, `validate.py`, `confest.py` |
+| NICOLE ZLOTCHEVSKY  | `clean_data.py`, `evaluate.py`, `features.py`  |
+| JAUME BALAGUER      | `test_infer.py`, `test_load_data.py`, `test_main.py`, `test_train.py` |
 
 ---
 
