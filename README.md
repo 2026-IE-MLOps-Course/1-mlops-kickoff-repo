@@ -1,15 +1,15 @@
 # CUSTOMER CHURN ANALYSIS 
 
-**Author:** Group 5 (Your Group Name or number)  
+**Author:** Group 5 
 **Course:** MLOps: Master in Business Analytics and Data Sciense
-**Status:** Session 1 (Initialization)
+**Status:** Complete
 
 ---
 
 ## 1. Business Objective
-*Replace this section with your project definition.*
+*Analyze Customer Churn for a Telecommunications company.*
 
-* **The Goal:** What business value does this model create?
+* **The Goal:** 
 Build a machine learning model to predict customer churn for a telecommunications company. They can then identify customers at risk of leaving and take retention actions.
 
 The model creates business value by:
@@ -17,13 +17,12 @@ The model creates business value by:
   - Increasing customer lifetime value
   - Improving their retention strategy
 
-* **The User:** Who consumes the output and how?
+* **The User:** 
 Marketing team receives an Excel file report listing customers and their predicted churn probability.
 
 ---
 
 ## 2. Success Metrics
-*How do we know if the project is successful?*
 
 * **Business KPI (The "Why"):**
  - Reduce churn rate among high-value customer.
