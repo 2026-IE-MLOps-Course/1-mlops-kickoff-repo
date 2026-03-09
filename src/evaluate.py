@@ -204,4 +204,4 @@ def evaluate_model(
 
     print("[evaluate.evaluate_model] Evaluation complete.")  # TODO: replace with logging later
     return metric_value
->>>>>>> 2fc2a9a (Fixed an error on evaluate.py there was a character that could not be processed)
+
