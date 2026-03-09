@@ -10,7 +10,7 @@ import pandas as pd
 
 
 
-def clean_data(df=pd.DataFrame)-> pd.DataFrame:
+def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Clean raw dataset and return a clean DataFrame.
     '''
@@ -24,35 +24,17 @@ def clean_data(df=pd.DataFrame)-> pd.DataFrame:
     )
     #Trim whitespaces
     obj_cols= df.select_dtypes(include="object").columns
-    if len(obj_cols) >0:
-        df[obj_cols]=(
-                      df[obj_cols]
-                      .apply(
-                          lambda x: x.str.strip()
-                                         )
-                      )
+    for col in obj_cols:
+        df[col] = df[col].str.strip()
     
     #Drop exact duplicates rows
     df=df.drop_duplicates()
 
     #Standardizing missing values
-    df = df.replace(
-        ["NA",
-         "N/A",
-         "",
-         "?",
-         "null",
-         "None",
-         "missing",
-         -999,
-         ],
-        pd.NA
-        )
+    _SENTINEL = ["NA", "N/A", "", "?", "null", "None", "missing", -999]
+    df = df.replace({val: pd.NA for val in _SENTINEL})
     
 
 
     return df
 
-if __name__ == "__main__":
-    clean_data(df)
-    print(df.head())

@@ -44,19 +44,23 @@ validation:
     - Churn
     - ContractRenewal
     - DataPlan
+  non_negative_cols:
+    - AccountWeeks
+    - DataUsage
+    - CustServCalls
+    - DayMins
+    - DayCalls
+    - MonthlyCharge
+    - OverageFee
+    - RoamMins
+  binary_cols:
+    - ContractRenewal
+    - DataPlan
+    - Churn
 
 # ── Training ──────────────────────────────────────────────────
 train:
+  problem_type: "classification"
+  model_path: "models/model.pkl"
   test_size: 0.2
-  random_state: 42
-
-# ── Evaluation ────────────────────────────────────────────────
-evaluate:
-  reports_dir: "reports/figures"
-
-# ── Logging ───────────────────────────────────────────────────
-logging:
-  log_file: "logs/main.log"
-  format: "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
-  datefmt: "%Y-%m-%d %H:%M:%S"
-  level: "INFO"
+  seed: 42

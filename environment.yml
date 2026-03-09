@@ -11,8 +11,5 @@ dependencies:
   - scikit-learn
   - joblib
   - matplotlib
-  - jupyter
   - pyyaml
-  - pytest
-  - pytest-cov
-  - flake8
+  - jupyter

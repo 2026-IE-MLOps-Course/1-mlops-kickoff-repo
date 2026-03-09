@@ -18,7 +18,8 @@ Returns a single float — the primary evaluation metric — so the caller (src/
 promotion decisions with a simple numerical comparison. As a side-effect, saves a diagnostic plot
 to reports/figures/ and prints a full metrics dictionary to stdout.
 
-TODO: Hardcoded variables will be imported from config.yml later
+TODO: Replace print statements with standard library logging in a later session
+TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
 """
 """
 evaluate.py
@@ -100,7 +101,7 @@ def evaluate_model(
         raise ValueError("X_test is empty.")
     if len(X_test) != len(y_test):
         raise ValueError(
-            f"X_test has {len(X_test)} rows but y_test has {len(y_test)} entries. "
+            f"Length mismatch: X_test has {len(X_test)} rows but y_test has {len(y_test)} entries. "
             "They must be the same length."
         )
 
