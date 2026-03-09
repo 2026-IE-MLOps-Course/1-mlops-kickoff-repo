@@ -14,6 +14,11 @@ class TestCleanDataColumnStandardization:
         result = clean_data(df)
         assert list(result.columns) == ["name", "age"]
 
+    def test_lowercases_real_column_names(self):
+        df = pd.DataFrame({"AccountWeeks": [10], "DataUsage": [5]})
+        result = clean_data(df)
+        assert list(result.columns) == ["accountweeks", "datausage"]
+
     def test_columns_spaces_replaced_with_underscores(self):
         df = pd.DataFrame({"First Name": [1], "Last Name": [2]})
         result = clean_data(df)
@@ -35,10 +40,21 @@ class TestCleanDataWhitespace:
         result = clean_data(df)
         assert result["city"].tolist() == ["Madrid", "London"]
 
+    def test_strips_whitespace_lowercase_values(self):
+        df = pd.DataFrame({"name": ["  alice  ", " bob"]})
+        result = clean_data(df)
+        assert result["name"].iloc[0] == "alice"
+        assert result["name"].iloc[1] == "bob"
+
     def test_numeric_columns_unaffected(self):
         df = pd.DataFrame({"value": [1.5, 2.5]})
         result = clean_data(df)
         assert result["value"].tolist() == [1.5, 2.5]
+
+    def test_no_object_columns_still_works(self):
+        df = pd.DataFrame({"x": [1, 2, 3], "y": [4.0, 5.0, 6.0]})
+        result = clean_data(df)
+        assert len(result) == 3
 
 
 class TestCleanDataDuplicates:
@@ -95,6 +111,12 @@ class TestCleanDataMissingValues:
         assert pd.isna(result["col"].iloc[0])
         assert result["col"].iloc[1] == 42
 
+    def test_replaces_multiple_sentinels_in_one_column(self):
+        df = pd.DataFrame({"a": ["NA", "N/A", "?", "valid"]})
+        result = clean_data(df)
+        assert result["a"].isna().sum() == 3
+        assert result["a"].dropna().iloc[0] == "valid"
+
 
 class TestCleanDataGeneral:
     """General behavior tests."""
@@ -115,6 +137,12 @@ class TestCleanDataGeneral:
         result = clean_data(df)
         assert isinstance(result, pd.DataFrame)
         assert len(result) == 0
+
+    def test_idempotent(self):
+        df = pd.DataFrame({"Name": [1, 2], "Age": [3, 4]})
+        first_pass = clean_data(df)
+        second_pass = clean_data(first_pass)
+        pd.testing.assert_frame_equal(first_pass, second_pass)
 
     def test_mixed_types_and_duplicates(self):
         df = pd.DataFrame({

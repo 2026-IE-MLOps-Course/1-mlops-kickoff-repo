@@ -5,6 +5,10 @@ wires together all sub-modules (load, validate, clean, features, train,
 evaluate, infer) and that its constants are consistent.
 """
 
+import os
+import subprocess
+import sys
+
 import pandas as pd
 import pytest
 
@@ -45,6 +49,11 @@ def _make_raw_df(n=80):
         "ContractRenewal": rng.choice([0, 1], n),
         "DataPlan": rng.choice([0, 1], n),
     })
+
+
+# ---------------------------------------------------------------------------
+# Unit tests (mock data, no disk I/O)
+# ---------------------------------------------------------------------------
 
 
 class TestMainConstants:
@@ -142,3 +151,67 @@ class TestPipelineIntegration:
         df = df.drop(columns=["Churn"])
         with pytest.raises(ValueError, match="Missing required columns"):
             validate_dataframe(df, REQUIRED_COLUMNS)
+
+
+# ---------------------------------------------------------------------------
+# Subprocess tests (run main.py as a real process against real data)
+# ---------------------------------------------------------------------------
+
+
+class TestMainPipeline:
+    """Tests for the main.py pipeline orchestrator via subprocess."""
+
+    def test_pipeline_runs_end_to_end(self):
+        """The full pipeline should complete without errors."""
+        result = subprocess.run(
+            [sys.executable, "-m", "src.main"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert result.returncode == 0, (
+            f"Pipeline failed with stderr:\n{result.stderr}"
+        )
+
+    def test_pipeline_outputs_metric(self):
+        """The pipeline should print the final metric."""
+        result = subprocess.run(
+            [sys.executable, "-m", "src.main"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert "Pipeline complete" in result.stdout
+        assert "metric" in result.stdout
+
+    def test_pipeline_outputs_predictions(self):
+        """The pipeline should print prediction results."""
+        result = subprocess.run(
+            [sys.executable, "-m", "src.main"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert "prediction" in result.stdout
+
+    def test_pipeline_produces_model_artifact(self):
+        """The pipeline should save a model file."""
+        result = subprocess.run(
+            [sys.executable, "-m", "src.main"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert result.returncode == 0
+        assert os.path.exists("models/model.pkl")
+
+    def test_pipeline_produces_confusion_matrix(self):
+        """The pipeline should save a confusion matrix plot."""
+        result = subprocess.run(
+            [sys.executable, "-m", "src.main"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert result.returncode == 0
+        assert os.path.exists("reports/figures/confusion_matrix.png")
