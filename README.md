@@ -206,7 +206,7 @@ Each team member owns ~2 modules + their tests. Commit early, commit often, and 
 
 | MOHAMMAD ALKHAN     |  `config.yaml`, `environment.yml`, `01_voyageiq_analysis_vExp.iynb`, `test_utils.py`, `test_validate.py` |
 | MICHAEL CONCEPCION  | `test_clean_data.py`, `test_evaluate.py` , `test_features.py` |
-| CLAUDIA MOLINER     | `infer.py`, `load_data.py` , `main.py` |
+| CLAUDIA ARANGUREN     | `infer.py`, `load_data.py` , `main.py` , `utils.py`, `01_voyageiq_analysis_Legacy.iynb` |
 | NICKLAS URBAN       | `train.py`, `validate.py`, `confest.py`, `README.md` |
 | NICOLE ZLOTCHEVSKY  | `clean_data.py`, `evaluate.py`, `features.py`  |
 | JAUME BALAGUER      | `test_infer.py`, `test_load_data.py`, `test_main.py`, `test_train.py` |
