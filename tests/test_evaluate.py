@@ -1,129 +1,94 @@
 """
-Module: Evaluation
---------------------
-Role: Generate metrics and plots for model performance.
-Input: Trained Model + Test Data.
-Output: Metrics dictionary and plots saved to `reports/`.
+test_evaluate.py
+----------------
+Unit tests for the model evaluation module.
 """
 
-import json
-import logging
-import os
-
-import numpy as np
 import pandas as pd
-from sklearn.metrics import (
-    mean_absolute_error,
-    mean_squared_error,
-    r2_score,
-)
+import pytest
 
-logger = logging.getLogger("voyageiq.evaluate")
+from src.evaluate import evaluate_model
+from src.features import get_feature_preprocessor
+from src.train import train_model
 
 
-def _mean_absolute_percentage_error(
-    y_true: np.ndarray, y_pred: np.ndarray
-) -> float:
-    """Compute MAPE, guarding against zero-division.
-
-    Args:
-        y_true: Ground-truth values.
-        y_pred: Predicted values.
-
-    Returns:
-        float: MAPE as a percentage.
-    """
-    mask = y_true != 0
-    if mask.sum() == 0:
-        return float("inf")
-    return float(np.mean(np.abs((y_true[mask] - y_pred[mask]) / y_true[mask])) * 100)
-
-
-_METRIC_FUNCTIONS = {
-    "rmse": lambda y, p: float(np.sqrt(mean_squared_error(y, p))),
-    "mae": lambda y, p: float(mean_absolute_error(y, p)),
-    "r2": lambda y, p: float(r2_score(y, p)),
-    "mape": _mean_absolute_percentage_error,
-}
-
-
-def evaluate_model(
-    pipeline,
-    X: pd.DataFrame,
-    y: pd.Series,
-    config: dict,
-    split_name: str = "validation",
-) -> dict:
-    """Score the pipeline on the given data split and persist metrics.
-
-    Args:
-        pipeline: Fitted sklearn Pipeline (must have ``.predict()``).
-        X: Feature DataFrame for the split being evaluated.
-        y: True target values for the same split.
-        config: Full pipeline configuration dictionary.
-        split_name: Label used in logs and the report (e.g. 'validation', 'test').
-
-    Returns:
-        dict: Mapping of metric name → float value.
-
-    Raises:
-        TypeError: If the pipeline lacks a predict method.
-        ValueError: If X and y have different row counts.
-    """
-    # Enforce duck-typing contract
-    if not hasattr(pipeline, "predict"):
-        raise TypeError(
-            "The provided artifact does not have a .predict() method. "
-            "Ensure a valid sklearn Pipeline was saved."
-        )
-
-    if len(X) != len(y):
-        raise ValueError(
-            f"Shape mismatch: X has {len(X)} rows, y has {len(y)} rows."
-        )
-
-    y_pred = pipeline.predict(X)
-    y_true = np.array(y)
-
-    eval_cfg = config.get("evaluation", {})
-    metric_names = eval_cfg.get("metrics", ["rmse", "mae", "r2"])
-
-    results: dict = {}
-    for name in metric_names:
-        func = _METRIC_FUNCTIONS.get(name)
-        if func is None:
-            logger.warning("Unknown metric '%s' — skipping.", name)
-            continue
-        results[name] = round(func(y_true, y_pred), 4)
-
-    # Log results
-    logger.info(
-        "Evaluation on %s split — %s",
-        split_name,
-        ", ".join(f"{k}: {v}" for k, v in results.items()),
+@pytest.fixture()
+def fitted_regression_pipeline(sample_feature_df, sample_target):
+    """Train a minimal regression pipeline and return (pipeline, X, y)."""
+    preprocessor = get_feature_preprocessor(
+        numeric_passthrough_cols=["duration_days", "traveler_age",
+                                  "travel_month", "day_of_week"],
+        categorical_onehot_cols=["destination_country", "traveler_gender",
+                                 "traveler_nationality",
+                                 "accommodation_type",
+                                 "transportation_type"],
     )
-
-    # Persist to JSON — accumulate results across splits
-    metrics_path = config.get("paths", {}).get(
-        "metrics_output", "reports/metrics.json"
+    pipeline = train_model(
+        sample_feature_df, sample_target, preprocessor, "regression"
     )
-    metrics_dir = os.path.dirname(metrics_path)
-    if metrics_dir:
-        os.makedirs(metrics_dir, exist_ok=True)
+    return pipeline, sample_feature_df, sample_target
 
-    # Load existing report if present, so we keep all splits
-    all_metrics = {}
-    if os.path.isfile(metrics_path):
-        try:
-            with open(metrics_path, "r", encoding="utf-8") as fh:
-                all_metrics = json.load(fh)
-        except (json.JSONDecodeError, OSError):
-            all_metrics = {}
 
-    all_metrics[split_name] = results
+@pytest.fixture()
+def fitted_classification_pipeline(sample_feature_df):
+    """Train a minimal classification pipeline and return (pipeline, X, y)."""
+    y_class = pd.Series([0, 1, 0, 1, 0, 1, 0, 1, 0, 1])
+    preprocessor = get_feature_preprocessor(
+        numeric_passthrough_cols=["duration_days", "traveler_age",
+                                  "travel_month", "day_of_week"],
+        categorical_onehot_cols=["destination_country", "traveler_gender",
+                                 "traveler_nationality",
+                                 "accommodation_type",
+                                 "transportation_type"],
+    )
+    pipeline = train_model(
+        sample_feature_df, y_class, preprocessor, "classification"
+    )
+    return pipeline, sample_feature_df, y_class
 
-    with open(metrics_path, "w", encoding="utf-8") as fh:
-        json.dump(all_metrics, fh, indent=2)
-    logger.info("Metrics saved to %s", metrics_path)
 
-    return results
+class TestEvaluateModel:
+    """Tests for the evaluate_model function."""
+
+    def test_returns_float_regression(self, fitted_regression_pipeline):
+        """Regression: returns a single float (RMSE)."""
+        pipeline, X, y = fitted_regression_pipeline
+        metric = evaluate_model(pipeline, X, y, "regression")
+        assert isinstance(metric, float)
+
+    def test_returns_float_classification(self, fitted_classification_pipeline):
+        """Classification: returns a single float (F1)."""
+        pipeline, X, y = fitted_classification_pipeline
+        metric = evaluate_model(pipeline, X, y, "classification")
+        assert isinstance(metric, float)
+
+    def test_rmse_is_non_negative(self, fitted_regression_pipeline):
+        """RMSE is always >= 0."""
+        pipeline, X, y = fitted_regression_pipeline
+        metric = evaluate_model(pipeline, X, y, "regression")
+        assert metric >= 0.0
+
+    def test_f1_in_valid_range(self, fitted_classification_pipeline):
+        """F1 score is between 0 and 1."""
+        pipeline, X, y = fitted_classification_pipeline
+        metric = evaluate_model(pipeline, X, y, "classification")
+        assert 0.0 <= metric <= 1.0
+
+    def test_no_predict_raises(self):
+        """TypeError if the object has no .predict() method."""
+        X = pd.DataFrame({"duration_days": [7]})
+        y = pd.Series([1800])
+        with pytest.raises(TypeError, match="predict"):
+            evaluate_model("not_a_model", X, y, "regression")
+
+    def test_shape_mismatch_raises(self, fitted_regression_pipeline):
+        """ValueError when X and y have different lengths."""
+        pipeline, X, y = fitted_regression_pipeline
+        with pytest.raises(ValueError, match="mismatch"):
+            evaluate_model(pipeline, X, y.iloc[:5], "regression")
+
+    def test_unknown_problem_type_raises(self, fitted_regression_pipeline):
+        """ValueError for unrecognised problem_type."""
+        pipeline, X, y = fitted_regression_pipeline
+        with pytest.raises(ValueError, match="Unknown"):
+            evaluate_model(pipeline, X, y, "unknown")
