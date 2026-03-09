@@ -1,39 +1,51 @@
 # MLOps Project Configuration
-# This file controls paths, column definitions, and training parameters.
+# Centralizes all paths, parameters, and settings for the ML pipeline.
 
+# ── Data Paths ────────────────────────────────────────────────
 data:
   raw: "data/raw/telecom_churn.csv"
   processed: "data/processed/clean.csv"
+  inference_output: "data/inference/predictions.csv"
 
-validate:
-  required_columns:
-    - "AccountWeeks"
-    - "DataUsage"
-    - "CustServCalls"
-    - "DayMins"
-    - "DayCalls"
-    - "MonthlyCharge"
-    - "OverageFee"
-    - "RoamMins"
-    - "Churn"
-    - "ContractRenewal"
-    - "DataPlan"
+# ── Model Artifact ────────────────────────────────────────────
+model:
+  path: "models/model.pkl"
+  problem_type: "classification"   # "classification" or "regression"
+
+# ── Target & Features ─────────────────────────────────────────
+target:
+  column: "churn"                  # lowercase after clean_data standardizes names
 
 features:
-  target_col: "churn"
-  numeric_cols:
-    - "accountweeks"
-    - "datausage"
-    - "custservcalls"
-    - "daymins"
-    - "daycalls"
-    - "monthlycharge"
-    - "overagefee"
-    - "roammins"
-  categorical_cols:
-    - "contractrenewal"
-    - "dataplan"
+  numeric:
+    - accountweeks
+    - datausage
+    - custservcalls
+    - daymins
+    - daycalls
+    - monthlycharge
+    - overagefee
+    - roammins
+  categorical:
+    - contractrenewal
+    - dataplan
 
+# ── Validation ────────────────────────────────────────────────
+validation:
+  required_columns:
+    - AccountWeeks
+    - DataUsage
+    - CustServCalls
+    - DayMins
+    - DayCalls
+    - MonthlyCharge
+    - OverageFee
+    - RoamMins
+    - Churn
+    - ContractRenewal
+    - DataPlan
+
+# ── Training ──────────────────────────────────────────────────
 train:
   problem_type: "classification"
   model_path: "models/model.pkl"
