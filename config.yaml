@@ -8,3 +8,18 @@ data:
 train:
   test_size: 0.2
   seed: 42
+
+validate:
+  non_negative_cols:
+    - AccountWeeks
+    - DataUsage
+    - CustServCalls
+    - DayMins
+    - DayCalls
+    - MonthlyCharge
+    - OverageFee
+    - RoamMins
+  binary_cols:
+    - Churn
+    - ContractRenewal
+    - DataPlan
