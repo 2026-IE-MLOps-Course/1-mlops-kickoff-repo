@@ -1,10 +1,10 @@
 """
 evaluate.py
 
-Fixes applied (only what's broken per the screenshot):
-- Load defaults from config.yaml (instead of hardcoded constants)
+Fixes applied (per project priorities):
+- Use config.yaml (if present) instead of hardcoded constants for reports directory
 - Replace print() with logging
-(3-way split is handled in train.py; evaluate_model stays generic: it evaluates any split you pass in.)
+- Keep REPORTS_DIR global so existing tests can monkeypatch it
 """
 
 from __future__ import annotations
@@ -18,11 +18,14 @@ import yaml
 
 LOGGER = logging.getLogger(__name__)
 
+# Kept for backward compatibility + tests that monkeypatch this
+REPORTS_DIR = Path("reports") / "figures"
+
 
 def _load_config(config_path: str = "config.yaml") -> Dict[str, Any]:
     path = Path(config_path)
     if not path.exists():
-        LOGGER.info("Config file not found at %s. Using function defaults.", config_path)
+        LOGGER.info("Config file not found at %s. Using defaults.", config_path)
         return {}
     with path.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
@@ -35,10 +38,21 @@ def evaluate_model(
     problem_type: str,
     config_path: str = "config.yaml",
 ) -> float:
-    cfg = _load_config(config_path)
-    eval_cfg = cfg.get("evaluate", cfg)  # allow either top-level or evaluate: block
+    """
+    Evaluate a fitted model on a held-out split.
 
-    reports_dir = Path(eval_cfg.get("reports_dir", "reports/figures"))
+    Returns:
+        float: primary metric
+              - regression: RMSE (lower is better)
+              - classification: weighted F1 (higher is better)
+    Side effects:
+        Saves a diagnostic plot to reports/figures (or config override).
+    """
+    cfg = _load_config(config_path)
+    eval_cfg = cfg.get("evaluate", cfg)
+
+    # Allow config override, else use the module constant (supports monkeypatch in tests)
+    reports_dir = Path(eval_cfg.get("reports_dir", str(REPORTS_DIR)))
     reports_dir.mkdir(parents=True, exist_ok=True)
 
     problem_type = problem_type.strip().lower()
@@ -52,11 +66,13 @@ def evaluate_model(
     if X_test.empty:
         raise ValueError("X_test is empty.")
     if len(X_test) != len(y_test):
-        raise ValueError(f"Length mismatch: X_test={len(X_test)}, y_test={len(y_test)}")
+        raise ValueError(
+            f"Length mismatch: X_test has {len(X_test)} rows but y_test has {len(y_test)} entries."
+        )
 
     y_pred = model.predict(X_test)
 
-    # Plotting (same idea as yours; only logging changes + config path)
+    # Plotting (non-interactive backend)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -67,10 +83,12 @@ def evaluate_model(
         rmse = float(mean_squared_error(y_test, y_pred, squared=False))
         mae = float(mean_absolute_error(y_test, y_pred))
         r2 = float(r2_score(y_test, y_pred))
-
         LOGGER.info("Regression metrics: rmse=%.6f mae=%.6f r2=%.6f", rmse, mae, r2)
 
-        residuals = (pd.Series(y_test).astype(float).to_numpy() - pd.Series(y_pred).astype(float).to_numpy())
+        residuals = (
+            pd.Series(y_test).astype(float).to_numpy()
+            - pd.Series(y_pred).astype(float).to_numpy()
+        )
 
         fig, ax = plt.subplots()
         ax.scatter(y_pred, residuals, alpha=0.4)
@@ -79,6 +97,7 @@ def evaluate_model(
         ax.set_ylabel("Residual (actual − predicted)")
         ax.set_title("Residual Plot")
         fig.tight_layout()
+
         plot_path = reports_dir / "residual_plot.png"
         fig.savefig(plot_path)
         plt.close(fig)
@@ -102,6 +121,7 @@ def evaluate_model(
         ax.set_ylabel("True label")
         ax.set_title("Confusion Matrix")
         fig.tight_layout()
+
         plot_path = reports_dir / "confusion_matrix.png"
         fig.savefig(plot_path)
         plt.close(fig)
@@ -109,4 +129,6 @@ def evaluate_model(
 
         return f1w
 
-    raise ValueError("problem_type must be 'regression' or 'classification'.")
+    raise ValueError(
+        f"Unknown problem_type='{problem_type}'. Expected 'regression' or 'classification'."
+    )
