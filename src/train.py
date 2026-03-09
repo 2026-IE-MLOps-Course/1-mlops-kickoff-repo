@@ -1,11 +1,15 @@
 """
 train.py
 
-Role: Split data, train model, and save the artifact.
-Fixes applied (only what's broken per the screenshot):
-- Load defaults from config.yaml (instead of hardcoded constants)
+Fixes applied (per project priorities):
+- Load defaults from config.yaml instead of hardcoded constants (with safe fallback)
 - Replace print() with logging
-- Implement 3-way split: train / validation / test
+- Implement 3-way split: train/validation/test
+- Keep Pipeline step names: ["preprocess", "model"]
+- Save fitted pipeline artifact to disk (create directory if missing)
+
+Returns:
+    fitted_pipeline, X_val, y_val, X_test, y_test
 """
 
 from __future__ import annotations
@@ -25,21 +29,14 @@ from sklearn.pipeline import Pipeline
 LOGGER = logging.getLogger(__name__)
 
 
-# -----------------------------
-# Config loader (minimal)
-# -----------------------------
 def _load_config(config_path: str = "config.yaml") -> Dict[str, Any]:
-    """
-    Loads config.yaml if present; returns {} if missing.
-    This keeps your module runnable even if the file isn't available in some envs.
-    """
+    """Load config.yaml if present; otherwise return {} (keeps module runnable)."""
     path = Path(config_path)
     if not path.exists():
         LOGGER.info("Config file not found at %s. Using function defaults.", config_path)
         return {}
     with path.open("r", encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
-    return data
+        return yaml.safe_load(f) or {}
 
 
 def train_model(
@@ -54,15 +51,35 @@ def train_model(
     config_path: str = "config.yaml",
 ) -> Tuple[Pipeline, pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
     """
-    Returns:
-        fitted_pipeline, X_val, y_val, X_test, y_test
+    Train a sklearn Pipeline (preprocessor + estimator) with a 3-way split.
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        Full feature matrix.
+    y : pd.Series | single-column pd.DataFrame
+        Full target vector aligned with X.
+    preprocessor : Transformer
+        ColumnTransformer (or similar) used in the pipeline as "preprocess".
+    problem_type : str
+        "regression" or "classification".
+    model_path : str | None
+        Where to save the fitted pipeline artifact (joblib).
+    test_size : float | None
+        Fraction held out for final test split (from full dataset).
+    val_size : float | None
+        Fraction held out for validation split (from full dataset).
+    random_state : int | None
+        Seed for reproducibility.
+    config_path : str
+        Path to config.yaml to source defaults.
+
+    Returns
+    -------
+    (fitted_pipeline, X_val, y_val, X_test, y_test)
     """
-
     cfg = _load_config(config_path)
-
-    # Pull defaults from config.yaml if not explicitly provided
-    # (keys are tolerant — works even if your config uses different nesting)
-    train_cfg = cfg.get("train", cfg)  # allow either top-level or train: block
+    train_cfg = cfg.get("train", cfg)  # tolerate either train: block or top-level keys
 
     model_path = model_path or train_cfg.get("model_path", "models/model.pkl")
     test_size = float(test_size if test_size is not None else train_cfg.get("test_size", 0.2))
@@ -77,12 +94,12 @@ def train_model(
     # -----------------------------
     if not isinstance(X, pd.DataFrame):
         raise ValueError("X must be a pandas DataFrame.")
-    if not isinstance(y, (pd.Series, pd.DataFrame)):
-        raise ValueError("y must be a pandas Series (or single-column DataFrame).")
     if isinstance(y, pd.DataFrame):
         if y.shape[1] != 1:
             raise ValueError("y DataFrame must have exactly one column.")
         y = y.iloc[:, 0]
+    if not isinstance(y, pd.Series):
+        raise ValueError("y must be a pandas Series (or single-column DataFrame).")
 
     if X.empty:
         raise ValueError("X is empty. Cannot train on zero samples.")
@@ -92,7 +109,7 @@ def train_model(
     if not (0.0 < test_size < 1.0) or not (0.0 < val_size < 1.0):
         raise ValueError("test_size and val_size must be floats in (0, 1).")
     if test_size + val_size >= 1.0:
-        raise ValueError("test_size + val_size must be < 1.0 to leave room for training.")
+        raise ValueError("test_size + val_size must be < 1.0.")
 
     # -----------------------------
     # 3-way split: train/val/test
@@ -100,13 +117,13 @@ def train_model(
     stratify = y if problem_type_normalized == "classification" else None
 
     LOGGER.info(
-        "Splitting data (3-way): test_size=%.3f, val_size=%.3f, random_state=%d",
+        "Splitting data (3-way): test_size=%.3f val_size=%.3f random_state=%d",
         test_size,
         val_size,
         random_state,
     )
 
-    # First split off the test set
+    # Split off test
     X_temp, X_test, y_temp, y_test = train_test_split(
         X,
         y,
@@ -115,8 +132,7 @@ def train_model(
         stratify=stratify,
     )
 
-    # Now split temp into train and val.
-    # val_size is relative to ORIGINAL dataset; convert to fraction of remaining.
+    # Split remaining into train/val; convert val_size to fraction of remaining
     val_fraction_of_temp = val_size / (1.0 - test_size)
     stratify_temp = y_temp if problem_type_normalized == "classification" else None
 
@@ -128,18 +144,13 @@ def train_model(
         stratify=stratify_temp,
     )
 
-    LOGGER.info(
-        "Split sizes: train=%d, val=%d, test=%d",
-        len(X_train),
-        len(X_val),
-        len(X_test),
-    )
+    LOGGER.info("Split sizes: train=%d val=%d test=%d", len(X_train), len(X_val), len(X_test))
 
     # -----------------------------
-    # Model selection (unchanged)
+    # Model selection
     # -----------------------------
     if problem_type_normalized == "regression":
-        estimator = Ridge()
+        estimator = Ridge(random_state=random_state)
     elif problem_type_normalized == "classification":
         estimator = LogisticRegression(
             solver="liblinear",
@@ -147,7 +158,7 @@ def train_model(
             random_state=random_state,
         )
     else:
-        raise ValueError("problem_type must be 'regression' or 'classification'.")
+        raise ValueError("Unsupported problem_type. Expected 'regression' or 'classification'.")
 
     pipeline = Pipeline(
         steps=[
