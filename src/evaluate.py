@@ -1,4 +1,25 @@
 """
+Educational Goal:
+
+Why this module exists in an MLOps system: Evaluation is the gate that decides whether a trained
+model is good enough to move forward in the pipeline (to registration, deployment, or A/B testing).
+Without a dedicated, isolated evaluation step, it is easy to accidentally leak information from the
+test set into training, producing optimistic metrics that do not reflect real-world performance.
+
+Responsibility (separation of concerns): This module measures how well a fitted model performs on
+held-out data AND produces diagnostic plots saved to reports/figures/. It does NOT load data and
+does NOT train or modify the model — those concerns belong to ingest.py and train.py respectively.
+
+Pipeline contract (inputs and outputs): Receives a fitted sklearn Pipeline object, a feature
+DataFrame (X_test), a target Series (y_test), and a string that declares the problem type.
+Returns a single float — the primary evaluation metric — so the caller (src/main.py) can make
+promotion decisions with a simple numerical comparison. As a side-effect, saves a diagnostic plot
+to reports/figures/ and prints a full metrics dictionary to stdout.
+
+TODO: Replace print statements with standard library logging in a later session
+TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
+"""
+"""
 evaluate.py
 
 Fixes applied (per project priorities):
