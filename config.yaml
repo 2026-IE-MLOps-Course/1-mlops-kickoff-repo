@@ -1,10 +1,41 @@
 # MLOps Project Configuration
-# This file will eventually control paths, hyperparameters, and toggles.
+# This file controls paths, column definitions, and training parameters.
 
 data:
-  raw: "data/raw/dataset.csv"
+  raw: "data/raw/telecom_churn.csv"
   processed: "data/processed/clean.csv"
 
+validate:
+  required_columns:
+    - "AccountWeeks"
+    - "DataUsage"
+    - "CustServCalls"
+    - "DayMins"
+    - "DayCalls"
+    - "MonthlyCharge"
+    - "OverageFee"
+    - "RoamMins"
+    - "Churn"
+    - "ContractRenewal"
+    - "DataPlan"
+
+features:
+  target_col: "churn"
+  numeric_cols:
+    - "accountweeks"
+    - "datausage"
+    - "custservcalls"
+    - "daymins"
+    - "daycalls"
+    - "monthlycharge"
+    - "overagefee"
+    - "roammins"
+  categorical_cols:
+    - "contractrenewal"
+    - "dataplan"
+
 train:
+  problem_type: "classification"
+  model_path: "models/model.pkl"
   test_size: 0.2
   seed: 42
