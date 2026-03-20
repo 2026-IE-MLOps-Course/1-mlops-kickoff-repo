@@ -4,9 +4,12 @@ test_features.py
 Unit tests for the feature engineering module.
 """
 
+from unittest.mock import patch
+
 import pandas as pd
 import pytest
 from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
 
 from src.features import get_feature_preprocessor
 
@@ -82,3 +85,25 @@ class TestGetFeaturePreprocessor:
         preprocessor.fit(sample_feature_df)
         transformed = preprocessor.transform(sample_feature_df)
         assert transformed.shape[0] == len(sample_feature_df)
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover lines 106-107 — TypeError fallback for older sklearn     #
+    # ------------------------------------------------------------------ #
+
+    def test_onehot_fallback_for_older_sklearn(self):
+        """When OneHotEncoder raises TypeError on sparse_output, the code
+        falls back to the sparse parameter (covers lines 106-107)."""
+        original_init = OneHotEncoder.__init__
+
+        def patched_init(self, **kwargs):
+            if "sparse_output" in kwargs:
+                raise TypeError("unexpected keyword argument 'sparse_output'")
+            return original_init(self, **kwargs)
+
+        with patch.object(OneHotEncoder, "__init__", patched_init):
+            preprocessor = get_feature_preprocessor(
+                categorical_onehot_cols=["traveler_gender"],
+            )
+            assert isinstance(preprocessor, ColumnTransformer)
+            transformer_names = [name for name, _, _ in preprocessor.transformers]
+            assert "cat_onehot" in transformer_names

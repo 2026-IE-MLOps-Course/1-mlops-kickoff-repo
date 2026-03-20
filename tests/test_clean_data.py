@@ -4,6 +4,8 @@ test_clean_data.py
 Unit tests for the data cleaning module.
 """
 
+from unittest.mock import patch
+
 import pandas as pd
 import pytest
 
@@ -73,3 +75,88 @@ class TestCleanDataframe:
         result = clean_dataframe(sample_raw_df, "total_cost")
         assert "travel_month" in result.columns
         assert "day_of_week" in result.columns
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover line 96 — unparseable cost values trigger print/drop     #
+    # ------------------------------------------------------------------ #
+
+    def test_unparseable_cost_values_dropped(self):
+        """Rows with non-numeric cost strings are dropped (covers line 96)."""
+        df = pd.DataFrame({
+            "Trip ID": [1, 2, 3],
+            "Destination": ["London, UK", "Paris, France", "Tokyo, Japan"],
+            "Start date": ["5/1/2023", "6/1/2023", "7/1/2023"],
+            "End date": ["5/8/2023", "6/5/2023", "7/7/2023"],
+            "Duration (days)": [7, 4, 6],
+            "Traveler name": ["John", "Jane", "Bob"],
+            "Traveler age": [35, 28, 40],
+            "Traveler gender": ["Male", "Female", "Male"],
+            "Traveler nationality": ["American", "French", "Japanese"],
+            "Accommodation type": ["Hotel", "Airbnb", "Hotel"],
+            "Accommodation cost": [1200, "INVALID", 1500],
+            "Transportation type": ["Flight", "Train", "Flight"],
+            "Transportation cost": [600, 200, 800],
+        })
+        result = clean_dataframe(df, "total_cost")
+        # Row with "INVALID" cost should be dropped
+        assert len(result) == 2
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover line 105 — KeyError when cost columns missing after      #
+    # standardisation                                                      #
+    # ------------------------------------------------------------------ #
+
+    def test_missing_cost_columns_after_standardisation_raises(self):
+        """KeyError raised when accommodation/transportation cost columns are
+        missing after column-name standardisation (covers line 105)."""
+        df = pd.DataFrame({
+            "Trip ID": [1],
+            "Destination": ["London, UK"],
+            "Start date": ["5/1/2023"],
+            "End date": ["5/8/2023"],
+            "Duration (days)": [7],
+            "Traveler name": ["John"],
+            "Traveler age": [35],
+            "Traveler gender": ["Male"],
+            "Traveler nationality": ["American"],
+            "Accommodation type": ["Hotel"],
+            # Deliberately omit cost columns
+            "Transportation type": ["Flight"],
+        })
+        with pytest.raises(KeyError, match="Cannot create target"):
+            clean_dataframe(df, "total_cost")
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover line 134 — defensive guard: target column missing after  #
+    # all cleaning. This guard is unreachable under normal execution       #
+    # because line 102 always creates df[target_column] when cost columns #
+    # are present. We patch pd.to_numeric to sabotage the target column   #
+    # after creation, simulating a hypothetical code change.               #
+    # ------------------------------------------------------------------ #
+
+    def test_target_missing_after_cleaning_raises(self, sample_raw_df):
+        """KeyError when target column is missing after all cleaning
+        (covers line 134 — defensive guard)."""
+        original_to_numeric = pd.to_numeric
+
+        def sabotaged_to_numeric(arg, **kwargs):
+            """On the last call to pd.to_numeric (for 'duration_days'),
+            also drop the target column from the DataFrame if accessible."""
+            result = original_to_numeric(arg, **kwargs)
+            # We can't easily drop from inside to_numeric, so we use a
+            # different approach below.
+            return result
+
+        # Cleaner approach: patch reset_index to drop the target column
+        # right before the final check at line 133.
+        original_reset_index = pd.DataFrame.reset_index
+
+        def patched_reset_index(self, *args, **kwargs):
+            result = original_reset_index(self, *args, **kwargs)
+            if "total_cost" in result.columns:
+                result = result.drop(columns=["total_cost"])
+            return result
+
+        with patch.object(pd.DataFrame, "reset_index", patched_reset_index):
+            with pytest.raises(KeyError, match="missing after cleaning"):
+                clean_dataframe(sample_raw_df, "total_cost")

@@ -55,3 +55,21 @@ class TestValidateDataframe:
         required = ["duration_days", "traveler_age", "total_cost"]
         with pytest.raises(ValueError):
             validate_dataframe(sample_clean_df, required)
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover line 79 — continue when range-check column is absent     #
+    # ------------------------------------------------------------------ #
+
+    def test_range_check_skipped_for_missing_columns(self):
+        """When range-check columns (duration_days, traveler_age, etc.) are
+        not present in the DataFrame, the validator skips them gracefully
+        (covers line 79)."""
+        # DataFrame without any of the range-check columns
+        df = pd.DataFrame({
+            "some_feature": [1, 2, 3],
+            "total_cost": [100.0, 200.0, 300.0],
+        })
+        # Only require columns that actually exist
+        required = ["some_feature", "total_cost"]
+        result = validate_dataframe(df, required)
+        assert result is True
