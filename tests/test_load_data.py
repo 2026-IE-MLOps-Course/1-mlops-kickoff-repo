@@ -9,6 +9,7 @@ Coverage:
 - Contract: returns unmodified DataFrame (no side effects on source)
 """
 
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -138,5 +139,5 @@ class TestLoadRawData:
     def test_error_message_contains_path(self, tmp_path):
         """FileNotFoundError message includes the attempted path."""
         bad_path = tmp_path / "missing.csv"
-        with pytest.raises(FileNotFoundError, match=str(bad_path)):
+        with pytest.raises(FileNotFoundError, match=re.escape(str(bad_path))):
             load_raw_data(bad_path)
