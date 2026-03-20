@@ -4,7 +4,7 @@ test_features.py
 Unit tests for the feature engineering module.
 """
 
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import pandas as pd
 import pytest
@@ -92,15 +92,33 @@ class TestGetFeaturePreprocessor:
 
     def test_onehot_fallback_for_older_sklearn(self):
         """When OneHotEncoder raises TypeError on sparse_output, the code
-        falls back to the sparse parameter (covers lines 106-107)."""
-        original_init = OneHotEncoder.__init__
+        falls back to the sparse parameter (covers lines 106-107).
 
-        def patched_init(self, **kwargs):
-            if "sparse_output" in kwargs:
+        Since modern sklearn doesn't accept 'sparse' either, we patch
+        OneHotEncoder so the first call (with sparse_output) raises TypeError
+        and the second call (with sparse) succeeds."""
+        real_ohe_class = OneHotEncoder
+
+        call_count = [0]
+
+        def mock_ohe_constructor(**kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1 and "sparse_output" in kwargs:
+                # First call: simulate old sklearn rejecting sparse_output
                 raise TypeError("unexpected keyword argument 'sparse_output'")
-            return original_init(self, **kwargs)
+            # Second call (or any without sparse_output): create a real
+            # OneHotEncoder but only with the params it actually accepts.
+            # Strip 'sparse' if present — modern sklearn uses 'sparse_output'.
+            clean_kwargs = {}
+            if "handle_unknown" in kwargs:
+                clean_kwargs["handle_unknown"] = kwargs["handle_unknown"]
+            if "sparse_output" in kwargs:
+                clean_kwargs["sparse_output"] = kwargs["sparse_output"]
+            elif "sparse" in kwargs:
+                clean_kwargs["sparse_output"] = kwargs["sparse"]
+            return real_ohe_class(**clean_kwargs)
 
-        with patch.object(OneHotEncoder, "__init__", patched_init):
+        with patch("src.features.OneHotEncoder", side_effect=mock_ohe_constructor):
             preprocessor = get_feature_preprocessor(
                 categorical_onehot_cols=["traveler_gender"],
             )
