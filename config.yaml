@@ -1,12 +1,14 @@
 # ============================================================
 # VoyageIQ – Total Trip Cost Forecasting Pipeline
 # Central configuration file  (config.yaml)
+# Single source of truth for non-secret runtime settings
+# Secrets belong in .env only NOT HERE! (e.g. WANDB_API_KEY)
 # ============================================================
 
 # ------ Project metadata ------------------------------------
 project:
   name: "voyageiq-trip-cost-forecasting"
-  version: "1.0.0"
+  version: "2.0.0"
   description: "End-to-end MLOps pipeline for predicting total travel trip cost"
   problem_type: "regression"          # regression | classification
 
@@ -18,11 +20,11 @@ paths:
   model_artifact: "models/model.joblib"
   predictions_output: "reports/predictions.csv"
   metrics_output: "reports/metrics.json"
-  log_file: "logs/main.log"
+  log_file: "logs/pipeline.log"
 
 # ------ Data loading ----------------------------------------
 data_loading:
-  file_type: "csv"                    # csv | excel
+  file_type: "csv"
   encoding: "utf-8-sig"
   separator: ","
 
@@ -42,12 +44,6 @@ schema:
     - "accommodation_cost"
     - "transportation_type"
     - "transportation_cost"
-  expected_types:
-    trip_id: "int64"
-    duration_days: "int64"
-    traveler_age: "int64"
-    accommodation_cost: "float64"
-    transportation_cost: "float64"
 
 # ------ Cleaning rules --------------------------------------
 cleaning:
@@ -59,7 +55,7 @@ cleaning:
 
 # ------ Validation rules ------------------------------------
 validation:
-  on_error: "raise"                   # raise | warn
+  on_error: "raise"
   numeric_ranges:
     duration_days:
       min: 1
@@ -89,9 +85,11 @@ features:
   date_derived_features:
     - "travel_month"
     - "day_of_week"
+  quantile_bin: []
+  n_bins: 3
   numeric_imputer_strategy: "median"
   categorical_imputer_strategy: "most_frequent"
-  scaler: "standard"                  # standard | minmax
+  scaler: "standard"
 
 # ------ Train / Val / Test split ----------------------------
 splitting:
@@ -101,7 +99,7 @@ splitting:
 
 # ------ Model -----------------------------------------------
 model:
-  algorithm: "random_forest"          # random_forest | gradient_boosting | linear
+  algorithm: "random_forest"
   random_seed: 42
   hyperparameters:
     random_forest:
@@ -109,24 +107,25 @@ model:
       max_depth: 12
       min_samples_split: 5
       min_samples_leaf: 2
-    gradient_boosting:
-      n_estimators: 200
-      max_depth: 5
-      learning_rate: 0.1
-    linear:
-      fit_intercept: true
 
 # ------ Evaluation ------------------------------------------
 evaluation:
-  primary_metric: "rmse"              # rmse | mae | r2
+  primary_metric: "rmse"
   metrics:
     - "rmse"
     - "mae"
     - "r2"
-    - "mape"
 
 # ------ Logging ---------------------------------------------
 logging:
   level: "INFO"
   format: "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
   datefmt: "%Y-%m-%d %H:%M:%S"
+
+# ------ Weights & Biases (Experiment Tracking) ---------------
+wandb:
+  enabled: true
+  project: "voyageiq-trip-cost"
+  model_artifact_name: "voyageiq_model"
+  log_processed_data: true
+  log_predictions: true
