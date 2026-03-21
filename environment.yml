@@ -1,7 +1,7 @@
-name: voyageiq-mlops
+name: mlops-student-env
 channels:
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - python=3.11
   - pandas=2.2.0
@@ -14,3 +14,9 @@ dependencies:
   - flake8=7.0.0
   - pip:
     - openpyxl==3.1.2
+    - python-dotenv==1.0.1
+    - wandb==0.19.1
+    - fastapi==0.115.0
+    - uvicorn==0.30.6
+    - pydantic==2.9.2
+    - httpx==0.27.2

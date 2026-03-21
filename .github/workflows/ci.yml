@@ -1,0 +1,38 @@
+# .github/workflows/ci.yml
+# Continuous Integration — runs on every Pull Request to main
+# Validates code quality before merge is allowed
+
+name: CI — Tests & Quality Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pandas numpy scikit-learn pyyaml python-dotenv joblib \
+                      pytest pytest-cov flake8 wandb fastapi uvicorn pydantic httpx
+
+      - name: Lint with flake8
+        run: |
+          flake8 src/ tests/ --max-line-length=120 --ignore=E501,W503,F401,E127,W292
+
+      - name: Run tests
+        env:
+          WANDB_MODE: disabled
+        run: |
+          python -m pytest tests/ -v --tb=short
