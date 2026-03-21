@@ -47,6 +47,16 @@ reports/**
 !reports/
 !reports/.gitkeep
 
+# -----------------------------
+# Logs
+# -----------------------------
+logs/
+
+# -----------------------------
+# W&B
+# -----------------------------
+wandb/
+artifacts/
+
 # Python cache
-__pycache__/
 *.pyc

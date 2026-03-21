@@ -1,252 +1,316 @@
+# src/main.py
 """
-Educational Goal:
-- Why this module exists in an MLOps system: The orchestrator is the single
-  entry point that drives the entire pipeline from configuration. It delegates
-  execution to specialised, single-purpose modules, creating a highly readable
-  flow for auditing and traceability.
-- Responsibility (separation of concerns): Coordinate Load → Clean → Validate
-  → Split → Build Recipe → Train → Evaluate → Infer. Never implement business
-  logic directly — always delegate to the appropriate module.
-- Pipeline contract (inputs and outputs):
-  Input  — SETTINGS dictionary (bridge to future config.yaml).
-  Output — Artifacts: data/processed/clean.csv, models/model.joblib,
-           reports/predictions.csv.
+Pipeline orchestrator — single entry point.
 
-TODO: Replace print statements with standard library logging in a later session
-TODO: Any temporary or hardcoded variable or parameter will be imported from config.yml in a later session
+Owns:
+- Loading and validating config.yaml
+- Resolving repo-relative paths
+- Initialising W&B experiment tracking
+- Orchestrating: load → clean → validate → split → recipe → train → evaluate → save → infer
+- Logging all W&B metrics, artifacts, and promoted model
 """
 
+import logging
+import os
 from pathlib import Path
+from typing import Any, Dict, List
 
 import pandas as pd
+import yaml
+from dotenv import load_dotenv
 from sklearn.model_selection import train_test_split
 
-from src.utils import load_csv, save_csv, save_model
-from src.load_data import load_raw_data
+import wandb
+
+from src.logger import configure_logging
+
 from src.clean_data import clean_dataframe
-from src.validate import validate_dataframe
-from src.features import get_feature_preprocessor
-from src.train import train_model
 from src.evaluate import evaluate_model
+from src.features import get_feature_preprocessor
 from src.infer import run_inference
+from src.load_data import load_raw_data
+from src.train import train_model
+from src.utils import save_csv, save_model
+
+logger = logging.getLogger(__name__)
 
 
-# ================================================================== #
-#  CONFIGURATION — SETTINGS DICTIONARY (bridge to future config.yaml) #
-# ================================================================== #
-# !!! STUDENTS: You MUST update this block to match YOUR dataset !!!  #
-# This SETTINGS dictionary is pre-configured for the VoyageIQ travel  #
-# dataset. If you use the dummy scaffolding CSV, set                  #
-# is_example_config = True and update the feature lists.              #
-# ================================================================== #
-SETTINGS = {
-    "is_example_config": False,  # Set True if using dummy scaffolding data
-    "target_column": "total_cost",
-    "problem_type": "regression",  # "regression" or "classification"
-    "random_seed": 42,
-    "test_size": 0.15,
-    "val_size": 0.15,
-    "paths": {
-        "raw_data": "data/raw/travel_raw.csv",
-        "processed_data": "data/processed/clean.csv",
-        "model_artifact": "models/model.joblib",
-        "predictions_output": "reports/predictions.csv",
-    },
-    "features": {
-        "quantile_bin": [],  # No binning for travel cost regression
-        "categorical_onehot": [
-            "destination_country",
-            "traveler_gender",
-            "traveler_nationality",
-            "accommodation_type",
-            "transportation_type",
-        ],
-        "numeric_passthrough": [
-            "duration_days",
-            "traveler_age",
-            "travel_month",
-            "day_of_week",
-        ],
-        "n_bins": 3,
-    },
-}
+# ─────────────────────────────────────
+# Config helpers
+# ─────────────────────────────────────
+
+def load_config(config_path: Path) -> Dict[str, Any]:
+    """Load YAML configuration from disk."""
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found at: {config_path}")
+
+    with config_path.open("r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+
+    if not isinstance(cfg, dict):
+        raise ValueError("config.yaml must parse into a dictionary at the top level")
+
+    return cfg
 
 
-def main():
-    """Execute the end-to-end ML pipeline.
+def resolve_repo_path(project_root: Path, relative_path: str) -> Path:
+    """Resolve a config path relative to the repo root."""
+    return project_root / relative_path.strip()
 
-    Steps:
-    1. Create directories for artifacts.
-    2. Load raw data.
-    3. Clean data (deterministic, idempotent).
-    4. Save processed CSV.
-    5. Validate data against schema.
-    6. Train/val/test split (BEFORE any feature fitting).
-    7. Fail-fast feature checks.
-    8. Build feature recipe (unfitted ColumnTransformer).
-    9. Train model (fit preprocessor + model on train only).
-    10. Save model artifact.
-    11. Evaluate on held-out validation and test splits.
-    12. Run inference and save predictions.
-    """
-    print("=" * 60)  # TODO: replace with logging later
-    print("Pipeline started")  # TODO: replace with logging later
-    print("=" * 60)  # TODO: replace with logging later
 
-    # ── 1. Create output directories ───────────────────────
-    print("[main] Creating output directories …")  # TODO: replace with logging later
-    for key in ["processed_data", "model_artifact", "predictions_output"]:
-        Path(SETTINGS["paths"][key]).parent.mkdir(parents=True, exist_ok=True)
+# ─────────────────────────────────────
+# W&B helpers
+# ─────────────────────────────────────
 
-    # ── Check if running example config ────────────────────
-    if SETTINGS["is_example_config"]:
-        print(
-            "\n⚠️  WARNING: Running with EXAMPLE configuration. "
-            "Update SETTINGS to match your real dataset!\n"
-        )  # TODO: replace with logging later
+def _wandb_is_enabled(cfg: Dict[str, Any]) -> bool:
+    wandb_cfg = cfg.get("wandb")
+    if not isinstance(wandb_cfg, dict):
+        return False
+    return bool(wandb_cfg.get("enabled", False))
 
-    # ── 2. Load raw data ───────────────────────────────────
-    print("[main] STEP 1 — Loading raw data")  # TODO: replace with logging later
-    raw_path = Path(SETTINGS["paths"]["raw_data"])
-    df_raw = load_raw_data(raw_path)
 
-    # ── 3. Clean data ──────────────────────────────────────
-    print("[main] STEP 2 — Cleaning data")  # TODO: replace with logging later
-    target_col = SETTINGS["target_column"]
-    df_clean = clean_dataframe(df_raw, target_col)
+def _wandb_get_str(cfg: Dict[str, Any], key: str, default: str = "") -> str:
+    wandb_cfg = cfg.get("wandb")
+    if not isinstance(wandb_cfg, dict):
+        return default
+    value = wandb_cfg.get(key, default)
+    return str(value).strip() if value is not None else default
 
-    # ── 4. Save processed CSV ──────────────────────────────
-    print("[main] Saving processed data …")  # TODO: replace with logging later
-    save_csv(df_clean, Path(SETTINGS["paths"]["processed_data"]))
 
-    # ── 5. Validate data ───────────────────────────────────
-    print("[main] STEP 3 — Validating data")  # TODO: replace with logging later
-    feat_cfg = SETTINGS["features"]
-    required_columns = (
-        feat_cfg["numeric_passthrough"]
-        + feat_cfg["categorical_onehot"]
-        + feat_cfg["quantile_bin"]
-        + [target_col]
-    )
-    validate_dataframe(df_clean, required_columns)
+def _wandb_get_bool(cfg: Dict[str, Any], key: str, default: bool = False) -> bool:
+    wandb_cfg = cfg.get("wandb")
+    if not isinstance(wandb_cfg, dict):
+        return default
+    return bool(wandb_cfg.get(key, default))
 
-    # ── 6. Train / Val / Test split ────────────────────────
-    print("[main] STEP 4 — Splitting data (train/val/test)")  # TODO: replace with logging later
-    seed = SETTINGS["random_seed"]
-    test_size = SETTINGS["test_size"]
-    val_size = SETTINGS["val_size"]
-    problem_type = SETTINGS["problem_type"]
 
-    # Determine feature columns
-    keep_cols = (
-        feat_cfg["numeric_passthrough"]
-        + feat_cfg["categorical_onehot"]
-        + feat_cfg["quantile_bin"]
-    )
-    keep_cols = [c for c in keep_cols if c in df_clean.columns]
+# ─────────────────────────────────────
+# Main pipeline
+# ─────────────────────────────────────
 
-    X = df_clean[keep_cols]
-    y = df_clean[target_col]
+def main() -> None:
+    project_root = Path(__file__).resolve().parents[1]
 
-    # Stratify only for classification
-    try:
-        stratify_arg = y if problem_type == "classification" else None
-        X_temp, X_test, y_temp, y_test = train_test_split(
-            X, y,
-            test_size=test_size,
-            random_state=seed,
-            stratify=stratify_arg,
-        )
-    except ValueError:
-        # Fallback: stratification may fail with very small classes
-        print(  # TODO: replace with logging later
-            "[main] WARNING: Stratification failed, falling back to "
-            "unstratified split."
-        )
-        X_temp, X_test, y_temp, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=seed,
-        )
+    # Load .env from repo root
+    load_dotenv(dotenv_path=project_root / ".env", override=False)
 
-    # Second split: train vs val
-    relative_val = val_size / (1 - test_size)
-    try:
-        stratify_arg = y_temp if problem_type == "classification" else None
-        X_train, X_val, y_train, y_val = train_test_split(
-            X_temp, y_temp,
-            test_size=relative_val,
-            random_state=seed,
-            stratify=stratify_arg,
-        )
-    except ValueError:
-        X_train, X_val, y_train, y_val = train_test_split(
-            X_temp, y_temp,
-            test_size=relative_val,
-            random_state=seed,
-        )
+    # ── Load config.yaml ──
+    cfg = load_config(project_root / "config.yaml")
 
-    print(  # TODO: replace with logging later
-        f"[main] Split sizes — train: {len(X_train)}, "
-        f"val: {len(X_val)}, test: {len(X_test)}"
+    # ── Configure logging ──
+    log_file_path = resolve_repo_path(project_root, cfg["paths"]["log_file"])
+    configure_logging(
+        log_level=cfg.get("logging", {}).get("level", "INFO"),
+        log_file=log_file_path,
     )
 
-    # ── 7. Fail-fast feature checks ───────────────────────
-    print("[main] STEP 5 — Checking feature columns …")  # TODO: replace with logging later
-    all_configured_cols = (
-        feat_cfg["quantile_bin"]
-        + feat_cfg["categorical_onehot"]
-        + feat_cfg["numeric_passthrough"]
-    )
-    missing_cols = [c for c in all_configured_cols if c not in X_train.columns]
-    if missing_cols:
-        raise ValueError(
-            f"Configured feature columns missing from training data: {missing_cols}"
-        )
-
-    # Verify numeric dtypes for quantile_bin and numeric_passthrough columns
-    for col in feat_cfg["quantile_bin"] + feat_cfg["numeric_passthrough"]:
-        if col in X_train.columns and not pd.api.types.is_numeric_dtype(X_train[col]):
-            raise TypeError(
-                f"Column '{col}' is configured as numeric but has dtype "
-                f"'{X_train[col].dtype}'. Fix in clean_data or SETTINGS."
+    # ── Initialise W&B ──
+    wandb_run = None
+    if _wandb_is_enabled(cfg):
+        wandb_project = _wandb_get_str(cfg, "project")
+        if not wandb_project:
+            raise ValueError(
+                "config.yaml: wandb.project must be a non-empty string when wandb.enabled is true"
             )
 
-    # ── 8. Build feature recipe ────────────────────────────
-    print("[main] STEP 6 — Building feature preprocessor recipe")  # TODO: replace with logging later
-    preprocessor = get_feature_preprocessor(
-        quantile_bin_cols=feat_cfg["quantile_bin"],
-        categorical_onehot_cols=feat_cfg["categorical_onehot"],
-        numeric_passthrough_cols=feat_cfg["numeric_passthrough"],
-        n_bins=feat_cfg["n_bins"],
-    )
+        wandb_run = wandb.init(
+            project=wandb_project,
+            config=cfg,
+            job_type="training-pipeline",
+        )
+        logger.info("Initialised W&B run | name=%s | project=%s", wandb_run.name, wandb_project)
+    else:
+        logger.info("W&B disabled, continuing without experiment tracking")
 
-    # ── 9. Train model ─────────────────────────────────────
-    print("[main] STEP 7 — Training model")  # TODO: replace with logging later
-    pipeline = train_model(X_train, y_train, preprocessor, problem_type)
+    try:
+        logger.info("=" * 60)
+        logger.info("Pipeline started")
+        logger.info("=" * 60)
 
-    # ── 10. Save model artifact ────────────────────────────
-    print("[main] Saving model artifact …")  # TODO: replace with logging later
-    save_model(pipeline, Path(SETTINGS["paths"]["model_artifact"]))
+        # ── Extract settings from config ──
+        paths_cfg = cfg["paths"]
+        features_cfg = cfg["features"]
+        splitting_cfg = cfg["splitting"]
+        target_col = features_cfg["target"]
+        problem_type = cfg["project"]["problem_type"]
 
-    # ── 11. Evaluate on validation split ───────────────────
-    print("[main] STEP 8 — Evaluating on validation split")  # TODO: replace with logging later
-    val_metric = evaluate_model(pipeline, X_val, y_val, problem_type)
-    print(f"[main] Validation metric: {val_metric:.4f}")  # TODO: replace with logging later
+        raw_data_path = resolve_repo_path(project_root, paths_cfg["raw_data"])
+        processed_data_path = resolve_repo_path(project_root, paths_cfg["processed_data"])
+        model_artifact_path = resolve_repo_path(project_root, paths_cfg["model_artifact"])
+        predictions_path = resolve_repo_path(project_root, paths_cfg["predictions_output"])
 
-    # ── 12. Evaluate on test split ─────────────────────────
-    print("[main] STEP 9 — Evaluating on test split")  # TODO: replace with logging later
-    test_metric = evaluate_model(pipeline, X_test, y_test, problem_type)
-    print(f"[main] Test metric: {test_metric:.4f}")  # TODO: replace with logging later
+        seed = splitting_cfg["random_seed"]
+        test_size = splitting_cfg["test_size"]
+        val_size = splitting_cfg["val_size"]
 
-    # ── 13. Inference on test split (demonstration) ────────
-    print("[main] Running inference on test split …")  # TODO: replace with logging later
-    preds = run_inference(pipeline, X_test)
-    save_csv(preds, Path(SETTINGS["paths"]["predictions_output"]))
+        # Feature columns
+        numeric_passthrough_cols = features_cfg.get("numeric_features", []) + features_cfg.get("date_derived_features", [])
+        categorical_onehot_cols = features_cfg.get("categorical_features", [])
+        quantile_bin_cols = features_cfg.get("quantile_bin", [])
+        n_bins = features_cfg.get("n_bins", 3)
 
-    print("=" * 60)  # TODO: replace with logging later
-    print("Pipeline completed successfully.")  # TODO: replace with logging later
-    print("=" * 60)  # TODO: replace with logging later
+        # ── 1. Create output directories ──
+        for path_key in ["processed_data", "model_artifact", "predictions_output", "log_file"]:
+            resolve_repo_path(project_root, paths_cfg[path_key]).parent.mkdir(parents=True, exist_ok=True)
+
+        # ── 2. Load raw data ──
+        logger.info("STEP 1 — Loading raw data")
+        df_raw = load_raw_data(raw_data_path)
+
+        if wandb_run is not None:
+            wandb.log({"data/raw_rows": int(df_raw.shape[0]), "data/raw_cols": int(df_raw.shape[1])})
+
+        # ── 3. Clean data ──
+        logger.info("STEP 2 — Cleaning data")
+        df_clean = clean_dataframe(df_raw, target_col)
+
+        if wandb_run is not None:
+            wandb.log({"data/clean_rows": int(df_clean.shape[0]), "data/clean_cols": int(df_clean.shape[1])})
+
+        # ── 4. Save processed CSV ──
+        logger.info("Saving processed data …")
+        save_csv(df_clean, processed_data_path)
+
+        # ── 5. Validate data ──
+        logger.info("STEP 3 — Validating data")
+        from src.validate import validate_dataframe
+
+        required_columns = (
+            numeric_passthrough_cols
+            + categorical_onehot_cols
+            + quantile_bin_cols
+            + [target_col]
+        )
+        validate_dataframe(df_clean, required_columns)
+
+        # ── 6. Train / Val / Test split ──
+        logger.info("STEP 4 — Splitting data (train/val/test)")
+        keep_cols = (
+            numeric_passthrough_cols
+            + categorical_onehot_cols
+            + quantile_bin_cols
+        )
+        keep_cols = [c for c in keep_cols if c in df_clean.columns]
+
+        X = df_clean[keep_cols]
+        y = df_clean[target_col]
+
+        stratify_arg = y if problem_type == "classification" else None
+        try:
+            X_temp, X_test, y_temp, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=seed, stratify=stratify_arg,
+            )
+        except ValueError:
+            logger.warning("Stratification failed, falling back to unstratified split.")
+            X_temp, X_test, y_temp, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=seed,
+            )
+
+        relative_val = val_size / (1 - test_size)
+        stratify_arg = y_temp if problem_type == "classification" else None
+        try:
+            X_train, X_val, y_train, y_val = train_test_split(
+                X_temp, y_temp, test_size=relative_val, random_state=seed, stratify=stratify_arg,
+            )
+        except ValueError:
+            X_train, X_val, y_train, y_val = train_test_split(
+                X_temp, y_temp, test_size=relative_val, random_state=seed,
+            )
+
+        logger.info("Split sizes — train: %d, val: %d, test: %d", len(X_train), len(X_val), len(X_test))
+
+        # ── 7. Fail-fast feature checks ──
+        logger.info("STEP 5 — Checking feature columns …")
+        all_configured_cols = quantile_bin_cols + categorical_onehot_cols + numeric_passthrough_cols
+        missing_cols = [c for c in all_configured_cols if c not in X_train.columns]
+        if missing_cols:
+            raise ValueError(f"Configured feature columns missing from training data: {missing_cols}")
+
+        # ── 8. Build feature recipe ──
+        logger.info("STEP 6 — Building feature preprocessor recipe")
+        preprocessor = get_feature_preprocessor(
+            quantile_bin_cols=quantile_bin_cols,
+            categorical_onehot_cols=categorical_onehot_cols,
+            numeric_passthrough_cols=numeric_passthrough_cols,
+            n_bins=n_bins,
+        )
+
+        # ── 9. Train model ──
+        logger.info("STEP 7 — Training model")
+        pipeline = train_model(X_train, y_train, preprocessor, problem_type)
+
+        # ── 10. Evaluate on validation split ──
+        logger.info("STEP 8 — Evaluating on validation split")
+        val_metrics = evaluate_model(pipeline, X_val, y_val, problem_type)
+        logger.info("Validation metrics: %s", val_metrics)
+
+        if wandb_run is not None:
+            wandb.log({f"metrics/val/{k}": float(v) for k, v in val_metrics.items()})
+
+        # ── 11. Evaluate on test split ──
+        logger.info("STEP 9 — Evaluating on test split")
+        test_metrics = evaluate_model(pipeline, X_test, y_test, problem_type)
+        logger.info("Test metrics: %s", test_metrics)
+
+        if wandb_run is not None:
+            wandb.log({f"metrics/test/{k}": float(v) for k, v in test_metrics.items()})
+
+        # ── 12. Save model artifact ──
+        logger.info("Saving model artifact …")
+        save_model(pipeline, model_artifact_path)
+
+        # Log model artifact to W&B
+        if wandb_run is not None:
+            model_artifact_name = _wandb_get_str(cfg, "model_artifact_name", default="voyageiq_model")
+            model_artifact = wandb.Artifact(
+                name=model_artifact_name,
+                type="model",
+                description="Scikit-learn pipeline (preprocessing + estimator)",
+            )
+            model_artifact.add_file(str(model_artifact_path))
+            wandb.log_artifact(model_artifact)
+            logger.info("Model artifact logged to W&B: %s", model_artifact_name)
+
+            # Optionally log processed data
+            if _wandb_get_bool(cfg, "log_processed_data", default=False):
+                data_artifact = wandb.Artifact(
+                    name=f"{model_artifact_name}-processed-data",
+                    type="dataset",
+                    description="Processed training dataset",
+                )
+                data_artifact.add_file(str(processed_data_path))
+                wandb.log_artifact(data_artifact)
+
+        # ── 13. Inference on test split (demonstration) ──
+        logger.info("Running inference on test split …")
+        preds = run_inference(pipeline, X_test)
+        save_csv(preds, predictions_path)
+
+        # Log predictions artifact to W&B
+        if wandb_run is not None and _wandb_get_bool(cfg, "log_predictions", default=False):
+            model_artifact_name = _wandb_get_str(cfg, "model_artifact_name", default="voyageiq_model")
+            pred_artifact = wandb.Artifact(
+                name=f"{model_artifact_name}-predictions",
+                type="predictions",
+                description="Inference outputs from the pipeline",
+            )
+            pred_artifact.add_file(str(predictions_path))
+            wandb.log_artifact(pred_artifact)
+
+        logger.info("=" * 60)
+        logger.info("Pipeline completed successfully.")
+        logger.info("=" * 60)
+
+    except Exception:
+        logger.exception("Pipeline failed")
+        if wandb_run is not None:
+            wandb.finish(exit_code=1)
+        raise
+
+    finally:
+        if wandb_run is not None and wandb.run is not None:
+            wandb.finish()
 
 
 if __name__ == "__main__":
     main()
-
