@@ -50,29 +50,33 @@ def fitted_classification_pipeline(sample_feature_df):
 class TestEvaluateModel:
     """Tests for the evaluate_model function."""
 
-    def test_returns_float_regression(self, fitted_regression_pipeline):
-        """Regression: returns a single float (RMSE)."""
+    def test_returns_dict_regression(self, fitted_regression_pipeline):
+        """Regression: returns a dict with rmse, mae, r2."""
         pipeline, X, y = fitted_regression_pipeline
-        metric = evaluate_model(pipeline, X, y, "regression")
-        assert isinstance(metric, float)
+        metrics = evaluate_model(pipeline, X, y, "regression")
+        assert isinstance(metrics, dict)
+        assert "rmse" in metrics
+        assert "mae" in metrics
+        assert "r2" in metrics
 
-    def test_returns_float_classification(self, fitted_classification_pipeline):
-        """Classification: returns a single float (F1)."""
+    def test_returns_dict_classification(self, fitted_classification_pipeline):
+        """Classification: returns a dict with f1_weighted."""
         pipeline, X, y = fitted_classification_pipeline
-        metric = evaluate_model(pipeline, X, y, "classification")
-        assert isinstance(metric, float)
+        metrics = evaluate_model(pipeline, X, y, "classification")
+        assert isinstance(metrics, dict)
+        assert "f1_weighted" in metrics
 
     def test_rmse_is_non_negative(self, fitted_regression_pipeline):
         """RMSE is always >= 0."""
         pipeline, X, y = fitted_regression_pipeline
-        metric = evaluate_model(pipeline, X, y, "regression")
-        assert metric >= 0.0
+        metrics = evaluate_model(pipeline, X, y, "regression")
+        assert metrics["rmse"] >= 0.0
 
     def test_f1_in_valid_range(self, fitted_classification_pipeline):
         """F1 score is between 0 and 1."""
         pipeline, X, y = fitted_classification_pipeline
-        metric = evaluate_model(pipeline, X, y, "classification")
-        assert 0.0 <= metric <= 1.0
+        metrics = evaluate_model(pipeline, X, y, "classification")
+        assert 0.0 <= metrics["f1_weighted"] <= 1.0
 
     def test_no_predict_raises(self):
         """TypeError if the object has no .predict() method."""
