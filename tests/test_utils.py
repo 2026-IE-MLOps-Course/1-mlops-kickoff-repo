@@ -5,6 +5,7 @@ Unit tests for the shared utility functions.
 """
 
 from pathlib import Path
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
@@ -27,6 +28,36 @@ class TestLoadCsv:
         """FileNotFoundError propagated when file is missing."""
         with pytest.raises(Exception):
             load_csv(tmp_path / "nonexistent.csv")
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover line 49 — UnicodeDecodeError fallback to latin-1         #
+    # ------------------------------------------------------------------ #
+
+    def test_latin1_fallback_on_unicode_error(self, tmp_path):
+        """When utf-8-sig decoding fails, load_csv falls back to latin-1
+        (covers line 49)."""
+        p = tmp_path / "latin1.csv"
+        # Write a CSV with latin-1 encoding containing non-UTF-8 bytes
+        content = "col_a,col_b\ncaf\xe9,1\nstra\xdfe,2\n"
+        p.write_bytes(content.encode("latin-1"))
+        df = load_csv(p)
+        assert isinstance(df, pd.DataFrame)
+        assert df.shape == (2, 2)
+
+    # ------------------------------------------------------------------ #
+    # NEW: Cover line 51 — ParserError re-raise                           #
+    # ------------------------------------------------------------------ #
+
+    def test_parser_error_reraise(self, tmp_path):
+        """When pandas raises a ParserError, load_csv re-raises it with
+        a descriptive message (covers line 51)."""
+        p = tmp_path / "valid.csv"
+        p.write_text("col_a,col_b\n1,2\n")
+
+        with patch("src.utils.pd.read_csv",
+                   side_effect=pd.errors.ParserError("mock parse failure")):
+            with pytest.raises(pd.errors.ParserError, match="Failed to parse"):
+                load_csv(p)
 
 
 class TestSaveCsv:
