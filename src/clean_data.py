@@ -106,7 +106,10 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
                 cols_to_drop.append(col)
 
     if cols_to_drop:
-        msg = f"[clean_data.clean_dataframe] Dropping ID columns: {cols_to_drop}"
+        msg = (
+            f"[clean_data.clean_dataframe] Dropping ID "
+            f"columns: {cols_to_drop}"
+        )
         print(msg)
         df_clean = df_clean.drop(columns=cols_to_drop)
 
