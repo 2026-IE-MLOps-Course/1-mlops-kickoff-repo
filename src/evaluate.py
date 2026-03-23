@@ -14,7 +14,12 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, mean_squared_error
 
 
-def evaluate_model(model, X_test: pd.DataFrame, y_test: pd.Series, problem_type: str = "classification") -> float:
+def evaluate_model(
+    model,
+    X_test: pd.DataFrame,
+    y_test: pd.Series,
+    problem_type: str = "classification"
+) -> float:
     """
     Evaluate model on validation/test split.
     Returns a single metric value.
