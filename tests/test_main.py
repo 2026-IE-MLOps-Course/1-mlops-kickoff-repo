@@ -16,7 +16,7 @@ class DummyModel:
         return [0] * len(X)
 
 
-def _install_fake_module(module_name: str, attrs: dict) -> None:
+def _install_fake_module(monkeypatch, module_name: str, attrs: dict) -> None:
     """
     Create a fake module and inject it into sys.modules so that
     imports in src.main succeed even if teammates' modules aren't
@@ -25,7 +25,7 @@ def _install_fake_module(module_name: str, attrs: dict) -> None:
     module = types.ModuleType(module_name)
     for key, value in attrs.items():
         setattr(module, key, value)
-    sys.modules[module_name] = module
+    monkeypatch.setitem(sys.modules, module_name, module)
 
 
 def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
@@ -79,20 +79,27 @@ def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
 
     # ---- Install fake modules so `import src.main` won't fail ----
     _install_fake_module(
-        "src.load_data", {"load_raw_data": load_raw_data}
+        monkeypatch, "src.load_data", {"load_raw_data": load_raw_data}
     )
     _install_fake_module(
-        "src.clean_data", {"clean_dataframe": clean_dataframe}
+        monkeypatch, "src.clean_data", {"clean_dataframe": clean_dataframe}
     )
     _install_fake_module(
-        "src.validate", {"validate_dataframe": validate_dataframe}
+        monkeypatch, "src.validate", {"validate_dataframe": validate_dataframe}
     )
     _install_fake_module(
-        "src.features", {"get_feature_preprocessor": get_feature_preprocessor}
+        monkeypatch, "src.features",
+        {"get_feature_preprocessor": get_feature_preprocessor}
     )
-    _install_fake_module("src.train", {"train_model": train_model})
-    _install_fake_module("src.evaluate", {"evaluate_model": evaluate_model})
-    _install_fake_module("src.infer", {"run_inference": run_inference})
+    _install_fake_module(
+        monkeypatch, "src.train", {"train_model": train_model}
+    )
+    _install_fake_module(
+        monkeypatch, "src.evaluate", {"evaluate_model": evaluate_model}
+    )
+    _install_fake_module(
+        monkeypatch, "src.infer", {"run_inference": run_inference}
+    )
 
     # ---- Import main AFTER stubbing dependencies ----
     import src.main as main_module
