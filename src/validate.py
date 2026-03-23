@@ -23,21 +23,28 @@ def validate_dataframe(
     target_config: Dict[str, dict]
 ) -> bool:
     """
-    Validates a cleaned DataFrame against a schema before it enters the ML pipeline.
+    Validates a cleaned DataFrame against a schema before it enters
+    the ML pipeline.
 
     Inputs:
     - df             : Cleaned DataFrame to validate.
     - schema         : Dict mapping column name → metadata dict with two keys:
-                           "type"       : dtype kind, one of "numeric" or "categorical"
-                           "accept_nan" : bool — True if NaNs are expected (imputed later);
-                                          False if NaNs are a hard pipeline error.
+                            "type"       : kind ("numeric" or
+                                           "categorical")
+                            "accept_nan" : bool — True if NaNs are expected
+                                           (imputed later); False if NaNs are
+                                           a hard pipeline error.
                        Example:
-                           {
-                               "customerID":   {"type": "categorical", "accept_nan": False},
-                               "tenure":       {"type": "numeric",     "accept_nan": False},
-                               "TotalCharges": {"type": "numeric",     "accept_nan": True},
-                               "Churn":        {"type": "numeric",     "accept_nan": False},
-                           }
+                            {
+                                "customerID":   {"type": "categorical",
+                                                 "accept_nan": False},
+                                "tenure":       {"type": "numeric",
+                                                 "accept_nan": False},
+                                "TotalCharges": {"type": "numeric",
+                                                 "accept_nan": True},
+                                "Churn":        {"type": "numeric",
+                                                 "accept_nan": False},
+                            }
     - target_config : Dict describing the target column and task type.
                       Maps directly to a config.yaml block (step 2 ready).
                       Required keys:
@@ -61,10 +68,12 @@ def validate_dataframe(
       surface as a crash inside the sklearn Pipeline at train time.
     - Separating structural NaNs (hard fail) from imputable NaNs (log & allow)
       prevents leakage while still catching genuinely broken rows.
-    - Keeping target_column as a plain string makes the single-target contract
-      self-documenting and enforced by the call signature, not by runtime logic.
+    - Keeping target_column as a plain string makes the single-target
+      contract self-documenting and enforced by the call signature,
+      not by runtime logic.
     """
-    print("[validate] Running data quality checks...")  # TODO: replace with logging later
+    print("[validate] Running data quality checks...")
+    # TODO: replace above with logging later
 
     # ─────────────────────────────────────────────────────────────────────────
     # Validate target_config structure up front
@@ -73,10 +82,12 @@ def validate_dataframe(
     target_type = target_config.get("type")
 
     if not target_column:
-        raise ValueError(
-            "[validate] FAILED: target_config is missing required key 'column'.\n"
-            "  → e.g. target_config = {'column': 'Churn', 'type': 'classification', ...}"
+        msg = (
+            "[validate] FAILED: target_config is missing required key "
+            "'column'.\n  → e.g. target_config = {'column': 'Churn', "
+            "'type': 'classification', ...}"
         )
+        raise ValueError(msg)
     if target_type not in _VALID_TARGET_TYPES:
         raise ValueError(
             f"[validate] FAILED: target_config 'type' must be one of "
@@ -91,9 +102,11 @@ def validate_dataframe(
             "[validate] FAILED: DataFrame is empty. "
             "Check your data source path and clean_data.py."
         )
-    print(
-        f"[validate] PASSED  — Shape: {df.shape[0]:,} rows × {df.shape[1]} columns"
-    )  # TODO: replace with logging later
+    msg = (
+        f"[validate] PASSED  — Shape: {df.shape[0]:,} rows × "
+        f"{df.shape[1]} cols"
+    )
+    print(msg)  # TODO: replace with logging later
 
     # ─────────────────────────────────────────────────────────────────────────
     # Check 2 — No fully-NaN rows
@@ -102,15 +115,16 @@ def validate_dataframe(
     n_fully_nan = int(fully_nan_mask.sum())
 
     if n_fully_nan > 0:
-        raise ValueError(
-            f"[validate] FAILED: {n_fully_nan} row(s) have NaN in every column.\n"
-            f"  First offending indices: {list(df.index[fully_nan_mask][:5])}\n"
-            f"  → These rows carry no information. Drop them in clean_data.py:\n"
-            f"    df.dropna(how='all', inplace=True)"
+        msg = (
+            f"[validate] FAILED: {n_fully_nan} row(s) have NaN in every "
+            f"column.\n  First offending indices: "
+            f"{list(df.index[fully_nan_mask][:5])}\n"
+            f"  → These rows carry no information. Drop them in "
+            f"clean_data.py:\n    df.dropna(how='all', inplace=True)"
         )
-    print(
-        f"[validate] PASSED  — No fully-NaN rows found"
-    )  # TODO: replace with logging later
+        raise ValueError(msg)
+    print("[validate] PASSED  — No fully-NaN rows found")
+    # TODO: replace above with logging later
 
     # ─────────────────────────────────────────────────────────────────────────
     # Check 3 — Schema: presence, dtype kind, and NaN policy per column
@@ -132,10 +146,11 @@ def validate_dataframe(
         # 2b — dtype kind must match
         checker = _DTYPE_CHECKERS.get(expected_kind)
         if checker is None:
-            raise ValueError(
-                f"[validate] Unknown dtype kind '{expected_kind}' for column '{col}'. "
-                f"Supported kinds: {list(_DTYPE_CHECKERS.keys())}"
+            msg = (
+                f"[validate] Unknown dtype kind '{expected_kind}' for column "
+                f"'{col}'. Supported kinds: {list(_DTYPE_CHECKERS.keys())}"
             )
+            raise ValueError(msg)
 
         if not checker(df[col]):
             actual_dtype = str(df[col].dtype)
@@ -149,13 +164,15 @@ def validate_dataframe(
 
         if n_nan > 0:
             if not accept_nan:
-                # Structural NaN — this column must be clean after clean_data.py
-                schema_errors.append(
-                    f"  UNEXPECTED NaN  '{col}'  has {n_nan} NaN(s) but accept_nan=False.\n"
-                    f"    → Drop or fill these rows in clean_data.py."
+                # Structural NaN — column must be clean after clean_data.py
+                msg = (
+                    f"  UNEXPECTED NaN  '{col}'  has {n_nan} NaN(s) but "
+                    f"accept_nan=False.\n    → Drop or fill these rows in "
+                    f"clean_data.py."
                 )
+                schema_errors.append(msg)
             else:
-                # Imputable NaN — expected, will be handled after train-test split
+                # Imputable NaN — expected, handled after train-test split
                 print(
                     f"[validate] INFO   — '{col}' has {n_nan} NaN(s) "
                     f"(accept_nan=True → will be imputed downstream)"
@@ -178,12 +195,14 @@ def validate_dataframe(
     # Check 4 — Target column present
     # ─────────────────────────────────────────────────────────────────────────
     if target_column not in df.columns:
-        raise ValueError(
-            f"[validate] FAILED: Target column '{target_column}' not found in DataFrame.\n"
-            f"  Available columns: {list(df.columns)}\n"
-            f"  → Check that clean_data.py does not drop or rename '{target_column}', "
-            f"and that the 'target_column' argument matches the column name in your CSV."
+        msg = (
+            f"[validate] FAILED: Target column '{target_column}' not found "
+            f"in DataFrame.\n  Available columns: {list(df.columns)}\n"
+            f"  → Check that clean_data.py does not drop or rename "
+            f"'{target_column}', and that the 'target_column' argument "
+            f"matches the column name in your CSV."
         )
+        raise ValueError(msg)
     print(
         f"[validate] PASSED  — Target column '{target_column}' present"
     )  # TODO: replace with logging later
@@ -202,37 +221,40 @@ def validate_dataframe(
             unexpected = actual_classes - allowed_set
 
             if unexpected:
-                raise ValueError(
-                    f"[validate] FAILED: Target '{target_column}' contains unexpected "
-                    f"class value(s): {unexpected}.\n"
+                msg = (
+                    f"[validate] FAILED: Target '{target_column}' contains "
+                    f"unexpected class value(s): {unexpected}.\n"
                     f"  Allowed classes : {allowed_set}\n"
                     f"  Found classes   : {actual_classes}\n"
-                    f"  → Ensure clean_data.py encodes '{target_column}' correctly "
-                    f"(e.g. Yes/No → 1/0) before validation."
+                    f"  → Ensure clean_data.py encodes '{target_column}' "
+                    f"correctly (e.g. Yes/No → 1/0) before validation."
                 )
+                raise ValueError(msg)
             print(
-                f"[validate] PASSED  — Target classes {actual_classes} ⊆ allowed {allowed_set}"
+                f"[validate] PASSED  — Target classes {actual_classes} "
+                f"⊆ allowed {allowed_set}"
             )  # TODO: replace with logging later
 
         else:
             # No allowed_classes provided — just report what's found
             print(
-                f"[validate] INFO   — No allowed_classes specified for classification target. "
-                f"Found classes: {set(target_series.unique())}"
+                f"[validate] INFO   — No allowed_classes specified for "
+                f"classification target. Found classes: "
+                f"{set(target_series.unique())}"
             )  # TODO: replace with logging later
 
     elif target_type == "regression":
 
         # 4a — Target must be numeric for regression
         if not pd.api.types.is_numeric_dtype(df[target_column]):
-            raise ValueError(
-                f"[validate] FAILED: Regression target '{target_column}' must be numeric, "
-                f"got dtype='{df[target_column].dtype}'.\n"
+            msg = (
+                f"[validate] FAILED: Regression target '{target_column}' must "
+                f"be numeric, got dtype='{df[target_column].dtype}'.\n"
                 f"  → Check encoding in clean_data.py."
             )
-        print(
-            f"[validate] PASSED  — Regression target '{target_column}' is numeric"
-        )  # TODO: replace with logging later
+            raise ValueError(msg)
+        msg = f"[validate] PASSED  — Target '{target_column}' is numeric"
+        print(msg)  # TODO: replace with logging later
 
         # 4b — Optional range check
         target_range = target_config.get("range")
@@ -244,35 +266,40 @@ def validate_dataframe(
                 ]
 
             if not out_of_range.empty:
-                raise ValueError(
-                    f"[validate] FAILED: Regression target '{target_column}' has "
-                    f"{len(out_of_range)} value(s) outside expected range [{lo}, {hi}].\n"
-                    f"  Min found : {target_series.min():.4g}\n"
+                msg = (
+                    f"[validate] FAILED: Regression target '{target_column}' "
+                    f"has {len(out_of_range)} value(s) outside expected range "
+                    f"[{lo}, {hi}].\n  Min found : {target_series.min():.4g}\n"
                     f"  Max found : {target_series.max():.4g}\n"
                     f"  → Inspect and clip/drop outliers in clean_data.py."
                 )
+                raise ValueError(msg)
             print(
                 f"[validate] PASSED  — Regression target within range "
-                f"[{lo}, {hi}]  (min={target_series.min():.4g}, max={target_series.max():.4g})"
+                f"[{lo}, {hi}]  (min={target_series.min():.4g}, "
+                f"max={target_series.max():.4g})"
             )  # TODO: replace with logging later
 
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # Check 6 — No negative values in any numeric column
-    # ─────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────
+# Check 6 — No negative values in any numeric column
+# ─────────────────────────────────────────────────────────────────────────
     numeric_cols = df.select_dtypes(include="number").columns.tolist()
     negative_cols = [col for col in numeric_cols if (df[col] < 0).any()]
 
     if negative_cols:
         details = [f"    '{col}':  min={df[col].min():.4g}"
                    for col in negative_cols]
-        raise ValueError(
-            f"[validate] FAILED: Negative values found in {len(negative_cols)} numeric column(s):\n"
+        msg = (
+            f"[validate] FAILED: Negative values found in "
+            f"{len(negative_cols)} numeric column(s):\n"
             + "\n".join(details)
-            + "\n  → Fix in clean_data.py (e.g. clip or drop negative rows)."
+            + "\n  → Fix in clean_data.py (clip or drop negative rows)."
         )
+        raise ValueError(msg)
     print(
-        f"[validate] PASSED  — No negative values across {len(numeric_cols)} numeric column(s)"
+        f"[validate] PASSED  — No negative values across "
+        f"{len(numeric_cols)} numeric column(s)"
     )  # TODO: replace with logging later
 
     print("[validate] All checks passed ✓")  # TODO: replace with logging later
