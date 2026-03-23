@@ -860,3 +860,95 @@ KeyError: 'schema'
 2026-03-23 22:58:07 | INFO | main | Validation metric = 0.99
 2026-03-23 22:58:07 | INFO | main | Running inference on TEST sample and saving predictions
 2026-03-23 22:58:07 | INFO | main | Pipeline complete ✅
+2026-03-23 23:19:13 | INFO | main | Starting pipeline
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: models
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:19:13 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 23:19:13 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-24/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 23:19:13 | INFO | main | Raw shape: (8, 3)
+2026-03-23 23:19:13 | INFO | main | Cleaning data (target=target)
+2026-03-23 23:19:13 | INFO | main | Clean shape: (8, 3)
+2026-03-23 23:19:13 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-24/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 23:19:13 | INFO | main | Validating required columns: ['target', 'num_feature', 'cat_feature']
+2026-03-23 23:19:13 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:19:13 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 23:19:13 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:19:13 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:19:13 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:19:13 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-24/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 23:19:13 | INFO | main | Evaluating on VAL split
+2026-03-23 23:19:13 | INFO | main | Validation metric = 0.99
+2026-03-23 23:19:13 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:19:13 | INFO | main | Pipeline complete ✅
+2026-03-23 23:19:55 | INFO | main | Starting pipeline
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: models
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:19:55 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 23:19:55 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-25/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 23:19:55 | INFO | main | Raw shape: (8, 3)
+2026-03-23 23:19:55 | INFO | main | Cleaning data (target=target)
+2026-03-23 23:19:55 | INFO | main | Clean shape: (8, 3)
+2026-03-23 23:19:55 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-25/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 23:19:55 | INFO | main | Validating required columns: ['num_feature', 'cat_feature', 'target']
+2026-03-23 23:19:55 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:19:55 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 23:19:55 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:19:55 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:19:55 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:19:55 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-25/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 23:19:55 | INFO | main | Evaluating on VAL split
+2026-03-23 23:19:55 | INFO | main | Validation metric = 0.99
+2026-03-23 23:19:55 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:19:55 | INFO | main | Pipeline complete ✅
+2026-03-23 23:25:28 | INFO | main | Starting pipeline
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: models
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:25:28 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 23:25:28 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-26/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 23:25:28 | INFO | main | Raw shape: (8, 3)
+2026-03-23 23:25:28 | INFO | main | Cleaning data (target=target)
+2026-03-23 23:25:28 | INFO | main | Clean shape: (8, 3)
+2026-03-23 23:25:28 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-26/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 23:25:28 | INFO | main | Validating required columns: ['num_feature', 'cat_feature', 'target']
+2026-03-23 23:25:28 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:25:28 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 23:25:28 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:25:28 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:25:28 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:25:28 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-26/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 23:25:28 | INFO | main | Evaluating on VAL split
+2026-03-23 23:25:28 | INFO | main | Validation metric = 0.99
+2026-03-23 23:25:28 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:25:28 | INFO | main | Pipeline complete ✅
+2026-03-23 23:26:00 | INFO | main | Starting pipeline
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: models
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:26:00 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 23:26:00 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 23:26:00 | INFO | main | Raw shape: (7043, 21)
+2026-03-23 23:26:00 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 23:26:00 | INFO | main | Clean shape: (7043, 20)
+2026-03-23 23:26:00 | INFO | main | Saving processed data to: data/processed/clean.csv
+2026-03-23 23:26:00 | INFO | main | Validating required columns: ['PhoneService', 'StreamingMovies', 'DeviceProtection', 'tenure', 'MonthlyCharges', 'OnlineBackup', 'MultipleLines', 'OnlineSecurity', 'Dependents', 'Contract', 'StreamingTV', 'PaperlessBilling', 'TechSupport', 'PaymentMethod', 'InternetService', 'gender', 'Churn', 'TotalCharges', 'SeniorCitizen', 'Partner']
+2026-03-23 23:26:00 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:26:00 | INFO | main | Split sizes -> train=4507, val=1127, test=1409
+2026-03-23 23:26:00 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:26:00 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:26:00 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:26:23 | INFO | main | Saving model artifact to: models/model.joblib
+2026-03-23 23:26:23 | INFO | main | Evaluating on VAL split
+2026-03-23 23:26:23 | INFO | main | Validation metric = 0.5921787709497207
+2026-03-23 23:26:23 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:26:23 | INFO | main | Pipeline complete ✅
