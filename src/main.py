@@ -23,7 +23,8 @@ from src.features import get_feature_preprocessor
 from src.infer import run_inference
 from src.load_data import load_raw_data
 from src.train import train_model
-from src.utils import get_logger, save_csv, save_model
+from src.logger import get_logger
+from src.utils import save_csv, save_model
 from src.validate import validate_dataframe
 
 

@@ -8,3 +8,8 @@ data:
 train:
   test_size: 0.2
   seed: 42
+
+logging:
+  level: "INFO"
+  format: "text" # Options: "text", "json"
+  log_file: "logs/main.log"

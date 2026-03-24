@@ -14,6 +14,9 @@ imported from config.yml in a later session
 
 import numpy as np
 import pandas as pd
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
@@ -27,10 +30,7 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     - Cleaning must be deterministic so training, evaluation, and
       inference behave consistently.
     """
-    print(
-        "[clean_data.clean_dataframe] Cleaning dataframe "
-        "(baseline: identity copy)"
-    )  # TODO: replace with logging later
+    logger.info("Cleaning dataframe (baseline: identity copy)")
     df_clean = df_raw.copy(deep=True)
 
     # --------------------------------------------------------
@@ -106,11 +106,7 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
                 cols_to_drop.append(col)
 
     if cols_to_drop:
-        msg = (
-            f"[clean_data.clean_dataframe] Dropping ID "
-            f"columns: {cols_to_drop}"
-        )
-        print(msg)
+        logger.info(f"Dropping ID columns: {cols_to_drop}")
         df_clean = df_clean.drop(columns=cols_to_drop)
 
     # 5. Target mapping (Specific to Yes/No, can be generalized easily
@@ -143,6 +139,6 @@ if __name__ == "__main__":
     df_raw = load_raw_data(Path("data/raw/telco.csv"))
     df_clean = clean_dataframe(df_raw, target_column="target")
 
-    print("Raw shape:", df_raw.shape)
-    print("Clean shape:", df_clean.shape)
-    print(df_clean.head())
+    logger.debug(f"Raw shape: {df_raw.shape}")
+    logger.debug(f"Clean shape: {df_clean.shape}")
+    logger.debug(f"Clean head:\n{df_clean.head()}")
