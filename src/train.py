@@ -7,6 +7,9 @@ Input: pandas.DataFrame (Processed) + ColumnTransformer (Recipe).
 Output: Serialized scikit-learn Pipeline in `models/`.
 """
 import pandas as pd
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, KFold
 from xgboost import XGBClassifier, XGBRegressor
@@ -54,8 +57,8 @@ def _validate_and_fill_param_grid(
     if missing_keys:
         for key in missing_keys:
             filled_grid[key] = default_grid[key]
-            print(
-                f"[train] WARNING: '{key}' not in param_grid — "
+            logger.warning(
+                f"'{key}' not in param_grid — "
                 f"using default values: {default_grid[key]}"
             )
 
@@ -84,7 +87,7 @@ def train_model(
         ("model", estimator)]
       Already refitted on the full X_train with best hyperparameters found.
     """
-    print(f"[train] Starting model training | problem_type='{problem_type}'")
+    logger.info(f"Starting model training | problem_type='{problem_type}'")
 
     # ------------------------------------------------------------------ #
     # 1. Build pipeline + set CV strategy and scoring by problem type
@@ -162,8 +165,8 @@ def train_model(
     )
     metric_label = "F1" if problem_type == "classification" else "RMSE"
 
-    print(f"[train] Best Parameters: {grid_search.best_params_}")
-    print(f"[train] Best CV {metric_label}: {best_score:.4f}")
+    logger.info(f"Best Parameters: {grid_search.best_params_}")
+    logger.info(f"Best CV {metric_label}: {best_score:.4f}")
 
     # grid_search.best_estimator_ is the refitted on X_train
     return grid_search.best_estimator_

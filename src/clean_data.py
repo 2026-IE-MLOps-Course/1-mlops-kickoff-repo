@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
@@ -7,6 +10,8 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     Clean raw dataframe for Telco churn pipeline.
     Keeps rows unless they are fully empty.
     """
+    logger.info("Cleaning dataframe (baseline: identity copy)")
+    df_clean = df_raw.copy(deep=True)
 
     print("[clean_data.clean_dataframe] Cleaning dataframe")
 
@@ -52,11 +57,23 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
             else:
                 df_clean[col] = df_clean[col].fillna("Missing")
 
-    # 6. Drop only obvious ID column
-    if "customerID" in df_clean.columns:
-        df_clean = df_clean.drop(columns=["customerID"])
+    # 4. Drop ID-like columns
+    # E.g., if >90% of values are unique, it's likely an identifier
+    # (like customerID).
+    cols_to_drop = []
+    for col in df_clean.select_dtypes(include=['object', 'string']).columns:
+        if col != target_column:
+            num_unique = df_clean[col].nunique()
+            num_total = df_clean[col].notna().sum()
+            if num_total > 10 and (num_unique / num_total) > 0.90:
+                cols_to_drop.append(col)
 
-    # 7. Encode target for Telco churn
+    if cols_to_drop:
+        logger.info(f"Dropping ID columns: {cols_to_drop}")
+        df_clean = df_clean.drop(columns=cols_to_drop)
+
+    # 5. Target mapping (Specific to Yes/No, can be generalized easily
+    # if needed)
     if target_column in df_clean.columns:
         df_clean[target_column] = df_clean[target_column].replace(
             {"No": 0, "Yes": 1, "False": 0, "True": 1}
@@ -71,4 +88,6 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     print(f"[clean_data.clean_dataframe] Raw shape: {df_raw.shape}")
     print(f"[clean_data.clean_dataframe] Clean shape: {df_clean.shape}")
 
-    return df_clean
+    logger.debug(f"Raw shape: {df_raw.shape}")
+    logger.debug(f"Clean shape: {df_clean.shape}")
+    logger.debug(f"Clean head:\n{df_clean.head()}")

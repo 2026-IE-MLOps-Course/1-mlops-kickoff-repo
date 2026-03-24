@@ -19,6 +19,141 @@ from src.train import train_model
 from src.evaluate import evaluate_model
 from src.infer import run_inference
 from src.utils import save_model, save_csv
+from src.logger import get_logger
+from src.utils import save_csv, save_model
+
+
+
+# ========================================================
+# CONFIGURATION (SETTINGS dictionary bridge)
+# ========================================================
+SETTINGS = {
+    "is_example_config": True,
+    "problem_type": "classification",  # "regression" or "classification"
+    "target_column": "target",
+    "raw_data_path": "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv",
+    "processed_data_path": "data/processed/clean.csv",
+    "model_path": "models/model.joblib",  # pickle content acceptable
+    "predictions_path": "reports/predictions.csv",
+    "random_state": 42,
+    # 3-way split (enforced early)
+    "test_size": 0.2,
+    "val_size": 0.2,  # % of the *remaining train* after test split
+    "features": {
+        "quantile_bin": ["num_feature"],
+        "categorical_onehot": ["cat_feature"],
+        "numeric_passthrough": [],
+        "n_bins": 3,
+    },
+
+}
+
+
+def _ensure_dirs(logger) -> None:
+    for p in ["data/raw", "data/processed", "models", "reports", "logs"]:
+        Path(p).mkdir(parents=True, exist_ok=True)
+        logger.info("Ensured directory exists: %s", p)
+
+
+def _maybe_switch_to_telco(logger) -> None:
+    telco_repo_path = Path("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    telco_alt_path = Path("/mnt/data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+
+    if (not telco_repo_path.exists()) and telco_alt_path.exists():
+        logger.info("Found Telco CSV at /mnt/data; copying into data/raw")
+        df_alt = pd.read_csv(telco_alt_path)
+        save_csv(df_alt, telco_repo_path)
+
+    if telco_repo_path.exists():
+        logger.info(
+            "Telco dataset detected. Switching SETTINGS to Telco schema."
+        )
+        SETTINGS["is_example_config"] = False
+        SETTINGS["problem_type"] = "classification"
+        SETTINGS["target_column"] = "Churn"
+        SETTINGS["raw_data_path"] = str(telco_repo_path)
+        SETTINGS["features"] = {
+            "quantile_bin": ["tenure", "MonthlyCharges", "TotalCharges"],
+            "numeric_passthrough": ["SeniorCitizen"],
+            "categorical_onehot": [
+                "gender",
+                "Partner",
+                "Dependents",
+                "PhoneService",
+                "MultipleLines",
+                "InternetService",
+                "OnlineSecurity",
+                "OnlineBackup",
+                "DeviceProtection",
+                "TechSupport",
+                "StreamingTV",
+                "StreamingMovies",
+                "Contract",
+                "PaperlessBilling",
+                "PaymentMethod",
+            ],
+            "n_bins": 5,
+        }
+        SETTINGS["schema"] = {
+            "gender": {'type': 'categorical', 'accept_nan': False},
+            "SeniorCitizen": {'type': 'numeric', 'accept_nan': False},
+            "Partner": {'type': 'categorical', 'accept_nan': False},
+            "Dependents": {'type': 'categorical', 'accept_nan': False},
+            "tenure": {'type': 'numeric', 'accept_nan': False},
+            "PhoneService": {'type': 'categorical', 'accept_nan': False},
+            "MultipleLines": {'type': 'categorical', 'accept_nan': False},
+            "InternetService": {'type': 'categorical', 'accept_nan': False},
+            "OnlineSecurity": {'type': 'categorical', 'accept_nan': False},
+            "OnlineBackup": {'type': 'categorical', 'accept_nan': False},
+            "DeviceProtection": {'type': 'categorical', 'accept_nan': False},
+            "TechSupport": {'type': 'categorical', 'accept_nan': False},
+            "StreamingTV": {'type': 'categorical', 'accept_nan': False},
+            "StreamingMovies": {'type': 'categorical', 'accept_nan': False},
+            "Contract": {'type': 'categorical', 'accept_nan': False},
+            "PaperlessBilling": {'type': 'categorical', 'accept_nan': False},
+            "PaymentMethod": {'type': 'categorical', 'accept_nan': False},
+            "MonthlyCharges": {'type': 'numeric', 'accept_nan': False},
+            "TotalCharges": {'type': 'numeric', 'accept_nan': False},
+        }
+        SETTINGS["target_config"] = {
+            'column': 'Churn',
+            'type': 'classification',
+            'allowed_classes': [1, 0]
+        }
+
+
+def _fail_fast_feature_checks(
+    X: pd.DataFrame,
+    target_col: str,
+    feature_cfg: dict,
+) -> list[str]:
+    configured_feature_cols = (
+        feature_cfg.get("quantile_bin", [])
+        + feature_cfg.get("categorical_onehot", [])
+        + feature_cfg.get("numeric_passthrough", [])
+    )
+
+    if target_col not in X.columns and target_col in X.columns:
+        # defensive (normally unreachable)
+        raise ValueError(f"Target column '{target_col}' should not be in X.")
+
+    missing_in_X = [c for c in configured_feature_cols if c not in X.columns]
+    if missing_in_X:
+        raise ValueError(
+            "Configured feature columns missing in X. "
+            f"Missing: {missing_in_X}. "
+            "Update SETTINGS['features'] to match your dataset."
+        )
+
+    for c in feature_cfg.get("quantile_bin", []):
+        if not pd.api.types.is_numeric_dtype(X[c]):
+            raise ValueError(
+                f"Column '{c}' is configured for quantile binning "
+                "but is not numeric. "
+                "Fix cleaning or change SETTINGS['features']['quantile_bin']."
+            )
+
+    return configured_feature_cols
 
 
 def main() -> None:

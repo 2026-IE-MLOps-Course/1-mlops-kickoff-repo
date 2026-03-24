@@ -952,3 +952,26 @@ KeyError: 'schema'
 2026-03-23 23:26:23 | INFO | main | Validation metric = 0.5921787709497207
 2026-03-23 23:26:23 | INFO | main | Running inference on TEST sample and saving predictions
 2026-03-23 23:26:23 | INFO | main | Pipeline complete ✅
+2026-03-24 14:20:53 | INFO | main | Starting pipeline
+2026-03-24 14:20:53 | INFO | main | Ensured directory exists: data/raw
+2026-03-24 14:20:53 | INFO | main | Ensured directory exists: data/processed
+2026-03-24 14:20:53 | INFO | main | Ensured directory exists: models
+2026-03-24 14:20:53 | INFO | main | Ensured directory exists: reports
+2026-03-24 14:20:53 | INFO | main | Ensured directory exists: logs
+2026-03-24 14:20:53 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-24 14:20:53 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-24 14:20:53 | INFO | main | Raw shape: (7043, 21)
+2026-03-24 14:20:53 | INFO | main | Cleaning data (target=Churn)
+2026-03-24 14:20:54 | INFO | main | Clean shape: (7043, 20)
+2026-03-24 14:20:54 | INFO | main | Saving processed data to: data/processed/clean.csv
+2026-03-24 14:20:54 | INFO | main | Validating required columns: ['StreamingTV', 'Partner', 'SeniorCitizen', 'PaymentMethod', 'gender', 'StreamingMovies', 'Contract', 'MultipleLines', 'InternetService', 'tenure', 'OnlineBackup', 'PhoneService', 'OnlineSecurity', 'MonthlyCharges', 'Churn', 'TechSupport', 'DeviceProtection', 'PaperlessBilling', 'TotalCharges', 'Dependents']
+2026-03-24 14:20:54 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-24 14:20:54 | INFO | main | Split sizes -> train=4507, val=1127, test=1409
+2026-03-24 14:20:54 | INFO | main | Running fail-fast feature checks
+2026-03-24 14:20:54 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-24 14:20:54 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-24 14:21:11 | INFO | main | Saving model artifact to: models/model.joblib
+2026-03-24 14:21:11 | INFO | main | Evaluating on VAL split
+2026-03-24 14:21:11 | INFO | main | Validation metric = 0.5921787709497207
+2026-03-24 14:21:11 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-24 14:21:11 | INFO | main | Pipeline complete ✅

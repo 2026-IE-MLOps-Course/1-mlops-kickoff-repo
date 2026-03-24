@@ -15,6 +15,9 @@ dependencies:
   - pyyaml
   - pytest
   - pip
+  - fastapi
+  - uvicorn
+  - pydantic
   - pip:
       - pytest-cov
       - black
