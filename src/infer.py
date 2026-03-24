@@ -7,11 +7,14 @@ Output: Predictions (Array or DataFrame).
 """
 from __future__ import annotations
 
-from pathlib import Path
 import pandas as pd
 
 
-def run_inference(model, X: pd.DataFrame, include_proba: bool = True) -> pd.DataFrame:
+def run_inference(
+    model,
+    X: pd.DataFrame,
+    include_proba: bool = True
+) -> pd.DataFrame:
     """
     Run inference using a trained sklearn-like model/pipeline.
     Returns predictions DataFrame.
@@ -26,7 +29,8 @@ def run_inference(model, X: pd.DataFrame, include_proba: bool = True) -> pd.Data
         proba = model.predict_proba(X)
 
         # binary classification → take positive class
-        if hasattr(proba, "shape") and len(proba.shape) == 2 and proba.shape[1] >= 2:
+        has_shape = hasattr(proba, "shape")
+        if has_shape and len(proba.shape) == 2 and proba.shape[1] >= 2:
             out["proba"] = proba[:, 1]
         else:
             out["proba"] = pd.Series(proba.ravel(), index=X.index)

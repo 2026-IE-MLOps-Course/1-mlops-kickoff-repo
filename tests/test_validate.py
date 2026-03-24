@@ -8,8 +8,6 @@ Each test class maps to one logical concern in the function.
 Fixtures are defined at module level and shared across test classes.
 """
 
-import math
-
 import numpy as np
 import pandas as pd
 import pytest
@@ -27,7 +25,7 @@ def valid_clf_df():
     return pd.DataFrame({
         "customerID":    ["A001", "A002", "A003"],
         "tenure":        [12, 24, 6],
-        "MonthlyCharges":[50.0, 75.0, 30.0],
+        "MonthlyCharges": [50.0, 75.0, 30.0],
         "TotalCharges":  [600.0, 1800.0, 180.0],
         "Churn":         [0, 1, 0],
     })
@@ -92,13 +90,19 @@ def reg_target():
 class TestHappyPath:
     """Valid DataFrames should return True with no errors raised."""
 
-    def test_classification_returns_true(self, valid_clf_df, clf_schema, clf_target):
+    def test_classification_returns_true(
+        self, valid_clf_df, clf_schema, clf_target
+    ):
         assert validate_dataframe(valid_clf_df, clf_schema, clf_target) is True
 
-    def test_regression_returns_true(self, valid_reg_df, reg_schema, reg_target):
+    def test_regression_returns_true(
+        self, valid_reg_df, reg_schema, reg_target
+    ):
         assert validate_dataframe(valid_reg_df, reg_schema, reg_target) is True
 
-    def test_classification_without_allowed_classes(self, valid_clf_df, clf_schema):
+    def test_classification_without_allowed_classes(
+        self, valid_clf_df, clf_schema
+    ):
         """allowed_classes is optional — omitting it should not raise."""
         target = {"column": "Churn", "type": "classification"}
         assert validate_dataframe(valid_clf_df, clf_schema, target) is True
@@ -118,7 +122,8 @@ class TestHappyPath:
             "Churn":          [0, 1, 0],
         })
         schema = clf_schema.copy()
-        schema["MonthlyCharges"] = {"type": "numeric", "accept_nan": True}  # allow it
+        # allow it
+        schema["MonthlyCharges"] = {"type": "numeric", "accept_nan": True}
         assert validate_dataframe(df, schema, clf_target) is True
 
 
@@ -152,7 +157,9 @@ class TestTargetConfig:
 class TestEmptyDataFrame:
 
     def test_empty_df_raises(self, clf_schema, clf_target):
-        empty_df = pd.DataFrame(columns=["customerID", "tenure", "MonthlyCharges", "TotalCharges", "Churn"])
+        empty_df = pd.DataFrame(columns=[
+            "customerID", "tenure", "MonthlyCharges", "TotalCharges", "Churn"
+        ])
         with pytest.raises(ValueError, match="DataFrame is empty"):
             validate_dataframe(empty_df, clf_schema, clf_target)
 
@@ -171,16 +178,19 @@ class TestSchema:
             "MonthlyCharges": {"type": "numeric",     "accept_nan": False},
             "TotalCharges":   {"type": "numeric",     "accept_nan": False},
             "Churn":          {"type": "numeric",     "accept_nan": False},
-            "GhostColumn":    {"type": "numeric",     "accept_nan": False},  # not in df
+            # not in df
+            "GhostColumn":    {"type": "numeric",     "accept_nan": False},
         }
         with pytest.raises(ValueError, match="MISSING"):
             validate_dataframe(valid_clf_df, schema_with_extra, clf_target)
 
     def test_wrong_dtype_raises(self, valid_clf_df, clf_target):
-        """Declaring a numeric column as categorical should raise a WRONG TYPE error."""
+        """Declaring a numeric column as categorical should raise a WRONG TYPE
+        error."""
         bad_schema = {
             "customerID":     {"type": "categorical", "accept_nan": False},
-            "tenure":         {"type": "categorical", "accept_nan": False},  # wrong — it's numeric
+            # wrong — it's numeric
+            "tenure":         {"type": "categorical", "accept_nan": False},
             "MonthlyCharges": {"type": "numeric",     "accept_nan": False},
             "TotalCharges":   {"type": "numeric",     "accept_nan": False},
             "Churn":          {"type": "numeric",     "accept_nan": False},
@@ -192,7 +202,8 @@ class TestSchema:
         """NaN in a column with accept_nan=False should raise."""
         df = pd.DataFrame({
             "customerID":     ["A001", "A002", "A003"],
-            "tenure":         [12, None, 6],          # NaN in non-nullable column
+            # NaN in non-nullable column
+            "tenure":         [12, None, 6],
             "MonthlyCharges": [50.0, 75.0, 30.0],
             "TotalCharges":   [600.0, 1800.0, 180.0],
             "Churn":          [0, 1, 0],
@@ -201,9 +212,11 @@ class TestSchema:
             validate_dataframe(df, clf_schema, clf_target)
 
     def test_unknown_dtype_kind_raises(self, valid_clf_df, clf_target):
-        """Using an unsupported dtype kind in schema should raise immediately."""
+        """Using an unsupported dtype kind in schema should raise immediately.
+        """
         bad_schema = {
-            "customerID":     {"type": "boolean",  "accept_nan": False},  # unsupported kind
+            # unsupported kind
+            "customerID":     {"type": "boolean",  "accept_nan": False},
             "tenure":         {"type": "numeric",  "accept_nan": False},
             "MonthlyCharges": {"type": "numeric",  "accept_nan": False},
             "TotalCharges":   {"type": "numeric",  "accept_nan": False},
@@ -219,16 +232,18 @@ class TestSchema:
 
 class TestTargetValidation:
 
-    # ── Classification ────────────────────────────────────────────────────────
+    # ── Classification ───────────────────────────────────────────────────────
 
     def test_unexpected_class_raises(self, clf_schema, clf_target):
-        """Target containing a class outside allowed_classes should raise."""
+        """Target containing a class outside allowed_classes should raise.
+        """
         df = pd.DataFrame({
             "customerID":     ["A001", "A002", "A003"],
             "tenure":         [12, 24, 6],
             "MonthlyCharges": [50.0, 75.0, 30.0],
             "TotalCharges":   [600.0, 1800.0, 180.0],
-            "Churn":          [0, 1, 2],   # 2 is unexpected
+            # 2 is unexpected
+            "Churn":          [0, 1, 2],
         })
         with pytest.raises(ValueError, match="unexpected class"):
             validate_dataframe(df, clf_schema, clf_target)
@@ -239,25 +254,35 @@ class TestTargetValidation:
 
     # ── Regression ───────────────────────────────────────────────────────────
 
-    def test_regression_non_numeric_target_raises(self, reg_schema, reg_target):
-        """Regression target that is a string column should raise."""
+    def test_regression_non_numeric_target_raises(
+        self, reg_schema, reg_target
+    ):
+        """Regression target that is a string column should raise.
+        """
         df = pd.DataFrame({
             "sqft":       [1200, 850, 2000],
             "bedrooms":   [3, 2, 4],
-            "HousePrice": ["cheap", "mid", "expensive"],  # string — wrong for regression
+            # string — wrong for regression
+            "HousePrice": ["cheap", "mid", "expensive"],
         })
         with pytest.raises(ValueError, match="must be numeric|WRONG TYPE"):
             validate_dataframe(df, reg_schema, reg_target)
 
     def test_regression_out_of_range_raises(self, valid_reg_df, reg_schema):
-        """Regression target with a value beyond the declared range should raise."""
+        """Regression target with a value beyond the declared range should
+        raise."""
         df = valid_reg_df.copy()
-        df.loc[0, "HousePrice"] = 5_000_000   # above range [0, 1_000_000]
-        target = {"column": "HousePrice", "type": "regression", "range": [0, 1_000_000]}
+        # above range [0, 1_000_000]
+        df.loc[0, "HousePrice"] = 5_000_000
+        target = {
+            "column": "HousePrice", "type": "regression", "range": [0, 1000000]
+        }
         with pytest.raises(ValueError, match="outside expected range"):
             validate_dataframe(df, reg_schema, target)
 
-    def test_regression_within_range_passes(self, valid_reg_df, reg_schema, reg_target):
+    def test_regression_within_range_passes(
+        self, valid_reg_df, reg_schema, reg_target
+    ):
         assert validate_dataframe(valid_reg_df, reg_schema, reg_target) is True
 
 
@@ -300,7 +325,8 @@ class TestNegativeValues:
         """Zero should not trigger the negative check."""
         df = pd.DataFrame({
             "customerID":     ["A001", "A002", "A003"],
-            "tenure":         [0, 24, 6],      # zero tenure is valid (new customer)
+            # zero tenure is valid (new customer)
+            "tenure":         [0, 24, 6],
             "MonthlyCharges": [50.0, 75.0, 30.0],
             "TotalCharges":   [0.0, 1800.0, 180.0],
             "Churn":          [0, 1, 0],

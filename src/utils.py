@@ -54,7 +54,9 @@ def load_csv(filepath: Path) -> pd.DataFrame:
     if not filepath.exists():
         raise FileNotFoundError(f"CSV not found: {filepath}")
     if filepath.is_dir():
-        raise IsADirectoryError(f"Expected a file but got a directory: {filepath}")
+        raise IsADirectoryError(
+            f"Expected a file but got a directory: {filepath}"
+        )
 
     try:
         return pd.read_csv(filepath)
@@ -78,6 +80,7 @@ def save_model(model: Any, filepath: Path) -> None:
     filepath.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, filepath)
 
+
 def load_model(filepath: Path) -> Any:
     """
     Load a serialized model artifact.
@@ -85,12 +88,16 @@ def load_model(filepath: Path) -> Any:
     if not filepath.exists():
         raise FileNotFoundError(f"Model file not found: {filepath}")
     if filepath.is_dir():
-        raise IsADirectoryError(f"Expected a file but got a directory: {filepath}")
+        raise IsADirectoryError(
+            f"Expected a file but got a directory: {filepath}"
+        )
 
     with open(filepath, "rb") as f:
         model = pickle.load(f)
 
     # Duck-typing guardrail (helpful for inference/eval)
     if not hasattr(model, "predict"):
-        raise TypeError("Loaded artifact does not implement .predict(). Is this a model?")
+        raise TypeError(
+            "Loaded artifact does not implement .predict(). Is this a model?"
+        )
     return model

@@ -4,7 +4,7 @@ Tests for src/train.py
 Covers:
   - _validate_and_fill_param_grid: key validation, prefix check, fill-in logic
   - train_model: classification, regression, bad inputs, output contract
-  
+
 Run with:
     pytest tests/test_train.py -v
     pytest tests/test_train.py -v --cov=src.train --cov-report=term-missing
@@ -47,13 +47,16 @@ def dummy_regression_data():
         "num_a": rng.normal(size=100),
         "num_b": rng.normal(size=100),
     })
-    y = pd.Series(X["num_a"] * 2 + rng.normal(scale=0.1, size=100), name="target")
+    y = pd.Series(
+        X["num_a"] * 2 + rng.normal(scale=0.1, size=100), name="target"
+    )
     return X, y
 
 
 @pytest.fixture
 def passthrough_preprocessor():
-    """ColumnTransformer that scales all numeric columns — compatible with both datasets."""
+    """ColumnTransformer that scales all numeric columns — compatible
+    with both datasets."""
     return ColumnTransformer(
         transformers=[("num", StandardScaler(), ["num_a", "num_b"])],
         remainder="drop",
@@ -105,7 +108,9 @@ class TestValidateAndFillParamGrid:
     # ------------------------------------------------------------------ #
     # Happy-path: valid grid, nothing to fill
     # ------------------------------------------------------------------ #
-    def test_valid_full_grid_returns_unchanged(self, xgb_classifier, default_grid):
+    def test_valid_full_grid_returns_unchanged(
+        self, xgb_classifier, default_grid
+    ):
         """A fully valid grid passes through without modification."""
         result = _validate_and_fill_param_grid(
             param_grid=default_grid,
@@ -114,8 +119,11 @@ class TestValidateAndFillParamGrid:
         )
         assert result == default_grid
 
-    def test_valid_grid_does_not_mutate_caller_dict(self, xgb_classifier, default_grid):
-        """The function must return a copy — caller's dict must not be mutated."""
+    def test_valid_grid_does_not_mutate_caller_dict(
+        self, xgb_classifier, default_grid
+    ):
+        """The function must return a copy — caller's dict must not be
+        mutated."""
         caller_grid = {"model__max_depth": [3]}
         _validate_and_fill_param_grid(
             param_grid=caller_grid,
@@ -127,8 +135,10 @@ class TestValidateAndFillParamGrid:
     # ------------------------------------------------------------------ #
     # Fill-in logic
     # ------------------------------------------------------------------ #
-    def test_missing_keys_are_filled_from_default(self, xgb_classifier, default_grid, capsys):
-        """Keys absent from the caller's grid are filled from the default grid."""
+    def test_missing_keys_are_filled_from_default(
+        self, xgb_classifier, default_grid, capsys
+    ):
+        """Keys absent from the caller's grid are filled from default grid."""
         partial_grid = {"model__max_depth": [3]}
         result = _validate_and_fill_param_grid(
             param_grid=partial_grid,
@@ -140,7 +150,9 @@ class TestValidateAndFillParamGrid:
         # The explicitly provided key must keep its value, not the default
         assert result["model__max_depth"] == [3]
 
-    def test_fill_in_prints_warning_for_each_missing_key(self, xgb_classifier, default_grid, capsys):
+    def test_fill_in_prints_warning_for_each_missing_key(
+        self, xgb_classifier, default_grid, capsys
+    ):
         """A printed warning is emitted for every key that is auto-filled."""
         partial_grid = {"model__max_depth": [3]}
         _validate_and_fill_param_grid(
@@ -153,7 +165,9 @@ class TestValidateAndFillParamGrid:
         missing_count = len(default_grid) - 1  # all except max_depth
         assert captured.count("WARNING") == missing_count
 
-    def test_empty_param_grid_fills_everything_from_default(self, xgb_classifier, default_grid):
+    def test_empty_param_grid_fills_everything_from_default(
+        self, xgb_classifier, default_grid
+    ):
         """An empty dict triggers a full fill from the default grid."""
         result = _validate_and_fill_param_grid(
             param_grid={},
@@ -165,7 +179,9 @@ class TestValidateAndFillParamGrid:
     # ------------------------------------------------------------------ #
     # Error cases: bad keys
     # ------------------------------------------------------------------ #
-    def test_raises_on_missing_model_prefix(self, xgb_classifier, default_grid):
+    def test_raises_on_missing_model_prefix(
+        self, xgb_classifier, default_grid
+    ):
         """Keys without the 'model__' prefix must raise ValueError."""
         bad_grid = {"max_depth": [3]}  # missing prefix
         with pytest.raises(ValueError, match="missing 'model__' prefix"):
@@ -175,8 +191,11 @@ class TestValidateAndFillParamGrid:
                 default_grid=default_grid,
             )
 
-    def test_raises_on_nonexistent_hyperparameter(self, xgb_classifier, default_grid):
-        """A key that looks right but maps to a non-existent param must raise ValueError."""
+    def test_raises_on_nonexistent_hyperparameter(
+        self, xgb_classifier, default_grid
+    ):
+        """A key that looks right but maps to a non-existent param must
+        raise ValueError."""
         bad_grid = {"model__max_dept": [3]}  # typo
         with pytest.raises(ValueError, match="is not a valid hyperparameter"):
             _validate_and_fill_param_grid(
@@ -185,8 +204,10 @@ class TestValidateAndFillParamGrid:
                 default_grid=default_grid,
             )
 
-    def test_error_message_lists_all_bad_keys(self, xgb_classifier, default_grid):
-        """ValueError message must list every bad key, not just the first one."""
+    def test_error_message_lists_all_bad_keys(
+        self, xgb_classifier, default_grid
+    ):
+        """ValueError message must list every bad key, not just the first."""
         bad_grid = {
             "max_depth": [3],          # missing prefix
             "model__fake_param": [1],  # wrong name
@@ -204,7 +225,8 @@ class TestValidateAndFillParamGrid:
     def test_valid_partial_grid_no_errors_no_warning_for_provided_key(
         self, xgb_classifier, default_grid, capsys
     ):
-        """Provided valid key should NOT produce a warning; only absent keys do."""
+        """Provided valid key should NOT produce a warning;
+        only absent keys do."""
         partial_grid = {"model__max_depth": [4, 6]}
         _validate_and_fill_param_grid(
             param_grid=partial_grid,
@@ -215,7 +237,8 @@ class TestValidateAndFillParamGrid:
         assert "model__max_depth" not in captured  # not warned about
 
     def test_works_with_xgb_regressor(self, xgb_regressor, default_grid):
-        """Validation must work for XGBRegressor (same params as classifier)."""
+        """Validation must work for XGBRegressor
+        (same params as classifier)."""
         result = _validate_and_fill_param_grid(
             param_grid=default_grid,
             estimator=xgb_regressor,
@@ -229,7 +252,8 @@ class TestValidateAndFillParamGrid:
 # ======================================================================= #
 
 class TestTrainModelOutputContract:
-    """Tests that verify the returned object satisfies the Pipeline contract."""
+    """Tests that verify the returned object satisfies the Pipeline contract.
+    """
 
     def test_returns_sklearn_pipeline_classification(
         self,
@@ -237,7 +261,8 @@ class TestTrainModelOutputContract:
         passthrough_preprocessor,
         minimal_param_grid,
     ):
-        """train_model must return a fitted sklearn Pipeline for classification."""
+        """train_model must return a fitted sklearn Pipeline
+        for classification."""
         X_train, y_train = dummy_classification_data
         pipeline = train_model(
             X_train=X_train,
@@ -271,7 +296,8 @@ class TestTrainModelOutputContract:
         passthrough_preprocessor,
         minimal_param_grid,
     ):
-        """Returned pipeline must contain exactly the 'preprocess' and 'model' steps."""
+        """Returned pipeline must contain exactly the
+        'preprocess' and 'model' steps."""
         X_train, y_train = dummy_classification_data
         pipeline = train_model(
             X_train=X_train,
@@ -324,7 +350,8 @@ class TestTrainModelOutputContract:
         passthrough_preprocessor,
         minimal_param_grid,
     ):
-        """Returned pipeline must be able to call .predict() on new data without errors."""
+        """Returned pipeline must be able to call .predict() on new data
+        without errors."""
         X_train, y_train = dummy_classification_data
         pipeline = train_model(
             X_train=X_train,
@@ -387,7 +414,8 @@ class TestTrainModelErrorHandling:
     def test_raises_on_unknown_problem_type(
         self, dummy_classification_data, passthrough_preprocessor
     ):
-        """An unrecognized problem_type must raise ValueError with informative message."""
+        """An unrecognized problem_type must raise ValueError
+        with informative message."""
         X_train, y_train = dummy_classification_data
         with pytest.raises(ValueError, match="Unknown problem_type"):
             train_model(
@@ -400,7 +428,8 @@ class TestTrainModelErrorHandling:
     def test_raises_on_param_grid_with_bad_key(
         self, dummy_classification_data, passthrough_preprocessor
     ):
-        """train_model must propagate ValueError from _validate_and_fill_param_grid."""
+        """train_model must propagate ValueError from
+        _validate_and_fill_param_grid."""
         X_train, y_train = dummy_classification_data
         bad_grid = {"max_depth": [3]}  # missing "model__" prefix
         with pytest.raises(ValueError, match="missing 'model__' prefix"):
@@ -417,7 +446,8 @@ class TestTrainModelErrorHandling:
     ):
         """A valid prefix but non-existent param name must raise ValueError."""
         X_train, y_train = dummy_classification_data
-        bad_grid = {"model__learing_rate": [0.1]}  # typo: 'learing' not 'learning'
+        # typo: 'learing' not 'learning'
+        bad_grid = {"model__learing_rate": [0.1]}
         with pytest.raises(ValueError, match="is not a valid hyperparameter"):
             train_model(
                 X_train=X_train,
@@ -440,8 +470,9 @@ class TestTrainModelDefaultParamGrid:
         dummy_classification_data,
         passthrough_preprocessor,
     ):
-        """Passing param_grid=None must not raise; the default grid is used instead.
-        We mock GridSearchCV to avoid a slow full grid search in the test suite."""
+        """Passing param_grid=None must not raise; the default grid is used
+        instead. We mock GridSearchCV to avoid a slow full grid search in the
+        test suite."""
         X_train, y_train = dummy_classification_data
 
         mock_pipeline = Pipeline(steps=[
@@ -472,7 +503,8 @@ class TestTrainModelDefaultParamGrid:
         dummy_regression_data,
         passthrough_preprocessor,
     ):
-        """Passing param_grid=None for regression must also use the default grid."""
+        """Passing param_grid=None for regression must also use the default
+        grid."""
         X_train, y_train = dummy_regression_data
 
         mock_pipeline = Pipeline(steps=[
@@ -504,18 +536,23 @@ class TestTrainModelDefaultParamGrid:
 # ======================================================================= #
 
 class TestTrainModelCVConfig:
-    """Verify the correct CV strategy and scoring metric are wired up per problem type."""
+    """Verify the correct CV strategy and scoring metric are wired up
+    per problem type."""
 
     def test_classification_uses_stratified_kfold_and_f1(
-        self, dummy_classification_data, passthrough_preprocessor, minimal_param_grid
+        self, dummy_classification_data, passthrough_preprocessor,
+        minimal_param_grid
     ):
-        """GridSearchCV for classification must receive StratifiedKFold and scoring='f1'."""
+        """GridSearchCV for classification must receive StratifiedKFold
+        and scoring='f1'."""
         from sklearn.model_selection import StratifiedKFold
         X_train, y_train = dummy_classification_data
 
         captured_kwargs = {}
 
-        original_gs = __import__("sklearn.model_selection", fromlist=["GridSearchCV"]).GridSearchCV
+        original_gs = __import__(
+            "sklearn.model_selection", fromlist=["GridSearchCV"]
+        ).GridSearchCV
 
         def mock_gs_constructor(*args, **kwargs):
             captured_kwargs.update(kwargs)
@@ -534,15 +571,19 @@ class TestTrainModelCVConfig:
         assert isinstance(captured_kwargs["cv"], StratifiedKFold)
 
     def test_regression_uses_kfold_and_neg_rmse(
-        self, dummy_regression_data, passthrough_preprocessor, minimal_param_grid
+        self, dummy_regression_data, passthrough_preprocessor,
+        minimal_param_grid
     ):
-        """GridSearchCV for regression must receive KFold and neg_root_mean_squared_error."""
+        """GridSearchCV for regression must receive KFold
+        and neg_root_mean_squared_error."""
         from sklearn.model_selection import KFold
         X_train, y_train = dummy_regression_data
 
         captured_kwargs = {}
 
-        original_gs = __import__("sklearn.model_selection", fromlist=["GridSearchCV"]).GridSearchCV
+        original_gs = __import__(
+            "sklearn.model_selection", fromlist=["GridSearchCV"]
+        ).GridSearchCV
 
         def mock_gs_constructor(*args, **kwargs):
             captured_kwargs.update(kwargs)
@@ -561,13 +602,16 @@ class TestTrainModelCVConfig:
         assert isinstance(captured_kwargs["cv"], KFold)
 
     def test_refit_is_true(
-        self, dummy_classification_data, passthrough_preprocessor, minimal_param_grid
+        self, dummy_classification_data, passthrough_preprocessor,
+        minimal_param_grid
     ):
         """GridSearchCV must always be instantiated with refit=True."""
         X_train, y_train = dummy_classification_data
         captured_kwargs = {}
 
-        original_gs = __import__("sklearn.model_selection", fromlist=["GridSearchCV"]).GridSearchCV
+        original_gs = __import__(
+            "sklearn.model_selection", fromlist=["GridSearchCV"]
+        ).GridSearchCV
 
         def mock_gs_constructor(*args, **kwargs):
             captured_kwargs.update(kwargs)

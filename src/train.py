@@ -37,7 +37,8 @@ def _validate_and_fill_param_grid(
             continue
         bare = key.replace("model__", "", 1)
         if bare not in valid_params:
-            unrecognized.append((key, f"'{bare}' is not a valid hyperparameter"))
+            msg = f"'{bare}' is not a valid hyperparameter"
+            unrecognized.append((key, msg))
 
     if unrecognized:
         details = "\n  ".join(f"{k} → {reason}" for k, reason in unrecognized)
@@ -79,7 +80,7 @@ def train_model(
                     If None, a sensible default grid is used.
 
     Outputs:
-    - Fitted sklearn Pipeline [("preprocess", preprocessor), 
+    - Fitted sklearn Pipeline [("preprocess", preprocessor),
         ("model", estimator)]
       Already refitted on the full X_train with best hyperparameters found.
     """
@@ -105,7 +106,11 @@ def train_model(
         scoring = "neg_root_mean_squared_error"
 
     else:
-        raise ValueError(f"[train] Unknown problem_type='{problem_type}'. Use 'classification' or 'regression'.")
+        msg = (
+            f"[train] Unknown problem_type='{problem_type}'. "
+            f"Use 'classification' or 'regression'."
+        )
+        raise ValueError(msg)
 
     # ------------------------------------------------------------------ #
     # 2. Validate + fill param_grid
@@ -118,13 +123,13 @@ def train_model(
         "model__colsample_bytree": [0.7, 0.9],
         "model__gamma":            [0, 0.1],
     }
-    
+
     param_grid = _validate_and_fill_param_grid(
-        param_grid   = param_grid or {},
-        estimator    = estimator,
-        default_grid = default_param_grid,
+        param_grid=param_grid or {},
+        estimator=estimator,
+        default_grid=default_param_grid,
     )
-    
+
     # ------------------------------------------------------------------ #
     # 3. Build pipeline and run grid search
     # ------------------------------------------------------------------ #

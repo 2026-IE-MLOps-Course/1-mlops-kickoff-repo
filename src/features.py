@@ -11,7 +11,11 @@ import pandas as pd
 import numpy as np
 
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer, StandardScaler
+from sklearn.preprocessing import (
+    OneHotEncoder,
+    FunctionTransformer,
+    StandardScaler
+)
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
@@ -57,7 +61,11 @@ def service_count(X):
     Counts how many Telco add-on services a customer has subscribed to ('Yes').
     Produces a single engineered numeric feature.
     """
-    return X.apply(lambda row: (row == "Yes").sum(), axis=1).values.reshape(-1, 1)
+    return (
+        X.apply(lambda row: (row == "Yes").sum(), axis=1)
+        .values.reshape(-1, 1)
+    )
+
 
 # --------------------------------------------------------
 # Feature Preprocessor Builder
@@ -71,7 +79,8 @@ def get_feature_preprocessor(
     Inputs:
     - quantile_bin_cols: numeric columns to apply domain-based transformations
     - categorical_onehot_cols: categorical columns for one-hot encoding
-    - numeric_passthrough_cols: numeric columns to pass through (with imputation)
+    - numeric_passthrough_cols: numeric columns to pass through
+      (with imputation)
 
     Outputs:
     - Unfitted ColumnTransformer
@@ -90,7 +99,10 @@ def get_feature_preprocessor(
     # --------------------------------------------------------
     if numeric_passthrough_cols:
         numeric_pipeline = Pipeline(steps=[
-            ("cast_numeric", FunctionTransformer(safe_numeric_cast, validate=False)),
+            (
+                "cast_numeric",
+                FunctionTransformer(safe_numeric_cast, validate=False)
+            ),
             ("imputer", SimpleImputer(strategy="mean")),
             ("scaler", StandardScaler())
         ])
@@ -121,7 +133,9 @@ def get_feature_preprocessor(
     if categorical_onehot_cols:
 
         try:
-            encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            encoder = OneHotEncoder(
+                handle_unknown="ignore", sparse_output=False
+            )
         except TypeError:
             encoder = OneHotEncoder(handle_unknown="ignore", sparse=False)
 
