@@ -51,3 +51,5 @@ reports/**
 __pycache__/
 *.pyc
 *.pdf
+"logs/" 
+wandb/ 

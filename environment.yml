@@ -22,3 +22,5 @@ dependencies:
       - pytest-cov
       - black
       - flake8
+      - wandb
+      - python-dotenv
