@@ -11,7 +11,11 @@ import pandas as pd
 import numpy as np
 
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer, StandardScaler
+from sklearn.preprocessing import (
+    OneHotEncoder,
+    FunctionTransformer,
+    StandardScaler
+)
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
@@ -34,6 +38,36 @@ def safe_numeric_cast(X):
 
 
 # --------------------------------------------------------
+# Module-level transform functions (required for pickle compatibility)
+# Defining these inside get_feature_preprocessor() makes them local closures
+# that joblib/pickle cannot serialize — they must live at module scope.
+# --------------------------------------------------------
+def tenure_bucket(X):
+    """
+    Domain-based risk bucket for tenure:
+      < 6 months  -> 2 (high churn risk)
+      6-11 months -> 1 (medium risk)
+      12+ months  -> 0 (low risk)
+    """
+    tenure = X.iloc[:, 0]
+    return np.where(
+        tenure < 6, 2,
+        np.where(tenure < 12, 1, 0)
+    ).reshape(-1, 1)
+
+
+def service_count(X):
+    """
+    Counts how many Telco add-on services a customer has subscribed to ('Yes').
+    Produces a single engineered numeric feature.
+    """
+    return (
+        X.apply(lambda row: (row == "Yes").sum(), axis=1)
+        .values.reshape(-1, 1)
+    )
+
+
+# --------------------------------------------------------
 # Feature Preprocessor Builder
 # --------------------------------------------------------
 def get_feature_preprocessor(
@@ -45,7 +79,8 @@ def get_feature_preprocessor(
     Inputs:
     - quantile_bin_cols: numeric columns to apply domain-based transformations
     - categorical_onehot_cols: categorical columns for one-hot encoding
-    - numeric_passthrough_cols: numeric columns to pass through (with imputation)
+    - numeric_passthrough_cols: numeric columns to pass through
+      (with imputation)
 
     Outputs:
     - Unfitted ColumnTransformer
@@ -64,7 +99,10 @@ def get_feature_preprocessor(
     # --------------------------------------------------------
     if numeric_passthrough_cols:
         numeric_pipeline = Pipeline(steps=[
-            ("cast_numeric", FunctionTransformer(safe_numeric_cast, validate=False)),
+            (
+                "cast_numeric",
+                FunctionTransformer(safe_numeric_cast, validate=False)
+            ),
             ("imputer", SimpleImputer(strategy="mean")),
             ("scaler", StandardScaler())
         ])
@@ -80,13 +118,6 @@ def get_feature_preprocessor(
     # --------------------------------------------------------
     # 2 Domain-Based Tenure Risk Bucket
     # --------------------------------------------------------
-    def tenure_bucket(X):
-        tenure = X.iloc[:, 0]
-        return np.where(
-            tenure < 6, 2,
-            np.where(tenure < 12, 1, 0)
-        ).reshape(-1, 1)
-
     if "tenure" in quantile_bin_cols:
         transformers.append(
             (
@@ -102,7 +133,9 @@ def get_feature_preprocessor(
     if categorical_onehot_cols:
 
         try:
-            encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            encoder = OneHotEncoder(
+                handle_unknown="ignore", sparse_output=False
+            )
         except TypeError:
             encoder = OneHotEncoder(handle_unknown="ignore", sparse=False)
 
@@ -132,9 +165,6 @@ def get_feature_preprocessor(
     ]
 
     if all(col in categorical_onehot_cols for col in telco_service_columns):
-
-        def service_count(X):
-            return X.apply(lambda row: (row == "Yes").sum(), axis=1).values.reshape(-1, 1)
 
         transformers.append(
             (
