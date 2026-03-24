@@ -547,3 +547,408 @@ _pickle.PicklingError: Can't pickle <function get_feature_preprocessor.<locals>.
 2026-03-09 11:10:37 | INFO | main | Validation metric = 0.5921787709497207
 2026-03-09 11:10:37 | INFO | main | Running inference on TEST sample and saving predictions
 2026-03-09 11:10:37 | INFO | main | Pipeline complete ✅
+2026-03-23 22:06:08 | INFO | main | Starting pipeline
+2026-03-23 22:06:08 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:06:08 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:06:08 | INFO | main | Ensured directory exists: models
+2026-03-23 22:06:08 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:06:08 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:06:08 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:06:08 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:06:08 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:06:08 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:06:08 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:06:08 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-10/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:06:08 | INFO | main | Validating required columns: ['PaperlessBilling', 'TotalCharges', 'StreamingTV', 'Dependents', 'Partner', 'OnlineSecurity', 'OnlineBackup', 'SeniorCitizen', 'PaymentMethod', 'Contract', 'PhoneService', 'Churn', 'MonthlyCharges', 'DeviceProtection', 'tenure', 'InternetService', 'TechSupport', 'MultipleLines', 'StreamingMovies', 'gender']
+2026-03-23 22:06:08 | ERROR | main | Pipeline failed: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+TypeError: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+2026-03-23 22:06:31 | INFO | main | Starting pipeline
+2026-03-23 22:06:31 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:06:31 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:06:31 | INFO | main | Ensured directory exists: models
+2026-03-23 22:06:31 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:06:31 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:06:31 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:06:31 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:06:31 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:06:31 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:06:31 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:06:31 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-11/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:06:31 | INFO | main | Validating required columns: ['InternetService', 'PaperlessBilling', 'Partner', 'MonthlyCharges', 'MultipleLines', 'StreamingTV', 'Churn', 'OnlineSecurity', 'PhoneService', 'OnlineBackup', 'SeniorCitizen', 'TechSupport', 'gender', 'PaymentMethod', 'Contract', 'DeviceProtection', 'StreamingMovies', 'TotalCharges', 'tenure', 'Dependents']
+2026-03-23 22:06:31 | ERROR | main | Pipeline failed: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+TypeError: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+2026-03-23 22:07:16 | INFO | main | Starting pipeline
+2026-03-23 22:07:16 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:07:16 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:07:16 | INFO | main | Ensured directory exists: models
+2026-03-23 22:07:16 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:07:16 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:07:16 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:07:16 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:07:16 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:07:16 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:07:16 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:07:16 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-12/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:07:16 | INFO | main | Validating required columns: ['Contract', 'SeniorCitizen', 'PaymentMethod', 'gender', 'PhoneService', 'TechSupport', 'InternetService', 'Dependents', 'OnlineBackup', 'Churn', 'Partner', 'tenure', 'TotalCharges', 'PaperlessBilling', 'StreamingTV', 'MultipleLines', 'OnlineSecurity', 'MonthlyCharges', 'StreamingMovies', 'DeviceProtection']
+2026-03-23 22:07:16 | ERROR | main | Pipeline failed: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+TypeError: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+2026-03-23 22:07:31 | INFO | main | Starting pipeline
+2026-03-23 22:07:31 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:07:31 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:07:31 | INFO | main | Ensured directory exists: models
+2026-03-23 22:07:31 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:07:31 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:07:31 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:07:31 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:07:31 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:07:31 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:07:31 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:07:31 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-13/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:07:31 | INFO | main | Validating required columns: ['OnlineBackup', 'PaperlessBilling', 'TechSupport', 'SeniorCitizen', 'MonthlyCharges', 'tenure', 'gender', 'Contract', 'StreamingMovies', 'DeviceProtection', 'PhoneService', 'InternetService', 'Dependents', 'StreamingTV', 'OnlineSecurity', 'TotalCharges', 'Partner', 'Churn', 'MultipleLines', 'PaymentMethod']
+2026-03-23 22:07:31 | ERROR | main | Pipeline failed: Missing columns: ['gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges']
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/tests/test_main.py", line 65, in validate_dataframe
+    raise ValueError(f"Missing columns: {missing}")
+ValueError: Missing columns: ['gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges']
+2026-03-23 22:07:46 | INFO | main | Starting pipeline
+2026-03-23 22:07:46 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:07:46 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:07:46 | INFO | main | Ensured directory exists: models
+2026-03-23 22:07:46 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:07:46 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:07:46 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:07:46 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:07:46 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:07:46 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:07:46 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:07:46 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-14/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:07:46 | INFO | main | Validating required columns: ['Dependents', 'MonthlyCharges', 'tenure', 'StreamingMovies', 'OnlineBackup', 'InternetService', 'PaymentMethod', 'StreamingTV', 'Partner', 'SeniorCitizen', 'TechSupport', 'PaperlessBilling', 'DeviceProtection', 'TotalCharges', 'Churn', 'Contract', 'PhoneService', 'MultipleLines', 'gender', 'OnlineSecurity']
+2026-03-23 22:07:46 | ERROR | main | Pipeline failed: Missing columns: ['gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges']
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/tests/test_main.py", line 65, in validate_dataframe
+    raise ValueError(f"Missing columns: {missing}")
+ValueError: Missing columns: ['gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges']
+2026-03-23 22:08:25 | INFO | main | Starting pipeline
+2026-03-23 22:08:25 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:08:25 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:08:25 | INFO | main | Ensured directory exists: models
+2026-03-23 22:08:25 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:08:25 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:08:25 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:08:25 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:08:25 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:08:25 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:08:25 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:08:25 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-15/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:08:25 | INFO | main | Validating required columns: ['Contract', 'gender', 'MultipleLines', 'OnlineBackup', 'StreamingTV', 'PaymentMethod', 'Dependents', 'TotalCharges', 'DeviceProtection', 'PaperlessBilling', 'StreamingMovies', 'PhoneService', 'InternetService', 'TechSupport', 'SeniorCitizen', 'Partner', 'MonthlyCharges', 'Churn', 'tenure', 'OnlineSecurity']
+2026-03-23 22:08:25 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 22:08:25 | ERROR | main | Pipeline failed: "['Churn'] not found in axis"
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 203, in main
+    X_all = df_clean.drop(columns=[target_col])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/frame.py", line 5603, in drop
+    return super().drop(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4810, in drop
+    obj = obj._drop_axis(labels, axis, level=level, errors=errors)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4852, in _drop_axis
+    new_axis = axis.drop(labels, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 7136, in drop
+    raise KeyError(f"{labels[mask].tolist()} not found in axis")
+KeyError: "['Churn'] not found in axis"
+2026-03-23 22:09:10 | INFO | main | Starting pipeline
+2026-03-23 22:09:10 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:09:10 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:09:10 | INFO | main | Ensured directory exists: models
+2026-03-23 22:09:10 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:09:10 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:09:10 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:09:10 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:09:10 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:09:10 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:09:10 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:09:10 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-16/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:09:10 | INFO | main | Validating required columns: ['TechSupport', 'OnlineBackup', 'MultipleLines', 'StreamingMovies', 'PaperlessBilling', 'TotalCharges', 'tenure', 'StreamingTV', 'gender', 'InternetService', 'Churn', 'DeviceProtection', 'MonthlyCharges', 'SeniorCitizen', 'PhoneService', 'Dependents', 'Partner', 'OnlineSecurity', 'PaymentMethod', 'Contract']
+2026-03-23 22:09:10 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 22:09:10 | ERROR | main | Pipeline failed: "['Churn'] not found in axis"
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 203, in main
+    X_all = df_clean.drop(columns=[target_col])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/frame.py", line 5603, in drop
+    return super().drop(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4810, in drop
+    obj = obj._drop_axis(labels, axis, level=level, errors=errors)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4852, in _drop_axis
+    new_axis = axis.drop(labels, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 7136, in drop
+    raise KeyError(f"{labels[mask].tolist()} not found in axis")
+KeyError: "['Churn'] not found in axis"
+2026-03-23 22:16:18 | INFO | main | Starting pipeline
+2026-03-23 22:16:18 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:16:18 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:16:18 | INFO | main | Ensured directory exists: models
+2026-03-23 22:16:18 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:16:18 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:16:18 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:16:18 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:16:18 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:16:18 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:16:18 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:16:18 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-17/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:16:18 | INFO | main | Validating required columns: ['OnlineBackup', 'Partner', 'MonthlyCharges', 'Dependents', 'PhoneService', 'MultipleLines', 'StreamingMovies', 'Churn', 'InternetService', 'TotalCharges', 'PaymentMethod', 'tenure', 'TechSupport', 'StreamingTV', 'Contract', 'SeniorCitizen', 'OnlineSecurity', 'PaperlessBilling', 'DeviceProtection', 'gender']
+2026-03-23 22:16:18 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 22:16:18 | ERROR | main | Pipeline failed: "['Churn'] not found in axis"
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 203, in main
+    X_all = df_clean.drop(columns=[target_col])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/frame.py", line 5603, in drop
+    return super().drop(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4810, in drop
+    obj = obj._drop_axis(labels, axis, level=level, errors=errors)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4852, in _drop_axis
+    new_axis = axis.drop(labels, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 7136, in drop
+    raise KeyError(f"{labels[mask].tolist()} not found in axis")
+KeyError: "['Churn'] not found in axis"
+2026-03-23 22:18:54 | INFO | main | Starting pipeline
+2026-03-23 22:18:54 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:18:54 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:18:54 | INFO | main | Ensured directory exists: models
+2026-03-23 22:18:54 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:18:54 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:18:54 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:18:54 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:18:54 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:18:54 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:18:54 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:18:54 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-18/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:18:54 | INFO | main | Validating required columns: ['Dependents', 'Contract', 'PhoneService', 'gender', 'OnlineBackup', 'StreamingMovies', 'InternetService', 'MultipleLines', 'StreamingTV', 'OnlineSecurity', 'MonthlyCharges', 'TechSupport', 'PaperlessBilling', 'tenure', 'Churn', 'TotalCharges', 'PaymentMethod', 'DeviceProtection', 'SeniorCitizen', 'Partner']
+2026-03-23 22:18:54 | ERROR | main | Pipeline failed: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+TypeError: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+2026-03-23 22:19:25 | INFO | main | Starting pipeline
+2026-03-23 22:19:25 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:19:25 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:19:25 | INFO | main | Ensured directory exists: models
+2026-03-23 22:19:25 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:19:25 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:19:25 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:19:25 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:19:25 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:19:25 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:19:25 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:19:25 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-19/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:19:25 | INFO | main | Validating required columns: ['tenure', 'Churn', 'PaymentMethod', 'InternetService', 'Partner', 'Contract', 'OnlineBackup', 'SeniorCitizen', 'StreamingMovies', 'PaperlessBilling', 'TechSupport', 'DeviceProtection', 'OnlineSecurity', 'MonthlyCharges', 'Dependents', 'TotalCharges', 'PhoneService', 'MultipleLines', 'gender', 'StreamingTV']
+2026-03-23 22:19:25 | ERROR | main | Pipeline failed: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 199, in main
+    validate_dataframe(df=df_clean, schema=schema, target_config=target_config)
+TypeError: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+2026-03-23 22:54:37 | INFO | main | Starting pipeline
+2026-03-23 22:54:37 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:54:37 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:54:37 | INFO | main | Ensured directory exists: models
+2026-03-23 22:54:37 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:54:37 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:54:37 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:54:37 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:54:37 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:54:37 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:54:37 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:54:37 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-20/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:54:37 | INFO | main | Validating required columns: ['TotalCharges', 'OnlineBackup', 'Contract', 'Churn', 'TechSupport', 'Dependents', 'Partner', 'MultipleLines', 'MonthlyCharges', 'SeniorCitizen', 'OnlineSecurity', 'PaymentMethod', 'StreamingMovies', 'tenure', 'DeviceProtection', 'StreamingTV', 'gender', 'PhoneService', 'InternetService', 'PaperlessBilling']
+2026-03-23 22:54:37 | ERROR | main | Pipeline failed: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 207, in main
+    validate_dataframe(
+TypeError: test_main_orchestrates_and_writes_artifacts.<locals>.validate_dataframe() got an unexpected keyword argument 'df'
+2026-03-23 22:55:06 | INFO | main | Starting pipeline
+2026-03-23 22:55:06 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:55:06 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:55:06 | INFO | main | Ensured directory exists: models
+2026-03-23 22:55:06 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:55:06 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:55:06 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 22:55:06 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 22:55:06 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:55:06 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 22:55:06 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:55:06 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-21/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:55:06 | INFO | main | Validating required columns: ['StreamingTV', 'MonthlyCharges', 'TechSupport', 'Partner', 'gender', 'OnlineSecurity', 'DeviceProtection', 'PhoneService', 'OnlineBackup', 'InternetService', 'Contract', 'MultipleLines', 'TotalCharges', 'Dependents', 'Churn', 'PaymentMethod', 'PaperlessBilling', 'tenure', 'SeniorCitizen', 'StreamingMovies']
+2026-03-23 22:55:06 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 22:55:06 | ERROR | main | Pipeline failed: "['Churn'] not found in axis"
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 213, in main
+    X_all = df_clean.drop(columns=[target_col])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/frame.py", line 5603, in drop
+    return super().drop(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4810, in drop
+    obj = obj._drop_axis(labels, axis, level=level, errors=errors)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/generic.py", line 4852, in _drop_axis
+    new_axis = axis.drop(labels, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 7136, in drop
+    raise KeyError(f"{labels[mask].tolist()} not found in axis")
+KeyError: "['Churn'] not found in axis"
+2026-03-23 22:57:35 | INFO | main | Starting pipeline
+2026-03-23 22:57:35 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:57:35 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:57:35 | INFO | main | Ensured directory exists: models
+2026-03-23 22:57:35 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:57:35 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:57:35 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 22:57:35 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-22/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 22:57:35 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:57:35 | INFO | main | Cleaning data (target=target)
+2026-03-23 22:57:35 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:57:35 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-22/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:57:35 | ERROR | main | Pipeline failed: 'schema'
+Traceback (most recent call last):
+  File "/Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/main.py", line 202, in main
+    schema = SETTINGS['schema']
+             ~~~~~~~~^^^^^^^^^^
+KeyError: 'schema'
+2026-03-23 22:58:07 | INFO | main | Starting pipeline
+2026-03-23 22:58:07 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 22:58:07 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 22:58:07 | INFO | main | Ensured directory exists: models
+2026-03-23 22:58:07 | INFO | main | Ensured directory exists: reports
+2026-03-23 22:58:07 | INFO | main | Ensured directory exists: logs
+2026-03-23 22:58:07 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 22:58:07 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-23/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 22:58:07 | INFO | main | Raw shape: (8, 3)
+2026-03-23 22:58:07 | INFO | main | Cleaning data (target=target)
+2026-03-23 22:58:07 | INFO | main | Clean shape: (8, 3)
+2026-03-23 22:58:07 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-23/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 22:58:07 | INFO | main | Validating required columns: ['cat_feature', 'num_feature', 'target']
+2026-03-23 22:58:07 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 22:58:07 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 22:58:07 | INFO | main | Running fail-fast feature checks
+2026-03-23 22:58:07 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 22:58:07 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 22:58:07 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-23/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 22:58:07 | INFO | main | Evaluating on VAL split
+2026-03-23 22:58:07 | INFO | main | Validation metric = 0.99
+2026-03-23 22:58:07 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 22:58:07 | INFO | main | Pipeline complete ✅
+2026-03-23 23:19:13 | INFO | main | Starting pipeline
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: models
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:19:13 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:19:13 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 23:19:13 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-24/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 23:19:13 | INFO | main | Raw shape: (8, 3)
+2026-03-23 23:19:13 | INFO | main | Cleaning data (target=target)
+2026-03-23 23:19:13 | INFO | main | Clean shape: (8, 3)
+2026-03-23 23:19:13 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-24/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 23:19:13 | INFO | main | Validating required columns: ['target', 'num_feature', 'cat_feature']
+2026-03-23 23:19:13 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:19:13 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 23:19:13 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:19:13 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:19:13 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:19:13 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-24/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 23:19:13 | INFO | main | Evaluating on VAL split
+2026-03-23 23:19:13 | INFO | main | Validation metric = 0.99
+2026-03-23 23:19:13 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:19:13 | INFO | main | Pipeline complete ✅
+2026-03-23 23:19:55 | INFO | main | Starting pipeline
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: models
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:19:55 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:19:55 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 23:19:55 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-25/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 23:19:55 | INFO | main | Raw shape: (8, 3)
+2026-03-23 23:19:55 | INFO | main | Cleaning data (target=target)
+2026-03-23 23:19:55 | INFO | main | Clean shape: (8, 3)
+2026-03-23 23:19:55 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-25/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 23:19:55 | INFO | main | Validating required columns: ['num_feature', 'cat_feature', 'target']
+2026-03-23 23:19:55 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:19:55 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 23:19:55 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:19:55 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:19:55 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:19:55 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-25/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 23:19:55 | INFO | main | Evaluating on VAL split
+2026-03-23 23:19:55 | INFO | main | Validation metric = 0.99
+2026-03-23 23:19:55 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:19:55 | INFO | main | Pipeline complete ✅
+2026-03-23 23:25:28 | INFO | main | Starting pipeline
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: models
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:25:28 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:25:28 | WARNING | main | Running EXAMPLE config (dummy dataset schema). To use real data, update SETTINGS.
+2026-03-23 23:25:28 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-26/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-23 23:25:28 | INFO | main | Raw shape: (8, 3)
+2026-03-23 23:25:28 | INFO | main | Cleaning data (target=target)
+2026-03-23 23:25:28 | INFO | main | Clean shape: (8, 3)
+2026-03-23 23:25:28 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-26/test_main_orchestrates_and_wri0/clean.csv
+2026-03-23 23:25:28 | INFO | main | Validating required columns: ['num_feature', 'cat_feature', 'target']
+2026-03-23 23:25:28 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:25:28 | INFO | main | Split sizes -> train=4, val=2, test=2
+2026-03-23 23:25:28 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:25:28 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:25:28 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:25:28 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-26/test_main_orchestrates_and_wri0/model.pkl
+2026-03-23 23:25:28 | INFO | main | Evaluating on VAL split
+2026-03-23 23:25:28 | INFO | main | Validation metric = 0.99
+2026-03-23 23:25:28 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:25:28 | INFO | main | Pipeline complete ✅
+2026-03-23 23:26:00 | INFO | main | Starting pipeline
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: data/raw
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: data/processed
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: models
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: reports
+2026-03-23 23:26:00 | INFO | main | Ensured directory exists: logs
+2026-03-23 23:26:00 | INFO | main | Telco dataset detected. Switching SETTINGS to Telco schema.
+2026-03-23 23:26:00 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-23 23:26:00 | INFO | main | Raw shape: (7043, 21)
+2026-03-23 23:26:00 | INFO | main | Cleaning data (target=Churn)
+2026-03-23 23:26:00 | INFO | main | Clean shape: (7043, 20)
+2026-03-23 23:26:00 | INFO | main | Saving processed data to: data/processed/clean.csv
+2026-03-23 23:26:00 | INFO | main | Validating required columns: ['PhoneService', 'StreamingMovies', 'DeviceProtection', 'tenure', 'MonthlyCharges', 'OnlineBackup', 'MultipleLines', 'OnlineSecurity', 'Dependents', 'Contract', 'StreamingTV', 'PaperlessBilling', 'TechSupport', 'PaymentMethod', 'InternetService', 'gender', 'Churn', 'TotalCharges', 'SeniorCitizen', 'Partner']
+2026-03-23 23:26:00 | INFO | main | Splitting data into Train/Val/Test (leakage-safe)
+2026-03-23 23:26:00 | INFO | main | Split sizes -> train=4507, val=1127, test=1409
+2026-03-23 23:26:00 | INFO | main | Running fail-fast feature checks
+2026-03-23 23:26:00 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-23 23:26:00 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-23 23:26:23 | INFO | main | Saving model artifact to: models/model.joblib
+2026-03-23 23:26:23 | INFO | main | Evaluating on VAL split
+2026-03-23 23:26:23 | INFO | main | Validation metric = 0.5921787709497207
+2026-03-23 23:26:23 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-23 23:26:23 | INFO | main | Pipeline complete ✅

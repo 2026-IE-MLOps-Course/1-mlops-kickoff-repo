@@ -1,4 +1,3 @@
-import pytest
 import pandas as pd
 from pathlib import Path
 from unittest.mock import patch
@@ -43,7 +42,8 @@ def test_load_missing_csv_creates_dummy(tmp_path):
 
 def test_load_alt_path_copying(tmp_path):
     """
-    Test 3: Mock alt_path behavior so if raw path missing and "alt exists", it copies and saves.
+    Test 3: Mock alt_path behavior so if raw path missing and "alt exists",
+    it copies and saves.
     Assert save_csv called and output columns match the alt dataframe.
     """
     # Setup
@@ -60,17 +60,20 @@ def test_load_alt_path_copying(tmp_path):
 
     # We patch Path.exists to mock only the alt_path check.
     # We patch pd.read_csv to return our dummy alt dataframe.
-    # We patch save_csv with wraps to ensure it actually executes while allowing us to assert it was called.
+    # We patch save_csv with wraps to ensure it actually executes
+    # while allowing us to assert it was called.
     with patch.object(Path, "exists", side_effect=mock_exists, autospec=True):
         with patch("src.load_data.pd.read_csv", return_value=df_alt):
-            with patch("src.load_data.save_csv", wraps=src.utils.save_csv) as mock_save_csv:
-                
+            with patch(
+                "src.load_data.save_csv", wraps=src.utils.save_csv
+            ) as mock_save_csv:
+
                 # Action
                 df_result = load_raw_data(raw_data_path)
 
                 # Assert that save_csv was called
                 mock_save_csv.assert_called()
-                
+
                 # Assert that output matches alt dataframe
                 assert list(df_result.columns) == ["alt_col"]
                 assert df_result.shape == (2, 1)

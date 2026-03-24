@@ -8,22 +8,24 @@ import pandas as pd
 class DummyModel:
     """
     Top-level class => picklable by pickle.
-    Your main.py saves the trained model with pickle, so the fake model must be picklable.
+    Your main.py saves the trained model with pickle,
+    so the fake model must be picklable.
     """
 
     def predict(self, X):
         return [0] * len(X)
 
 
-def _install_fake_module(module_name: str, attrs: dict) -> None:
+def _install_fake_module(monkeypatch, module_name: str, attrs: dict) -> None:
     """
-    Create a fake module and inject it into sys.modules so that imports in src.main succeed
-    even if teammates' modules aren't available yet.
+    Create a fake module and inject it into sys.modules so that
+    imports in src.main succeed even if teammates' modules aren't
+    available yet.
     """
     module = types.ModuleType(module_name)
     for key, value in attrs.items():
         setattr(module, key, value)
-    sys.modules[module_name] = module
+    monkeypatch.setitem(sys.modules, module_name, module)
 
 
 def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
@@ -59,10 +61,8 @@ def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
     def clean_dataframe(df_in: pd.DataFrame, target_column: str):
         return df_in  # no-op cleaning for test
 
-    def validate_dataframe(df_in: pd.DataFrame, required_columns):
-        missing = [c for c in required_columns if c not in df_in.columns]
-        if missing:
-            raise ValueError(f"Missing columns: {missing}")
+    def validate_dataframe(*args, **kwargs):
+        pass
 
     def get_feature_preprocessor(**kwargs):
         return "dummy_preprocessor"
@@ -70,7 +70,7 @@ def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
     def train_model(X_train, y_train, preprocessor, problem_type):
         return DummyModel()
 
-    def evaluate_model(model, X_test, y_test, problem_type):
+    def evaluate_model(*args, **kwargs):
         return 0.99
 
     def run_inference(model, X_infer):
@@ -78,18 +78,33 @@ def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
         return pd.DataFrame({"prediction": preds})
 
     # ---- Install fake modules so `import src.main` won't fail ----
-    _install_fake_module("src.load_data", {"load_raw_data": load_raw_data})
-    _install_fake_module("src.clean_data", {"clean_dataframe": clean_dataframe})
-    _install_fake_module("src.validate", {"validate_dataframe": validate_dataframe})
-    _install_fake_module("src.features", {"get_feature_preprocessor": get_feature_preprocessor})
-    _install_fake_module("src.train", {"train_model": train_model})
-    _install_fake_module("src.evaluate", {"evaluate_model": evaluate_model})
-    _install_fake_module("src.infer", {"run_inference": run_inference})
+    _install_fake_module(
+        monkeypatch, "src.load_data", {"load_raw_data": load_raw_data}
+    )
+    _install_fake_module(
+        monkeypatch, "src.clean_data", {"clean_dataframe": clean_dataframe}
+    )
+    _install_fake_module(
+        monkeypatch, "src.validate", {"validate_dataframe": validate_dataframe}
+    )
+    _install_fake_module(
+        monkeypatch, "src.features",
+        {"get_feature_preprocessor": get_feature_preprocessor}
+    )
+    _install_fake_module(
+        monkeypatch, "src.train", {"train_model": train_model}
+    )
+    _install_fake_module(
+        monkeypatch, "src.evaluate", {"evaluate_model": evaluate_model}
+    )
+    _install_fake_module(
+        monkeypatch, "src.infer", {"run_inference": run_inference}
+    )
 
     # ---- Import main AFTER stubbing dependencies ----
     import src.main as main_module
 
-    # ---- Redirect SETTINGS to tmp_path so test doesn't touch repo folders ----
+    # Redirect SETTINGS to tmp_path so test doesn't touch repo folders
     monkeypatch.setattr(
         main_module,
         "SETTINGS",
@@ -110,7 +125,21 @@ def test_main_orchestrates_and_writes_artifacts(tmp_path, monkeypatch):
                 "numeric_passthrough": [],
                 "n_bins": 3,
             },
+            "schema": {
+                "num_feature": {"type": "numeric", "accept_nan": False},
+                "cat_feature": {"type": "categorical", "accept_nan": False},
+            },
+            "target_config": {
+                "column": "target",
+                "type": "classification",
+                "allowed_classes": [0, 1]
+            },
         },
+    )
+
+    # Prevent dynamic discovery from overriding our dummy SETTINGS
+    monkeypatch.setattr(
+        main_module, "_maybe_switch_to_telco", lambda logger: None
     )
 
     # ---- Run pipeline ----

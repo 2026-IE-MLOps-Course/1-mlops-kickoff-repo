@@ -1,8 +1,11 @@
 """
 Educational Goal:
-- Why this module exists in an MLOps system: Validate that feature engineering logic builds correctly and is safe to integrate.
-- Responsibility (separation of concerns): Ensure preprocessing blueprint is correctly constructed.
-- Pipeline contract (inputs and outputs): Configuration lists in → ColumnTransformer out.
+- Why this module exists in an MLOps system: Validate that feature engineering
+  logic builds correctly and is safe to integrate.
+- Responsibility (separation of concerns): Ensure preprocessing blueprint is
+  correctly constructed.
+- Pipeline contract (inputs and outputs): Configuration lists in ->
+  ColumnTransformer out.
 
 TODO: Replace print statements with logging in later session
 TODO: Expand tests when custom feature logic is implemented
@@ -10,7 +13,6 @@ TODO: Expand tests when custom feature logic is implemented
 
 import pandas as pd
 import numpy as np
-import pytest
 from sklearn.compose import ColumnTransformer
 
 from src.features import get_feature_preprocessor
@@ -25,7 +27,8 @@ def test_returns_column_transformer():
     Why this contract matters for reliable ML delivery:
     - Ensures blueprint object is constructed correctly.
     """
-    print("Testing that get_feature_preprocessor returns ColumnTransformer...")  # TODO: replace with logging later
+    # TODO: replace with logging later
+    print("Testing that get_feature_preprocessor returns ColumnTransformer...")
 
     preprocessor = get_feature_preprocessor(
         quantile_bin_cols=["num_feature"],
@@ -46,7 +49,8 @@ def test_transformer_handles_dummy_dataframe():
     - Ensures feature blueprint can be fitted safely inside Pipeline.
     """
 
-    print("Testing transformation on dummy dataset...")  # TODO: replace with logging later
+    # TODO: replace with logging later
+    print("Testing transformation on dummy dataset...")
 
     df = pd.DataFrame({
         "num_feature": [1, 2, 3, 4],
@@ -74,12 +78,13 @@ def test_no_columns_provided():
     - Prevents silent failures when config is empty.
     """
 
-    print("Testing behavior with empty column lists...")  # TODO: replace with logging later
+    # TODO: replace with logging later
+    print("Testing behavior with empty column lists...")
 
     preprocessor = get_feature_preprocessor()
 
     assert isinstance(preprocessor, ColumnTransformer)
-    
+
 
 def test_imputation_works():
     from src.features import get_feature_preprocessor
