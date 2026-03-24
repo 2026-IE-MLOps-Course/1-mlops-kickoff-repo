@@ -6,6 +6,7 @@ Usage:
 """
 
 from pathlib import Path
+import sys
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -20,8 +21,6 @@ from src.evaluate import evaluate_model
 from src.infer import run_inference
 from src.utils import save_model, save_csv
 from src.logger import get_logger
-from src.utils import save_csv, save_model
-
 
 
 # ========================================================
@@ -157,88 +156,114 @@ def _fail_fast_feature_checks(
 
 
 def main() -> None:
-    cfg = load_config()
+    logger = get_logger("main")
 
-    paths_cfg = cfg["paths"]
-    ml_cfg = cfg["ml"]
-    features_cfg = cfg["features"]
-    schema_cfg = cfg["schema"]
-    target_cfg = cfg["target_config"]
+    logger.info("Starting pipeline")
+    try:
+        _ensure_dirs(logger)
+        _maybe_switch_to_telco(logger)
 
-    raw_data_path = Path(paths_cfg["raw_data"])
-    processed_data_path = Path(paths_cfg["processed_data"])
-    model_path = Path(paths_cfg["model_path"])
-    predictions_path = Path(paths_cfg["predictions_path"])
+        cfg = load_config()
 
-    model_path.parent.mkdir(parents=True, exist_ok=True)
-    predictions_path.parent.mkdir(parents=True, exist_ok=True)
-    processed_data_path.parent.mkdir(parents=True, exist_ok=True)
+        paths_cfg = cfg["paths"]
+        ml_cfg = cfg["ml"]
+        features_cfg = cfg["features"]
+        schema_cfg = cfg["schema"]
+        target_cfg = cfg["target_config"]
 
-    # 1. Load
-    df_raw = load_data(str(raw_data_path))
+        raw_data_path = Path(paths_cfg["raw_data"])
+        processed_data_path = Path(paths_cfg["processed_data"])
+        model_path = Path(paths_cfg["model_path"])
+        predictions_path = Path(paths_cfg["predictions_path"])
 
-    # 2. Clean
-    target_column = target_cfg["column"]
-    df_clean = clean_dataframe(df_raw, target_column=target_column)
+        model_path.parent.mkdir(parents=True, exist_ok=True)
+        predictions_path.parent.mkdir(parents=True, exist_ok=True)
+        processed_data_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # 3. Validate
-    validate_dataframe(
-        df=df_clean,
-        schema=schema_cfg,
-        target_config=target_cfg,
-    )
+        # 1. Load
+        logger.info("Loading raw data from: %s", raw_data_path)
+        df_raw = load_data(str(raw_data_path))
+        logger.info("Raw shape: %s", df_raw.shape)
 
-    # 4. Save cleaned data
-    save_csv(df_clean, processed_data_path)
+        # 2. Clean
+        target_column = target_cfg["column"]
+        logger.info("Cleaning data (target=%s)", target_column)
+        df_clean = clean_dataframe(df_raw, target_column=target_column)
+        logger.info("Clean shape: %s", df_clean.shape)
 
-    # 5. Split
-    X = df_clean.drop(columns=[target_column]).copy()
-    y = df_clean[target_column].copy()
+        # 3. Validate
+        logger.info("Validating required columns against schema")
+        validate_dataframe(
+            df=df_clean,
+            schema=schema_cfg,
+            target_config=target_cfg,
+        )
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=ml_cfg["test_size"],
-        random_state=ml_cfg["random_state"],
-        stratify=y if ml_cfg["problem_type"] == "classification" else None,
-    )
+        # 4. Save cleaned data
+        logger.info("Saving processed data to: %s", processed_data_path)
+        save_csv(df_clean, processed_data_path)
 
-    # 6. Preprocessor
-    preprocessor = get_feature_preprocessor(
-        quantile_bin_cols=features_cfg["quantile_bin"],
-        categorical_onehot_cols=features_cfg["categorical_onehot"],
-        numeric_passthrough_cols=features_cfg["numeric_passthrough"],
-    )
+        # 5. Split
+        logger.info("Splitting data into Train/Test")
+        X = df_clean.drop(columns=[target_column]).copy()
+        y = df_clean[target_column].copy()
 
-    # 7. Train
-    model = train_model(
-        X_train=X_train,
-        y_train=y_train,
-        preprocessor=preprocessor,
-        problem_type=ml_cfg["problem_type"],
-        param_grid=None,
-    )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X,
+            y,
+            test_size=ml_cfg["test_size"],
+            random_state=ml_cfg["random_state"],
+            stratify=y if ml_cfg["problem_type"] == "classification" else None,
+        )
+        logger.info("Split sizes -> train=%d, test=%d", len(X_train), len(X_test))
 
-    # 8. Save model
-    save_model(model, model_path)
+        # 6. Preprocessor
+        logger.info("Building feature preprocessor (unfitted)")
+        preprocessor = get_feature_preprocessor(
+            quantile_bin_cols=features_cfg["quantile_bin"],
+            categorical_onehot_cols=features_cfg["categorical_onehot"],
+            numeric_passthrough_cols=features_cfg["numeric_passthrough"],
+        )
 
-    # 9. Evaluate
-    metric_value = evaluate_model(
-        model=model,
-        X_test=X_test,
-        y_test=y_test,
-        problem_type=ml_cfg["problem_type"],
-    )
+        # 7. Train
+        logger.info("Training model (fit only on TRAIN split)")
+        model = train_model(
+            X_train=X_train,
+            y_train=y_train,
+            preprocessor=preprocessor,
+            problem_type=ml_cfg["problem_type"],
+            param_grid=None,
+        )
 
-    # 10. Inference
-    predictions = run_inference(model, X_test.iloc[:20], include_proba=True)
-    save_csv(predictions.reset_index(drop=True), predictions_path)
+        # 8. Save model
+        logger.info("Saving model artifact to: %s", model_path)
+        save_model(model, model_path)
 
-    print("\n=== PIPELINE FINISHED ===")
-    print(f"Metric ({ml_cfg['problem_type']}): {metric_value}")
-    print(f"Saved cleaned data to: {processed_data_path}")
-    print(f"Saved model to: {model_path}")
-    print(f"Saved predictions to: {predictions_path}")
+        # 9. Evaluate
+        logger.info("Evaluating on TEST split")
+        metric_value = evaluate_model(
+            model=model,
+            X_test=X_test,
+            y_test=y_test,
+            problem_type=ml_cfg["problem_type"],
+        )
+        logger.info("Validation metric = %s", metric_value)
+
+        # 10. Inference
+        logger.info("Running inference on TEST sample and saving predictions")
+        predictions = run_inference(model, X_test.iloc[:20], include_proba=True)
+        save_csv(predictions.reset_index(drop=True), predictions_path)
+
+        logger.info("Pipeline complete ✅")
+        print("\n=== PIPELINE FINISHED ===")
+        print(f"Metric ({ml_cfg['problem_type']}): {metric_value}")
+        print(f"Saved cleaned data to: {processed_data_path}")
+        print(f"Saved model to: {model_path}")
+        print(f"Saved predictions to: {predictions_path}")
+
+    except Exception as exc:
+        logger.exception("Pipeline failed: %s", exc)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

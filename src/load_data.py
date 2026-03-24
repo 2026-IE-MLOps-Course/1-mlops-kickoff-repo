@@ -44,19 +44,19 @@ def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
 def load_data(file_path: str) -> pd.DataFrame:
     path = Path(file_path)
 
-        logger.warning(
-            "\n"
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            "!!!!!!!!\n"
-            "Reference data/raw/dataset.csv not found.\n"
-            "Dummy dataset created for scaffolding ONLY.\n"
-            f"Path: {raw_data_path}\n"
-            "Columns are hardcoded: num_feature, cat_feature, target\n"
-            "You MUST replace this with your real dataset and update "
-            "SETTINGS.\n"
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            "!!!!!!!!\n"
-        )
+    logger.warning(
+        "\n"
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        "!!!!!!!!\n"
+        "Reference data/raw/dataset.csv not found.\n"
+        "Dummy dataset created for scaffolding ONLY.\n"
+        f"Path: {path}\n"
+        "Columns are hardcoded: num_feature, cat_feature, target\n"
+        "You MUST replace this with your real dataset and update "
+        "SETTINGS.\n"
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        "!!!!!!!!\n"
+    )
 
     if path.suffix == ".csv":
         return pd.read_csv(path)
