@@ -102,7 +102,7 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
         if col != target_column:
             num_unique = df_clean[col].nunique()
             num_total = df_clean[col].notna().sum()
-            if num_total > 0 and (num_unique / num_total) > 0.90:
+            if num_total > 10 and (num_unique / num_total) > 0.90:
                 cols_to_drop.append(col)
 
     if cols_to_drop:
