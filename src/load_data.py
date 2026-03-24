@@ -1,18 +1,4 @@
-"""
-Educational Goal:
-- Why this module exists in an MLOps system: Standardize data
-  acquisition so training and inference use consistent raw inputs.
-- Responsibility (separation of concerns): Only load raw data (and
-  create a dummy dataset if missing for scaffolding).
-- Pipeline contract (inputs and outputs): raw_data_path -> raw DataFrame.
-
-TODO: Replace print statements with standard library logging in a later session
-TODO: Any temporary or hardcoded variable or parameter will be
-imported from config.yml in a later session
-"""
-
 from pathlib import Path
-
 import pandas as pd
 
 from src.utils import load_csv, save_csv
@@ -55,11 +41,8 @@ def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
     # END STUDENT CODE
     # --------------------------------------------------------
 
-    try:
-        df_raw = load_csv(raw_data_path)
-        return df_raw
-    except FileNotFoundError:
-        raw_data_path.parent.mkdir(parents=True, exist_ok=True)
+def load_data(file_path: str) -> pd.DataFrame:
+    path = Path(file_path)
 
         logger.warning(
             "\n"
@@ -75,16 +58,11 @@ def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
             "!!!!!!!!\n"
         )
 
-        df_dummy = pd.DataFrame(
-            {
-                "num_feature": [0.0, 1.0, 2.0, 3.0],
-                "cat_feature": ["A", "B", "A", "C"],
-                "target": ["No", "Yes", "No", "Yes"],
-            }
-        )
-        save_csv(df_dummy, raw_data_path)
-        return load_csv(raw_data_path)
+    if path.suffix == ".csv":
+        return pd.read_csv(path)
 
+    if path.suffix == ".parquet":
+        return pd.read_parquet(path)
 
 if __name__ == "__main__":
     df = load_raw_data(Path("data/raw/telco.csv"))
