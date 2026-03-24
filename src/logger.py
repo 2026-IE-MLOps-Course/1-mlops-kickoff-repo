@@ -28,7 +28,7 @@ def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     
     # Avoid duplicate handlers if logger is already configured
-    if logger.hasHandlers():
+    if logger.handlers:
         return logger
 
     logger.setLevel(log_level)

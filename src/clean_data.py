@@ -35,6 +35,12 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
                 "null": np.nan,
             }
         )
+        if col != target_column:
+            try:
+                # Try to convert to numeric. Without errors=ignore, it will raise ValueError if invalid
+                df_clean[col] = pd.to_numeric(df_clean[col])
+            except ValueError:
+                pass  # Keep as string/object if it cannot be converted
 
     # 3. Convert TotalCharges to numeric if present
     if "TotalCharges" in df_clean.columns:
@@ -75,12 +81,15 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     # 5. Target mapping (Specific to Yes/No, can be generalized easily
     # if needed)
     if target_column in df_clean.columns:
-        df_clean[target_column] = df_clean[target_column].replace(
-            {"No": 0, "Yes": 1, "False": 0, "True": 1}
-        )
-        df_clean[target_column] = pd.to_numeric(
-            df_clean[target_column], errors="coerce"
-        )
+        unique_vals = set(df_clean[target_column].dropna().unique())
+        acceptable = {"No", "Yes", "False", "True", 0, 1, 0.0, 1.0, "0", "1"}
+        if unique_vals.issubset(acceptable):
+            df_clean[target_column] = df_clean[target_column].replace(
+                {"No": 0, "Yes": 1, "False": 0, "True": 1, "0": 0, "1": 1}
+            )
+            df_clean[target_column] = pd.to_numeric(
+                df_clean[target_column], errors="coerce"
+            ).astype(float)
 
     # 8. Drop rows that are entirely empty
     df_clean = df_clean.dropna(how="all")
@@ -91,3 +100,5 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     logger.debug(f"Raw shape: {df_raw.shape}")
     logger.debug(f"Clean shape: {df_clean.shape}")
     logger.debug(f"Clean head:\n{df_clean.head()}")
+
+    return df_clean

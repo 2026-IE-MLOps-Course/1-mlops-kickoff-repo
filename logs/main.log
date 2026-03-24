@@ -975,3 +975,929 @@ KeyError: 'schema'
 2026-03-24 14:21:11 | INFO | main | Validation metric = 0.5921787709497207
 2026-03-24 14:21:11 | INFO | main | Running inference on TEST sample and saving predictions
 2026-03-24 14:21:11 | INFO | main | Pipeline complete ✅
+2026-03-24 22:49:07 | INFO | file_test | Test message
+2026-03-24 22:54:14 | INFO | main | Starting pipeline
+2026-03-24 22:54:14 | INFO | main | Ensured directory exists: data/raw
+2026-03-24 22:54:14 | INFO | main | Ensured directory exists: data/processed
+2026-03-24 22:54:14 | INFO | main | Ensured directory exists: models
+2026-03-24 22:54:14 | INFO | main | Ensured directory exists: reports
+2026-03-24 22:54:14 | INFO | main | Ensured directory exists: logs
+2026-03-24 22:54:14 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-31/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-24 22:54:14 | INFO | main | Raw shape: (8, 3)
+2026-03-24 22:54:14 | INFO | main | Cleaning data (target=target)
+2026-03-24 22:54:14 | INFO | main | Clean shape: (8, 3)
+2026-03-24 22:54:14 | INFO | main | Validating required columns against schema
+2026-03-24 22:54:14 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-31/test_main_orchestrates_and_wri0/clean.csv
+2026-03-24 22:54:14 | INFO | main | Splitting data into Train/Test
+2026-03-24 22:54:14 | INFO | main | Split sizes -> train=6, test=2
+2026-03-24 22:54:14 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-24 22:54:14 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-24 22:54:14 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-31/test_main_orchestrates_and_wri0/model.pkl
+2026-03-24 22:54:14 | INFO | main | Evaluating on TEST split
+2026-03-24 22:54:14 | INFO | main | Validation metric = 0.99
+2026-03-24 22:54:14 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-24 22:54:14 | INFO | main | Pipeline complete ✅
+2026-03-24 22:55:23 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-32/test_load_existing_csv0/existing.csv
+2026-03-24 22:55:23 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-32/test_load_missing_csv_creates_0/missing.csv
+2026-03-24 22:55:23 | WARNING | src.load_data | Creating dummy dataset because raw_data_path does not exist.
+2026-03-24 22:55:23 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-32/test_load_alt_path_copying0/test_alt.csv
+2026-03-24 22:55:23 | INFO | src.load_data | Found Telco churn CSV at /mnt/data. Copying into repo data/raw for reproducible runs.
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Dropping ID columns: ['id_col']
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Dropping ID columns: ['id_col_1', 'id_col_2']
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:00:35 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-33/test_load_existing_csv0/existing.csv
+2026-03-24 23:00:35 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-33/test_load_missing_csv_creates_0/missing.csv
+2026-03-24 23:00:35 | WARNING | src.load_data | Creating dummy dataset because raw_data_path does not exist.
+2026-03-24 23:00:35 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-33/test_load_alt_path_copying0/test_alt.csv
+2026-03-24 23:00:35 | INFO | src.load_data | Found Telco churn CSV at /mnt/data. Copying into repo data/raw for reproducible runs.
+2026-03-24 23:00:35 | INFO | file_test | Test message
+2026-03-24 23:00:35 | INFO | main | Starting pipeline
+2026-03-24 23:00:35 | INFO | main | Ensured directory exists: data/raw
+2026-03-24 23:00:35 | INFO | main | Ensured directory exists: data/processed
+2026-03-24 23:00:35 | INFO | main | Ensured directory exists: models
+2026-03-24 23:00:35 | INFO | main | Ensured directory exists: reports
+2026-03-24 23:00:35 | INFO | main | Ensured directory exists: logs
+2026-03-24 23:00:35 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-33/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-24 23:00:35 | INFO | main | Raw shape: (8, 3)
+2026-03-24 23:00:35 | INFO | main | Cleaning data (target=target)
+2026-03-24 23:00:35 | INFO | main | Clean shape: (8, 3)
+2026-03-24 23:00:35 | INFO | main | Validating required columns against schema
+2026-03-24 23:00:35 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-33/test_main_orchestrates_and_wri0/clean.csv
+2026-03-24 23:00:35 | INFO | main | Splitting data into Train/Test
+2026-03-24 23:00:35 | INFO | main | Split sizes -> train=6, test=2
+2026-03-24 23:00:35 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-24 23:00:35 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-24 23:00:35 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-33/test_main_orchestrates_and_wri0/model.pkl
+2026-03-24 23:00:35 | INFO | main | Evaluating on TEST split
+2026-03-24 23:00:35 | INFO | main | Validation metric = 0.99
+2026-03-24 23:00:35 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-24 23:00:35 | INFO | main | Pipeline complete ✅
+2026-03-24 23:00:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:35 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:37 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:37 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:00:38 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:38 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:00:38 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:38 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:38 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:38 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:38 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:38 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:38 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:00:39 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:39 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:00:39 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:39 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:39 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:39 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:40 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:40 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='clustering'
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:40 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:00:40 | INFO | src.train | Best CV F1: 0.7500
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:00:40 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:00:40 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:00:40 | INFO | src.train | Best CV RMSE: 0.5000
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:40 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:40 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:00:40 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:00:40 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:00:40 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Regression target within range [0, 1000000]  (min=1.75e+05, max=4e+05)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | No allowed_classes specified for classification target. Found classes: {np.int64(0), np.int64(1)}
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | 'MonthlyCharges' has 1 NaN(s) (accept_nan=True → will be imputed downstream)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Regression target within range [0, 1000000]  (min=1.75e+05, max=4e+05)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:00:40 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:00:40 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:00:40 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:00:40 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:02:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:35 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:35 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:37 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:02:37 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:02:38 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:38 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:02:38 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:39 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:39 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:02:39 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:39 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:39 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:02:39 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:02:39 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:39 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:02:39 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:39 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:39 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:02:39 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:41 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:41 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='clustering'
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:41 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:02:41 | INFO | src.train | Best CV F1: 0.7500
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:02:41 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:02:41 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:02:41 | INFO | src.train | Best CV RMSE: 0.5000
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:41 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:41 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:02:41 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:02:41 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:02:41 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:03:10 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:03:10 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:03:10 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:03:10 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:03:10 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:03:52 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:03:52 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:03:52 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:03:52 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:03:52 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:06 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:05:06 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:08 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:08 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:08 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:05:09 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:09 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:05:09 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:09 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:09 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:09 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:10 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:10 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:10 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:05:10 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:10 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:05:10 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:11 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:11 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:11 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='clustering'
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:05:11 | INFO | src.train | Best CV F1: 0.7500
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:05:11 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:05:11 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:05:11 | INFO | src.train | Best CV RMSE: 0.5000
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:11 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:11 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:05:11 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:05:11 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:05:11 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Dropping ID columns: ['id_col']
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Dropping ID columns: ['id_col_1', 'id_col_2']
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:05:24 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Dropping ID columns: ['id_col']
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Dropping ID columns: ['id_col_1', 'id_col_2']
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Dropping ID columns: ['id_col']
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Dropping ID columns: ['id_col_1', 'id_col_2']
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:45 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Dropping ID columns: ['id_col']
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Dropping ID columns: ['id_col_1', 'id_col_2']
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:06:58 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-34/test_load_existing_csv0/existing.csv
+2026-03-24 23:06:58 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-34/test_load_missing_csv_creates_0/missing.csv
+2026-03-24 23:06:58 | WARNING | src.load_data | Creating dummy dataset because raw_data_path does not exist.
+2026-03-24 23:06:58 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-34/test_load_alt_path_copying0/test_alt.csv
+2026-03-24 23:06:58 | INFO | src.load_data | Found Telco churn CSV at /mnt/data. Copying into repo data/raw for reproducible runs.
+2026-03-24 23:06:58 | INFO | file_test | Test message
+2026-03-24 23:06:58 | INFO | main | Starting pipeline
+2026-03-24 23:06:58 | INFO | main | Ensured directory exists: data/raw
+2026-03-24 23:06:58 | INFO | main | Ensured directory exists: data/processed
+2026-03-24 23:06:58 | INFO | main | Ensured directory exists: models
+2026-03-24 23:06:58 | INFO | main | Ensured directory exists: reports
+2026-03-24 23:06:58 | INFO | main | Ensured directory exists: logs
+2026-03-24 23:06:58 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-34/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-24 23:06:58 | INFO | main | Raw shape: (8, 3)
+2026-03-24 23:06:58 | INFO | main | Cleaning data (target=target)
+2026-03-24 23:06:58 | INFO | main | Clean shape: (8, 3)
+2026-03-24 23:06:58 | INFO | main | Validating required columns against schema
+2026-03-24 23:06:58 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-34/test_main_orchestrates_and_wri0/clean.csv
+2026-03-24 23:06:58 | INFO | main | Splitting data into Train/Test
+2026-03-24 23:06:58 | INFO | main | Split sizes -> train=6, test=2
+2026-03-24 23:06:58 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-24 23:06:58 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-24 23:06:58 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-34/test_main_orchestrates_and_wri0/model.pkl
+2026-03-24 23:06:58 | INFO | main | Evaluating on TEST split
+2026-03-24 23:06:58 | INFO | main | Validation metric = 0.99
+2026-03-24 23:06:58 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-24 23:06:58 | INFO | main | Pipeline complete ✅
+2026-03-24 23:06:58 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:06:58 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:06:58 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:00 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:00 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:00 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:07:02 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:02 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:07:02 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:02 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:02 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:02 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:02 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:02 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:02 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:07:02 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:02 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:07:02 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:02 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:02 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:02 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:07:03 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:03 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:03 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:03 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='clustering'
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:03 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:07:03 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:07:03 | INFO | src.train | Best CV F1: 0.7500
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:07:03 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:07:03 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:07:03 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:07:03 | INFO | src.train | Best CV RMSE: 0.5000
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:03 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:03 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:03 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:07:04 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:04 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:07:04 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:07:04 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:07:04 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Regression target within range [0, 1000000]  (min=1.75e+05, max=4e+05)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | No allowed_classes specified for classification target. Found classes: {np.int64(0), np.int64(1)}
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | 'MonthlyCharges' has 1 NaN(s) (accept_nan=True → will be imputed downstream)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Regression target within range [0, 1000000]  (min=1.75e+05, max=4e+05)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:07:04 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:07:04 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:07:04 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:07:04 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:09:12 | INFO | main | Starting pipeline
+2026-03-24 23:09:12 | INFO | main | Ensured directory exists: data/raw
+2026-03-24 23:09:12 | INFO | main | Ensured directory exists: data/processed
+2026-03-24 23:09:12 | INFO | main | Ensured directory exists: models
+2026-03-24 23:09:12 | INFO | main | Ensured directory exists: reports
+2026-03-24 23:09:12 | INFO | main | Ensured directory exists: logs
+2026-03-24 23:09:12 | INFO | main | Loading raw data from: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+2026-03-24 23:09:12 | WARNING | src.load_data | 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Reference data/raw/dataset.csv not found.
+Dummy dataset created for scaffolding ONLY.
+Path: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+Columns are hardcoded: num_feature, cat_feature, target
+You MUST replace this with your real dataset and update config.yaml.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+2026-03-24 23:09:12 | INFO | main | Raw shape: (7043, 21)
+2026-03-24 23:09:12 | INFO | main | Cleaning data (target=Churn)
+2026-03-24 23:09:12 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:09:12 | INFO | src.clean_data | Dropping ID columns: ['customerID']
+2026-03-24 23:09:12 | INFO | main | Clean shape: (7043, 20)
+2026-03-24 23:09:12 | INFO | main | Validating required columns against schema
+2026-03-24 23:09:12 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:09:12 | INFO | src.validate | [validate] PASSED  — Shape: 7,043 rows × 20 cols
+2026-03-24 23:09:12 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:09:12 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-24 23:09:12 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:09:12 | INFO | src.validate | PASSED  — Target classes {np.float64(0.0), np.float64(1.0)} ⊆ allowed {0, 1}
+2026-03-24 23:09:12 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-24 23:09:12 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:09:12 | INFO | main | Saving processed data to: data/processed/clean.csv
+2026-03-24 23:09:12 | INFO | main | Splitting data into Train/Test
+2026-03-24 23:09:12 | INFO | main | Split sizes -> train=5634, test=1409
+2026-03-24 23:09:12 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-24 23:09:12 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-24 23:09:12 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:09:12 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:09:12 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:09:12 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:09:12 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:09:12 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:09:12 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:09:36 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 0.9, 'model__gamma': 0.1, 'model__learning_rate': 0.15, 'model__max_depth': 3, 'model__n_estimators': 100, 'model__subsample': 0.9}
+2026-03-24 23:09:36 | INFO | src.train | Best CV F1: 0.5902
+2026-03-24 23:09:36 | INFO | main | Saving model artifact to: models/model.joblib
+2026-03-24 23:09:36 | INFO | main | Evaluating on TEST split
+2026-03-24 23:09:36 | INFO | main | Validation metric = 0.5753012048192772
+2026-03-24 23:09:36 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-24 23:09:36 | INFO | main | Pipeline complete ✅
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Dropping ID columns: ['id_col']
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Dropping ID columns: ['id_col_1', 'id_col_2']
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-24 23:21:32 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_load_existing_csv0/existing.csv
+2026-03-24 23:21:32 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_load_missing_csv_creates_0/missing.csv
+2026-03-24 23:21:32 | WARNING | src.load_data | Creating dummy dataset because raw_data_path does not exist.
+2026-03-24 23:21:32 | INFO | src.load_data | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_load_alt_path_copying0/test_alt.csv
+2026-03-24 23:21:32 | INFO | src.load_data | Found Telco churn CSV at /mnt/data. Copying into repo data/raw for reproducible runs.
+2026-03-24 23:21:32 | INFO | file_test | Test message
+2026-03-24 23:21:32 | INFO | main | Starting pipeline
+2026-03-24 23:21:32 | INFO | main | Ensured directory exists: data/raw
+2026-03-24 23:21:32 | INFO | main | Ensured directory exists: data/processed
+2026-03-24 23:21:32 | INFO | main | Ensured directory exists: models
+2026-03-24 23:21:32 | INFO | main | Ensured directory exists: reports
+2026-03-24 23:21:32 | INFO | main | Ensured directory exists: logs
+2026-03-24 23:21:32 | INFO | main | Loading raw data from: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_main_orchestrates_and_wri0/dataset.csv
+2026-03-24 23:21:32 | INFO | main | Raw shape: (8, 3)
+2026-03-24 23:21:32 | INFO | main | Cleaning data (target=target)
+2026-03-24 23:21:32 | INFO | main | Clean shape: (8, 3)
+2026-03-24 23:21:32 | INFO | main | Validating required columns against schema
+2026-03-24 23:21:32 | INFO | main | Saving processed data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_main_orchestrates_and_wri0/clean.csv
+2026-03-24 23:21:32 | INFO | main | Splitting data into Train/Test
+2026-03-24 23:21:32 | INFO | main | Split sizes -> train=6, test=2
+2026-03-24 23:21:32 | INFO | main | Building feature preprocessor (unfitted)
+2026-03-24 23:21:32 | INFO | main | Training model (fit only on TRAIN split)
+2026-03-24 23:21:32 | INFO | main | Saving model artifact to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_main_orchestrates_and_wri0/model.pkl
+2026-03-24 23:21:32 | INFO | main | Evaluating on TEST split
+2026-03-24 23:21:32 | INFO | main | Validation metric = 0.99
+2026-03-24 23:21:32 | INFO | main | Running inference on TEST sample and saving predictions
+2026-03-24 23:21:32 | INFO | main | Pipeline complete ✅
+2026-03-24 23:21:32 | INFO | main | === PIPELINE FINISHED ===
+2026-03-24 23:21:32 | INFO | main | Metric (classification): 0.99
+2026-03-24 23:21:32 | INFO | main | Saved cleaned data to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_main_orchestrates_and_wri0/clean.csv
+2026-03-24 23:21:32 | INFO | main | Saved model to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_main_orchestrates_and_wri0/model.pkl
+2026-03-24 23:21:32 | INFO | main | Saved predictions to: /private/var/folders/dz/mp6v9x4n2y30h186jvh_7lh40000gn/T/pytest-of-juanjose/pytest-35/test_main_orchestrates_and_wri0/preds.csv
+2026-03-24 23:21:32 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:32 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:21:32 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:34 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:34 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:34 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:21:35 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:35 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:21:35 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:35 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:35 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:35 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:36 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:36 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:36 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='clustering'
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:21:37 | INFO | src.train | Best CV F1: 0.7500
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:21:37 | WARNING | src.train | 'model__max_depth' not in param_grid — using default values: [3, 6]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__learning_rate' not in param_grid — using default values: [0.01, 0.15]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__n_estimators' not in param_grid — using default values: [100, 300]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__subsample' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__colsample_bytree' not in param_grid — using default values: [0.7, 0.9]
+2026-03-24 23:21:37 | WARNING | src.train | 'model__gamma' not in param_grid — using default values: [0, 0.1]
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__max_depth': 3}
+2026-03-24 23:21:37 | INFO | src.train | Best CV RMSE: 0.5000
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='regression'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV RMSE: 0.2308
+2026-03-24 23:21:37 | INFO | src.train | Starting model training | problem_type='classification'
+2026-03-24 23:21:37 | INFO | src.train | Best Parameters: {'model__colsample_bytree': 1.0, 'model__gamma': 0, 'model__learning_rate': 0.1, 'model__max_depth': 3, 'model__n_estimators': 50, 'model__subsample': 1.0}
+2026-03-24 23:21:37 | INFO | src.train | Best CV F1: 0.8844
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Regression target within range [0, 1000000]  (min=1.75e+05, max=4e+05)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | No allowed_classes specified for classification target. Found classes: {np.int64(0), np.int64(1)}
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | 'MonthlyCharges' has 1 NaN(s) (accept_nan=True → will be imputed downstream)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 3 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 3 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'HousePrice' present
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Target 'HousePrice' is numeric
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Regression target within range [0, 1000000]  (min=1.75e+05, max=4e+05)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 3 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:21:37 | INFO | src.validate | Running data quality checks...
+2026-03-24 23:21:37 | INFO | src.validate | [validate] PASSED  — Shape: 3 rows × 5 cols
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Schema OK for 5 column(s) (NaN policy enforced per column)
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
+2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
+2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
