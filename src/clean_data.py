@@ -1,92 +1,50 @@
-"""
-Educational Goal:
-- Why this module exists in an MLOps system: Make cleaning repeatable
-  and testable outside notebooks.
-- Responsibility (separation of concerns): Transform raw df -> clean df
-  without training leakage.
-- Pipeline contract (inputs and outputs): df_raw + target_column ->
-  clean DataFrame.
-
-TODO: Replace print statements with standard library logging in a later session
-TODO: Any temporary or hardcoded variable or parameter will be
-imported from config.yml in a later session
-"""
-
 import numpy as np
 import pandas as pd
 
 
 def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """
-    Inputs:
-    - df_raw: Raw dataframe.
-    - target_column: Name of the target column used for training.
-    Outputs:
-    - df_clean: Clean dataframe ready for splitting into X/y.
-    Why this contract matters for reliable ML delivery:
-    - Cleaning must be deterministic so training, evaluation, and
-      inference behave consistently.
+    Clean raw dataframe for Telco churn pipeline.
+    Keeps rows unless they are fully empty.
     """
-    print(
-        "[clean_data.clean_dataframe] Cleaning dataframe "
-        "(baseline: identity copy)"
-    )  # TODO: replace with logging later
+
+    print("[clean_data.clean_dataframe] Cleaning dataframe")
+
+    if df_raw is None:
+        raise ValueError("df_raw is None")
+
     df_clean = df_raw.copy(deep=True)
 
-    # --------------------------------------------------------
-    # START STUDENT CODE
-    # --------------------------------------------------------
-    # Generalized Data Cleaning Strategy
+    # 1. Standardize column names
+    df_clean.columns = [col.strip() for col in df_clean.columns]
 
-    # 1. Handle string blanks across the entire dataframe
-    # Replace empty strings or pure whitespace with NaN
-    for col in df_clean.select_dtypes(include=['object', 'string']).columns:
-        # Strip string columns. .str.strip() safely ignores genuine NaNs
-        df_clean[col] = df_clean[col].str.strip().replace("", np.nan)
-        # Handle literal "nan" or "<NA>" strings that might emerge from
-        # CSV loading
-        replace_dict = {
-            "nan": np.nan,
-            "<NA>": np.nan,
-            "None": np.nan,
-            "null": np.nan
-        }
-        df_clean[col] = df_clean[col].replace(replace_dict)
+    # 2. Trim whitespace and convert blank strings to NaN
+    for col in df_clean.select_dtypes(include=["object", "string"]).columns:
+        df_clean[col] = df_clean[col].astype(str).str.strip()
+        df_clean[col] = df_clean[col].replace(
+            {
+                "": np.nan,
+                "nan": np.nan,
+                "<NA>": np.nan,
+                "None": np.nan,
+                "null": np.nan,
+            }
+        )
 
-    # 2. Attempt to convert object/string columns to numeric
-    # This generalizing "TotalCharges" conversion for any similar columns.
-    for col in df_clean.select_dtypes(include=['object', 'string']).columns:
-        if col != target_column:
-            # We check if dropping NaNs leaves us with values that
-            # *could* be numeric
-            # A simple heuristic: try to_numeric; if it succeeds with
-            # reasonable NaNs, keep it
-            s_numeric = pd.to_numeric(df_clean[col], errors="coerce")
+    # 3. Convert TotalCharges to numeric if present
+    if "TotalCharges" in df_clean.columns:
+        df_clean["TotalCharges"] = pd.to_numeric(
+            df_clean["TotalCharges"], errors="coerce"
+        )
 
-            # If converting to numeric doesn't create MORE NaNs than already
-            # existed (or only introduces a few due to edge-case dirty
-            # data), we convert it.
-            # Here, if we successfully converted >50% of the non-null data,
-            # we keep the numeric version.
-            not_null_count_before = df_clean[col].notna().sum()
-            not_null_count_after = s_numeric.notna().sum()
-
-            condition = (not_null_count_after / not_null_count_before) > 0.5
-            if not_null_count_before > 0 and condition:
-                df_clean[col] = s_numeric
-
-    # 3. Fill missing numerical values with Median
-    # Generalized to all numerical columns
-    for col in df_clean.select_dtypes(include=['number']).columns:
+    # 4. Fill numeric NaNs with median
+    for col in df_clean.select_dtypes(include=["number"]).columns:
         if df_clean[col].isna().any():
             median_val = df_clean[col].median()
             df_clean[col] = df_clean[col].fillna(median_val)
 
-    # 3.b Fill missing categorical values with Mode (avoiding dropping
-    # rows with nulls)
-    # Generalized to all object/string columns
-    target_types = ['object', 'string', 'category']
-    for col in df_clean.select_dtypes(include=target_types).columns:
+    # 5. Fill categorical NaNs with mode
+    for col in df_clean.select_dtypes(include=["object", "string", "category"]).columns:
         if col != target_column and df_clean[col].isna().any():
             mode_s = df_clean[col].mode()
             if not mode_s.empty:
@@ -94,55 +52,23 @@ def clean_dataframe(df_raw: pd.DataFrame, target_column: str) -> pd.DataFrame:
             else:
                 df_clean[col] = df_clean[col].fillna("Missing")
 
-    # 4. Drop ID-like columns
-    # E.g., if >90% of values are unique, it's likely an identifier
-    # (like customerID).
-    cols_to_drop = []
-    for col in df_clean.select_dtypes(include=['object', 'string']).columns:
-        if col != target_column:
-            num_unique = df_clean[col].nunique()
-            num_total = df_clean[col].notna().sum()
-            if num_total > 0 and (num_unique / num_total) > 0.90:
-                cols_to_drop.append(col)
+    # 6. Drop only obvious ID column
+    if "customerID" in df_clean.columns:
+        df_clean = df_clean.drop(columns=["customerID"])
 
-    if cols_to_drop:
-        msg = (
-            f"[clean_data.clean_dataframe] Dropping ID "
-            f"columns: {cols_to_drop}"
-        )
-        print(msg)
-        df_clean = df_clean.drop(columns=cols_to_drop)
-
-    # 5. Target mapping (Specific to Yes/No, can be generalized easily
-    # if needed)
+    # 7. Encode target for Telco churn
     if target_column in df_clean.columns:
-        is_obj = pd.api.types.is_object_dtype(df_clean[target_column])
-        is_str = pd.api.types.is_string_dtype(df_clean[target_column])
-        if is_obj or is_str:
-            # Check for Yes/No (boolean representations)
-            target_unique = set(df_clean[target_column].dropna().unique())
-            bool_set = {"Yes", "No", "True", "False"}
-            if target_unique.issubset(bool_set):
-                mapping = {"No": 0, "Yes": 1, "False": 0, "True": 1}
-                df_clean[target_column] = df_clean[target_column].map(mapping)
-                s_target = pd.to_numeric(
-                    df_clean[target_column], errors="coerce"
-                ).astype("float64")
-                df_clean[target_column] = s_target
-    # --------------------------------------------------------
-    # END STUDENT CODE
-    # --------------------------------------------------------
+        df_clean[target_column] = df_clean[target_column].replace(
+            {"No": 0, "Yes": 1, "False": 0, "True": 1}
+        )
+        df_clean[target_column] = pd.to_numeric(
+            df_clean[target_column], errors="coerce"
+        )
+
+    # 8. Drop rows that are entirely empty
+    df_clean = df_clean.dropna(how="all")
+
+    print(f"[clean_data.clean_dataframe] Raw shape: {df_raw.shape}")
+    print(f"[clean_data.clean_dataframe] Clean shape: {df_clean.shape}")
 
     return df_clean
-
-
-if __name__ == "__main__":
-    from pathlib import Path
-    from src.load_data import load_raw_data
-
-    df_raw = load_raw_data(Path("data/raw/telco.csv"))
-    df_clean = clean_dataframe(df_raw, target_column="target")
-
-    print("Raw shape:", df_raw.shape)
-    print("Clean shape:", df_clean.shape)
-    print(df_clean.head())
