@@ -8,3 +8,9 @@ data:
 train:
   test_size: 0.2
   seed: 42
+
+wandb:
+  project: "mlops-churn-prediction"
+  job_type: "training-pipeline"
+  model_artifact_name: "churn-model"
+  model_alias: "prod"
