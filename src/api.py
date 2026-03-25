@@ -1,13 +1,9 @@
 from contextlib import asynccontextmanager
-from typing import List, Optional
-import sys
-import yaml
 from pathlib import Path
-
+from typing import List
 import pandas as pd
 import joblib
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, ConfigDict
 
 from src.clean_data import clean_dataframe
 from src.validate import validate_dataframe
@@ -19,35 +15,7 @@ CFG = load_config()
 # Check if maybe we should switch settings to Telco (similar to main.py logic)
 
 
-# ==========================================
-# 1. Pydantic Schemas (Compliance)
-# ==========================================
-class TelcoChurnInput(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    gender: str
-    SeniorCitizen: float
-    Partner: str
-    Dependents: str
-    tenure: float
-    PhoneService: str
-    MultipleLines: str
-    InternetService: str
-    OnlineSecurity: str
-    OnlineBackup: str
-    DeviceProtection: str
-    TechSupport: str
-    StreamingTV: str
-    StreamingMovies: str
-    Contract: str
-    PaperlessBilling: str
-    PaymentMethod: str
-    MonthlyCharges: float
-    TotalCharges: str  # Kept as str to handle raw dataset format where missing is " ", clean_data will fix it
-
-class PredictResponse(BaseModel):
-    prediction: int
-    proba: Optional[float] = None
+from src.schemas import TelcoChurnInput, PredictResponse
 
 # ==========================================
 # 2. Lifespan & Global State
@@ -142,6 +110,15 @@ def predict(payload: List[TelcoChurnInput]):
         traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
+
+from src.ui import init as init_ui
+
+
+init_ui(app)
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    port = int(os.environ.get("PORT", 8050))
+    # Production mode: reload=False
+    uvicorn.run("src.api:app", host="0.0.0.0", port=port, reload=False)

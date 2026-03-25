@@ -1901,3 +1901,66 @@ You MUST replace this with your real dataset and update config.yaml.
 2026-03-24 23:21:37 | INFO | src.validate | PASSED  — Target classes {np.int64(0), np.int64(1)} ⊆ allowed {0, 1}
 2026-03-24 23:21:37 | INFO | src.validate | PASSED  — No negative values across 4 numeric column(s)
 2026-03-24 23:21:37 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:06:41 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:06:41 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:06:41 | INFO | src.validate | [validate] PASSED  — Shape: 1 rows × 20 cols
+2026-03-25 18:06:41 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:06:41 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:06:41 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:06:41 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:06:41 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:06:41 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:06:56 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:06:56 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:06:56 | INFO | src.validate | [validate] PASSED  — Shape: 1 rows × 20 cols
+2026-03-25 18:06:56 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:06:56 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:06:56 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:06:56 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:06:56 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:06:56 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:09:22 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:09:22 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:09:22 | INFO | src.validate | [validate] PASSED  — Shape: 20 rows × 20 cols
+2026-03-25 18:09:22 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:09:22 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:09:22 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:09:22 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:09:22 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:09:22 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:13:23 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:13:23 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:13:23 | INFO | src.validate | [validate] PASSED  — Shape: 20 rows × 20 cols
+2026-03-25 18:13:23 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:13:23 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:13:23 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:13:23 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:13:23 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:13:23 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:23:32 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:23:32 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:23:32 | INFO | src.validate | [validate] PASSED  — Shape: 20 rows × 20 cols
+2026-03-25 18:23:32 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:23:32 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:23:32 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:23:32 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:23:32 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:23:32 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:28:20 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:28:20 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:28:20 | INFO | src.validate | [validate] PASSED  — Shape: 13 rows × 20 cols
+2026-03-25 18:28:20 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:28:20 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:28:20 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:28:20 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:28:20 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:28:20 | INFO | src.validate | All checks passed ✓
+2026-03-25 18:29:14 | INFO | src.clean_data | Cleaning dataframe (baseline: identity copy)
+2026-03-25 18:29:14 | INFO | src.validate | Running data quality checks...
+2026-03-25 18:29:14 | INFO | src.validate | [validate] PASSED  — Shape: 13 rows × 20 cols
+2026-03-25 18:29:14 | INFO | src.validate | PASSED  — No fully-NaN rows found
+2026-03-25 18:29:14 | INFO | src.validate | PASSED  — Schema OK for 20 column(s) (NaN policy enforced per column)
+2026-03-25 18:29:14 | INFO | src.validate | PASSED  — Target column 'Churn' present
+2026-03-25 18:29:14 | INFO | src.validate | PASSED  — Target classes {np.int64(0)} ⊆ allowed {0, 1}
+2026-03-25 18:29:14 | INFO | src.validate | PASSED  — No negative values across 5 numeric column(s)
+2026-03-25 18:29:14 | INFO | src.validate | All checks passed ✓
