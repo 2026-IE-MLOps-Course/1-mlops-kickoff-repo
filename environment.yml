@@ -24,3 +24,4 @@ dependencies:
       - flake8
       - wandb
       - python-dotenv
+      - nicegui

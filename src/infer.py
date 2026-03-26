@@ -1,7 +1,7 @@
 """
 Module: Inference
 -----------------
-Role: Download the promoted 'prod' model from W&B and make predictions.
+Role: Download the promoted 'prod' model from W&B or use local model.
 Input: New customer data (pandas.DataFrame).
 Output: Churn predictions and probabilities.
 
@@ -15,9 +15,7 @@ import logging
 
 import yaml
 import joblib
-import numpy as np
 import pandas as pd
-import wandb
 from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
@@ -32,12 +30,8 @@ def load_config(path="config.yaml"):
 def download_prod_model(config=None):
     """
     Download the model artifact aliased 'prod' from W&B.
-
-    Returns
-    -------
-    model : sklearn.pipeline.Pipeline
-        The fitted pipeline (preprocessor + classifier).
     """
+    import wandb
     if config is None:
         config = load_config()
 
@@ -47,7 +41,6 @@ def download_prod_model(config=None):
     model_alias = config["wandb"]["model_alias"]
     project = config["wandb"]["project"]
 
-    # Use the W&B API to fetch the artifact without starting a full run
     api = wandb.Api()
 
     entity = api.default_entity
@@ -56,12 +49,9 @@ def download_prod_model(config=None):
     logger.info("Downloading model artifact: %s", artifact_path)
     artifact = api.artifact(artifact_path)
     artifact_dir = artifact.download()
-    logger.info("Model downloaded to: %s", artifact_dir)
-
+    
     model_file = os.path.join(artifact_dir, "model.joblib")
     model = joblib.load(model_file)
-    logger.info("Model loaded successfully from W&B artifact.")
-
     return model
 
 

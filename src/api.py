@@ -1,81 +1,21 @@
 from contextlib import asynccontextmanager
-from typing import List, Optional
-import sys
-import yaml
 from pathlib import Path
-
+from typing import List
 import pandas as pd
 import joblib
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, ConfigDict
 
 from src.clean_data import clean_dataframe
 from src.validate import validate_dataframe
 from src.infer import run_inference
-from src.main import SETTINGS  # Use the shared settings for consistency
+from src.config import load_config
+
+CFG = load_config()
 
 # Check if maybe we should switch settings to Telco (similar to main.py logic)
-telco_repo_path = Path("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
-if telco_repo_path.exists():
-    SETTINGS["is_example_config"] = False
-    SETTINGS["problem_type"] = "classification"
-    SETTINGS["target_column"] = "Churn"
-    SETTINGS["schema"] = {
-        "gender": {'type': 'categorical', 'accept_nan': False},
-        "SeniorCitizen": {'type': 'numeric', 'accept_nan': False},
-        "Partner": {'type': 'categorical', 'accept_nan': False},
-        "Dependents": {'type': 'categorical', 'accept_nan': False},
-        "tenure": {'type': 'numeric', 'accept_nan': False},
-        "PhoneService": {'type': 'categorical', 'accept_nan': False},
-        "MultipleLines": {'type': 'categorical', 'accept_nan': False},
-        "InternetService": {'type': 'categorical', 'accept_nan': False},
-        "OnlineSecurity": {'type': 'categorical', 'accept_nan': False},
-        "OnlineBackup": {'type': 'categorical', 'accept_nan': False},
-        "DeviceProtection": {'type': 'categorical', 'accept_nan': False},
-        "TechSupport": {'type': 'categorical', 'accept_nan': False},
-        "StreamingTV": {'type': 'categorical', 'accept_nan': False},
-        "StreamingMovies": {'type': 'categorical', 'accept_nan': False},
-        "Contract": {'type': 'categorical', 'accept_nan': False},
-        "PaperlessBilling": {'type': 'categorical', 'accept_nan': False},
-        "PaymentMethod": {'type': 'categorical', 'accept_nan': False},
-        "MonthlyCharges": {'type': 'numeric', 'accept_nan': False},
-        "TotalCharges": {'type': 'numeric', 'accept_nan': False},
-    }
-    SETTINGS["target_config"] = {
-        'column': 'Churn',
-        'type': 'classification',
-        'allowed_classes': [1, 0]
-    }
 
-# ==========================================
-# 1. Pydantic Schemas (Compliance)
-# ==========================================
-class TelcoChurnInput(BaseModel):
-    model_config = ConfigDict(extra="forbid")
 
-    gender: str
-    SeniorCitizen: float
-    Partner: str
-    Dependents: str
-    tenure: float
-    PhoneService: str
-    MultipleLines: str
-    InternetService: str
-    OnlineSecurity: str
-    OnlineBackup: str
-    DeviceProtection: str
-    TechSupport: str
-    StreamingTV: str
-    StreamingMovies: str
-    Contract: str
-    PaperlessBilling: str
-    PaymentMethod: str
-    MonthlyCharges: float
-    TotalCharges: str  # Kept as str to handle raw dataset format where missing is " ", clean_data will fix it
-
-class PredictResponse(BaseModel):
-    prediction: int
-    proba: Optional[float] = None
+from src.schemas import TelcoChurnInput, PredictResponse
 
 # ==========================================
 # 2. Lifespan & Global State
@@ -131,12 +71,12 @@ def predict(payload: List[TelcoChurnInput]):
         # In to clean_dataframe
         # clean_dataframe operates with the assumption that target_column is in df,
         # but safely handles if it is not (target mapping checks if in cols).
-        target_column = SETTINGS.get("target_column", "target")
+        target_column = CFG.get("target_config", {}).get("column", "target")
         df_clean = clean_dataframe(df_raw, target_column=target_column)
         
         # Validation checks
-        schema = SETTINGS.get("schema", {})
-        target_config = SETTINGS.get("target_config", {})
+        schema = CFG.get("schema", {})
+        target_config = CFG.get("target_config", {})
         
         # validate_dataframe expects the target column for some checks 
         # For inference we temporarily add a dummy target column so validation doesn't fail Check 4
@@ -170,6 +110,15 @@ def predict(payload: List[TelcoChurnInput]):
         traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
+
+from src.ui import init as init_ui
+
+
+init_ui(app)
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    port = int(os.environ.get("PORT", 8050))
+    # Production mode: reload=False
+    uvicorn.run("src.api:app", host="0.0.0.0", port=port, reload=False)

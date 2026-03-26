@@ -37,6 +37,19 @@ def load_raw_data(raw_data_path: Path) -> pd.DataFrame:
         )
         df_alt = pd.read_csv(alt_path)
         save_csv(df_alt, raw_data_path)
+        return df_alt
+        
+    if not raw_data_path.exists():
+        logger.warning("Creating dummy dataset because raw_data_path does not exist.")
+        df_dummy = pd.DataFrame({
+            "num_feature": [1.0, 2.0, 3.0, 4.0],
+            "cat_feature": ["A", "B", "A", "B"],
+            "target": [0, 1, 0, 1]
+        })
+        save_csv(df_dummy, raw_data_path)
+        return df_dummy
+        
+    return pd.read_csv(raw_data_path)
     # --------------------------------------------------------
     # END STUDENT CODE
     # --------------------------------------------------------
@@ -53,7 +66,7 @@ def load_data(file_path: str) -> pd.DataFrame:
         f"Path: {path}\n"
         "Columns are hardcoded: num_feature, cat_feature, target\n"
         "You MUST replace this with your real dataset and update "
-        "SETTINGS.\n"
+        "config.yaml.\n"
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         "!!!!!!!!\n"
     )

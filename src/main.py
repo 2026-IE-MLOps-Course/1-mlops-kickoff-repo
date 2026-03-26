@@ -27,26 +27,7 @@ from src.logger import get_logger
 # ========================================================
 # CONFIGURATION (SETTINGS dictionary bridge)
 # ========================================================
-SETTINGS = {
-    "is_example_config": True,
-    "problem_type": "classification",  # "regression" or "classification"
-    "target_column": "target",
-    "raw_data_path": "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv",
-    "processed_data_path": "data/processed/clean.csv",
-    "model_path": "models/model.joblib",  # pickle content acceptable
-    "predictions_path": "reports/predictions.csv",
-    "random_state": 42,
-    # 3-way split (enforced early)
-    "test_size": 0.2,
-    "val_size": 0.2,  # % of the *remaining train* after test split
-    "features": {
-        "quantile_bin": ["num_feature"],
-        "categorical_onehot": ["cat_feature"],
-        "numeric_passthrough": [],
-        "n_bins": 3,
-    },
-
-}
+# Removed SETTINGS dictionary in favor of config.yaml
 
 
 def _ensure_dirs(logger) -> None:
@@ -55,71 +36,7 @@ def _ensure_dirs(logger) -> None:
         logger.info("Ensured directory exists: %s", p)
 
 
-def _maybe_switch_to_telco(logger) -> None:
-    telco_repo_path = Path("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
-    telco_alt_path = Path("/mnt/data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
-    if (not telco_repo_path.exists()) and telco_alt_path.exists():
-        logger.info("Found Telco CSV at /mnt/data; copying into data/raw")
-        df_alt = pd.read_csv(telco_alt_path)
-        save_csv(df_alt, telco_repo_path)
-
-    if telco_repo_path.exists():
-        logger.info(
-            "Telco dataset detected. Switching SETTINGS to Telco schema."
-        )
-        SETTINGS["is_example_config"] = False
-        SETTINGS["problem_type"] = "classification"
-        SETTINGS["target_column"] = "Churn"
-        SETTINGS["raw_data_path"] = str(telco_repo_path)
-        SETTINGS["features"] = {
-            "quantile_bin": ["tenure", "MonthlyCharges", "TotalCharges"],
-            "numeric_passthrough": ["SeniorCitizen"],
-            "categorical_onehot": [
-                "gender",
-                "Partner",
-                "Dependents",
-                "PhoneService",
-                "MultipleLines",
-                "InternetService",
-                "OnlineSecurity",
-                "OnlineBackup",
-                "DeviceProtection",
-                "TechSupport",
-                "StreamingTV",
-                "StreamingMovies",
-                "Contract",
-                "PaperlessBilling",
-                "PaymentMethod",
-            ],
-            "n_bins": 5,
-        }
-        SETTINGS["schema"] = {
-            "gender": {'type': 'categorical', 'accept_nan': False},
-            "SeniorCitizen": {'type': 'numeric', 'accept_nan': False},
-            "Partner": {'type': 'categorical', 'accept_nan': False},
-            "Dependents": {'type': 'categorical', 'accept_nan': False},
-            "tenure": {'type': 'numeric', 'accept_nan': False},
-            "PhoneService": {'type': 'categorical', 'accept_nan': False},
-            "MultipleLines": {'type': 'categorical', 'accept_nan': False},
-            "InternetService": {'type': 'categorical', 'accept_nan': False},
-            "OnlineSecurity": {'type': 'categorical', 'accept_nan': False},
-            "OnlineBackup": {'type': 'categorical', 'accept_nan': False},
-            "DeviceProtection": {'type': 'categorical', 'accept_nan': False},
-            "TechSupport": {'type': 'categorical', 'accept_nan': False},
-            "StreamingTV": {'type': 'categorical', 'accept_nan': False},
-            "StreamingMovies": {'type': 'categorical', 'accept_nan': False},
-            "Contract": {'type': 'categorical', 'accept_nan': False},
-            "PaperlessBilling": {'type': 'categorical', 'accept_nan': False},
-            "PaymentMethod": {'type': 'categorical', 'accept_nan': False},
-            "MonthlyCharges": {'type': 'numeric', 'accept_nan': False},
-            "TotalCharges": {'type': 'numeric', 'accept_nan': False},
-        }
-        SETTINGS["target_config"] = {
-            'column': 'Churn',
-            'type': 'classification',
-            'allowed_classes': [1, 0]
-        }
 
 
 def _fail_fast_feature_checks(
@@ -142,7 +59,7 @@ def _fail_fast_feature_checks(
         raise ValueError(
             "Configured feature columns missing in X. "
             f"Missing: {missing_in_X}. "
-            "Update SETTINGS['features'] to match your dataset."
+            "Update config.yaml features to match your dataset."
         )
 
     for c in feature_cfg.get("quantile_bin", []):
@@ -150,7 +67,7 @@ def _fail_fast_feature_checks(
             raise ValueError(
                 f"Column '{c}' is configured for quantile binning "
                 "but is not numeric. "
-                "Fix cleaning or change SETTINGS['features']['quantile_bin']."
+                "Fix cleaning or change config.yaml features quantile_bin."
             )
 
     return configured_feature_cols
@@ -163,7 +80,6 @@ def main() -> None:
     run = None
     try:
         _ensure_dirs(logger)
-        _maybe_switch_to_telco(logger)
 
         cfg = load_config()
 
@@ -314,13 +230,12 @@ def main() -> None:
             "predictions_sample": wandb.Table(dataframe=preds_df.reset_index(drop=True))
         })
 
-        logger.info("Pipeline complete")
-        print("\n=== PIPELINE FINISHED ===")
-        print(f"Metric ({ml_cfg['problem_type']}): {metric_value}")
-        print(f"Saved cleaned data to: {processed_data_path}")
-        print(f"Saved model to: {model_path}")
-        print(f"Saved predictions to: {predictions_path}")
-        print(f"W&B run: {run.url}")
+        logger.info("Pipeline complete ✅")
+        logger.info("=== PIPELINE FINISHED ===")
+        logger.info("Metric (%s): %s", ml_cfg['problem_type'], metric_value)
+        logger.info("Saved cleaned data to: %s", processed_data_path)
+        logger.info("Saved model to: %s", model_path)
+        logger.info("Saved predictions to: %s", predictions_path)
 
     except Exception as exc:
         logger.exception("Pipeline failed: %s", exc)
