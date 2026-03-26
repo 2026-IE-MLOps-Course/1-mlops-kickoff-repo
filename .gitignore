@@ -47,6 +47,23 @@ reports/**
 !reports/
 !reports/.gitkeep
 
-# Python cache
+# Python cache (redundant but safe)
 __pycache__/
 *.pyc
+
+# -----------------------------
+# Logs
+# -----------------------------
+logs/
+*.log
+
+# -----------------------------
+# Reference / scratch files
+# -----------------------------
+newconfig.yaml
+basemain.py
+
+# -----------------------------
+# W&B (IMPORTANT FIX)
+# -----------------------------
+wandb/

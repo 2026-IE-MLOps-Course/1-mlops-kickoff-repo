@@ -1,10 +1,53 @@
 # MLOps Project Configuration
-# This file will eventually control paths, hyperparameters, and toggles.
+# Single source of truth for non-secret runtime settings.
+# Secrets belong in .env only, NOT HERE!
 
-data:
-  raw: "data/raw/dataset.csv"
-  processed: "data/processed/clean.csv"
+paths:
+  raw_data: "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+  processed_data: "data/processed/clean.csv"
+  model_artifact: "models/model.joblib"
+  predictions_artifact: "reports/predictions.csv"
+  log_file: "logs/pipeline.log"
 
-train:
-  test_size: 0.2
-  seed: 42
+logging:
+  level: "INFO"   # "DEBUG", "INFO", "WARNING", "ERROR"
+  format: "text"
+
+problem:
+  target_column: "Churn"
+  problem_type: "classification"   # "classification" or "regression"
+  identifier_column: "customerID"
+
+split:
+  test_size: 0.30
+  random_state: 42
+
+training:
+  classification:
+    max_iter: 2000
+    random_state: 42
+
+validation:
+  drop_na: true
+  required_columns:
+    - "customerID"
+    - "tenure"
+    - "MonthlyCharges"
+    - "TotalCharges"
+    - "Churn"
+
+wandb:
+  enabled: true
+  project: "telco-churn"
+  name: "baseline-logistic-regression"
+  job_type: "training"
+  group: "baseline"
+  notes: "Baseline logistic regression on Telco churn dataset"
+  tags: ["baseline", "logreg"]
+  model_artifact_name: "telco_churn_model"
+  log_predictions: true
+  log_auc_plots: true
+  log_confusion_matrix: true
+  log_predictions_table: true
+  predictions_table_rows: 200
+  class_names: ["No Churn", "Churn"]
