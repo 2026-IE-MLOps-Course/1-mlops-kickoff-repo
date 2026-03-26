@@ -3,14 +3,16 @@ Module: Inference
 -----------------
 Role: Download the promoted 'prod' model from W&B and make predictions.
 Input: New customer data (pandas.DataFrame).
-Output: Churn predictions (numpy.ndarray) and probabilities.
+Output: Churn predictions and probabilities.
 
-IMPORTANT: This module NEVER loads a local .joblib file directly.
-           It always pulls the model artifact aliased 'prod' from W&B.
+Supports two modes:
+    1. W&B mode (default): Downloads the 'prod' artifact from Weights & Biases.
+    2. Local mode: Pass a pre-loaded model directly (used during training pipeline).
 """
 
 import os
 import logging
+
 import yaml
 import joblib
 import numpy as np
@@ -48,7 +50,6 @@ def download_prod_model(config=None):
     # Use the W&B API to fetch the artifact without starting a full run
     api = wandb.Api()
 
-    # Build the full artifact path: entity/project/artifact:alias
     entity = api.default_entity
     artifact_path = f"{entity}/{project}/{artifact_name}:{model_alias}"
 
@@ -64,81 +65,51 @@ def download_prod_model(config=None):
     return model
 
 
-def run_inference(input_data, config=None):
+def run_inference(
+    model_or_data,
+    X: pd.DataFrame = None,
+    include_proba: bool = True,
+    config=None,
+):
     """
-    Run churn prediction on new customer data using the W&B 'prod' model.
+    Run inference in one of two modes:
 
-    Parameters
-    ----------
-    input_data : pd.DataFrame
-        Customer data with the same schema as the training data
-        (excluding the target column 'Churn').
-    config : dict, optional
-        Configuration dictionary. Loaded from config.yaml if not provided.
+    Local mode (training pipeline):
+        run_inference(model, X_test, include_proba=True)
+
+    W&B mode (standalone inference):
+        run_inference(input_dataframe, config=config)
+        → Downloads the 'prod' model from W&B, then predicts.
 
     Returns
     -------
-    dict
-        {
-            "predictions": list of int (0 or 1),
-            "probabilities": list of float (churn probability),
-        }
+    pd.DataFrame with 'prediction' and optionally 'proba' columns.
     """
-    if config is None:
-        config = load_config()
+    if X is not None:
+        # ── Local mode: model was passed directly ──
+        model = model_or_data
+        input_data = X
+    else:
+        # ── W&B mode: model_or_data is actually the input DataFrame ──
+        input_data = model_or_data
+        model = download_prod_model(config)
 
-    # Download the promoted 'prod' model from W&B
-    model = download_prod_model(config)
+    preds = model.predict(input_data)
 
-    # Generate predictions
-    predictions = model.predict(input_data)
-    probabilities = model.predict_proba(input_data)[:, 1]
-
-    logger.info(
-        "Inference complete: %d samples, %d predicted churn",
-        len(predictions),
-        int(np.sum(predictions)),
-    )
-
-    return {
-        "predictions": predictions.tolist(),
-        "probabilities": probabilities.tolist(),
-    }
-"""Role: Make predictions on new, unseen data.
-Input: Trained Model + New Data.
-Output: Predictions (Array or DataFrame).
-"""
-
-"""
-from __future__ import annotations
-
-import pandas as pd
-
-
-def run_inference(
-    model,
-    X: pd.DataFrame,
-    include_proba: bool = True
-) -> pd.DataFrame:
-
-    Run inference using a trained sklearn-like model/pipeline.
-    Returns predictions DataFrame.
-
-
-    preds = model.predict(X)
-
-    out = pd.DataFrame(index=X.index)
+    out = pd.DataFrame(index=input_data.index)
     out["prediction"] = preds
 
     if include_proba and hasattr(model, "predict_proba"):
-        proba = model.predict_proba(X)
-
-        # binary classification → take positive class
-        has_shape = hasattr(proba, "shape")
-        if has_shape and len(proba.shape) == 2 and proba.shape[1] >= 2:
+        proba = model.predict_proba(input_data)
+        if hasattr(proba, "shape") and len(proba.shape) == 2 and proba.shape[1] >= 2:
             out["proba"] = proba[:, 1]
         else:
-            out["proba"] = pd.Series(proba.ravel(), index=X.index)
+            out["proba"] = pd.Series(proba.ravel(), index=input_data.index)
+
+    logger.info(
+        "Inference complete: %d samples, %d predicted positive",
+        len(preds),
+        int(np.sum(preds)),
+    )
 
     return out
-"""
