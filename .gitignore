@@ -50,3 +50,15 @@ reports/**
 # Python cache
 __pycache__/
 *.pyc
+
+# -----------------------------
+# Logs
+# -----------------------------
+logs/
+*.log
+
+# -----------------------------
+# Reference / scratch files
+# -----------------------------
+newconfig.yaml
+basemain.py

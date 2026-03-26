@@ -1,0 +1,26 @@
+{
+  "os":  "Windows-10-10.0.26200-SP0",
+  "python":  "CPython 3.10.20",
+  "startedAt":  "2026-03-26T14:32:39.484790Z",
+  "program":  "-m src.main",
+  "git":  {
+    "remote":  "https://github.com/sebog99/group6-mlops-kickoff-repo.git",
+    "commit":  "981f28214921ea823f6c3f376e213eba7c45c0fa"
+  },
+  "email":  "sebastian.otegui@student.ie.edu",
+  "root":  "C:\\Users\\sebog\\OneDrive - IE University\\Term 2\\MLOps\\group6-mlops-assignment\\group6-mlops-kickoff-repo",
+  "host":  "asus_sebas",
+  "executable":  "C:\\Users\\sebog\\miniconda3\\envs\\mlops_project\\python.exe",
+  "cpu_count":  12,
+  "cpu_count_logical":  14,
+  "disk":  {
+    "/":  {
+      "total":  "1022282240000",
+      "used":  "235041505280"
+    }
+  },
+  "memory":  {
+    "total":  "33686183936"
+  },
+  "writerId":  "baz5rr7j50ewgtbpaygo0fvw9pd8jf94"
+}

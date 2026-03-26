@@ -1,0 +1,194 @@
+_wandb:
+    value:
+        cli_version: 0.25.1
+        e:
+            baz5rr7j50ewgtbpaygo0fvw9pd8jf94:
+                cpu_count: 12
+                cpu_count_logical: 14
+                disk:
+                    /:
+                        total: "1022282240000"
+                        used: "235041505280"
+                email: sebastian.otegui@student.ie.edu
+                executable: C:\Users\sebog\miniconda3\envs\mlops_project\python.exe
+                git:
+                    commit: 981f28214921ea823f6c3f376e213eba7c45c0fa
+                    remote: https://github.com/sebog99/group6-mlops-kickoff-repo.git
+                host: asus_sebas
+                memory:
+                    total: "33686183936"
+                os: Windows-10-10.0.26200-SP0
+                program: -m src.main
+                python: CPython 3.10.20
+                root: C:\Users\sebog\OneDrive - IE University\Term 2\MLOps\group6-mlops-assignment\group6-mlops-kickoff-repo
+                startedAt: "2026-03-26T14:32:39.484790Z"
+                writerId: baz5rr7j50ewgtbpaygo0fvw9pd8jf94
+        m: []
+        python_version: 3.10.20
+        t:
+            "1":
+                - 5
+                - 53
+            "2":
+                - 5
+                - 53
+            "3":
+                - 2
+                - 13
+                - 15
+                - 16
+            "4": 3.10.20
+            "5": 0.25.1
+            "8":
+                - 3
+            "12": 0.25.1
+            "13": windows-amd64
+        visualize:
+            plots/confusion_matrix_test:
+                panel_config:
+                    fieldSettings:
+                        Actual: Actual
+                        Predicted: Predicted
+                        nPredictions: nPredictions
+                    panelDefId: wandb/confusion_matrix/v1
+                    stringSettings:
+                        title: Confusion Matrix (test)
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: plots/confusion_matrix_test_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            plots/pr_curve_test:
+                panel_config:
+                    fieldSettings:
+                        class: class
+                        x: recall
+                        "y": precision
+                    panelDefId: wandb/area-under-curve/v0
+                    stringSettings:
+                        title: Precision-Recall Curve (test)
+                        x-axis-title: Recall
+                        y-axis-title: Precision
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: plots/pr_curve_test_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            plots/roc_curve_test:
+                panel_config:
+                    fieldSettings:
+                        class: class
+                        x: fpr
+                        "y": tpr
+                    panelDefId: wandb/area-under-curve/v0
+                    stringSettings:
+                        title: ROC Curve (test)
+                        x-axis-title: False positive rate
+                        y-axis-title: True positive rate
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: plots/roc_curve_test_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+logging:
+    value:
+        format: text
+        level: INFO
+paths:
+    value:
+        log_file: logs/pipeline.log
+        model_artifact: models/model.joblib
+        predictions_artifact: reports/predictions.csv
+        processed_data: data/processed/clean.csv
+        raw_data: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+problem:
+    value:
+        identifier_column: customerID
+        problem_type: classification
+        target_column: Churn
+split:
+    value:
+        random_state: 42
+        test_size: 0.3
+training:
+    value:
+        classification:
+            max_iter: 2000
+            random_state: 42
+validation:
+    value:
+        drop_na: true
+        required_columns:
+            - customerID
+            - tenure
+            - MonthlyCharges
+            - TotalCharges
+            - Churn
+wandb:
+    value:
+        class_names:
+            - No Churn
+            - Churn
+        enabled: true
+        group: baseline
+        job_type: training
+        log_auc_plots: true
+        log_confusion_matrix: true
+        log_predictions: true
+        log_predictions_table: true
+        model_artifact_name: telco_churn_model
+        name: baseline-logistic-regression
+        notes: Baseline logistic regression on Telco churn dataset
+        predictions_table_rows: 200
+        project: telco-churn
+        tags:
+            - baseline
+            - logreg
