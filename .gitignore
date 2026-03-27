@@ -32,6 +32,8 @@ data/**
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/inference/.gitkeep
+!data/inference/housing_inference.csv
+data/inference/predictions_*.csv
 
 # -----------------------------
 # Models
@@ -39,6 +41,8 @@ data/**
 models/**
 !models/
 !models/.gitkeep
+!models/model.joblib
+models/model_*.joblib
 
 # -----------------------------
 # Reports
@@ -50,3 +54,10 @@ reports/**
 # Python cache
 __pycache__/
 *.pyc
+
+# Logs
+logs/
+*.log
+
+# Weights & Biases
+wandb/
