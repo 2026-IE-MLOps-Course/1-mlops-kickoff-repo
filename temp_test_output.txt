@@ -1,0 +1,410 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo
+configfile: pytest.ini
+plugins: dash-3.3.0, anyio-4.11.0, timeout-2.4.0, langsmith-0.4.45
+collected 71 items
+
+tests/test_clean_data.py ........                                        [ 11%]
+tests/test_evaluate.py ..                                                [ 14%]
+tests/test_features.py ....                                              [ 19%]
+tests/test_infer.py ...                                                  [ 23%]
+tests/test_load_data.py ...                                              [ 28%]
+tests/test_main.py .                                                     [ 29%]
+tests/test_train.py .....................FFFFF                           [ 66%]
+tests/test_utils.py ...                                                  [ 70%]
+tests/test_validate.py .....................                             [100%]
+
+=================================== FAILURES ===================================
+_ TestTrainModelDefaultParamGrid.test_none_param_grid_uses_default_and_trains __
+
+self = <test_train.TestTrainModelDefaultParamGrid object at 0x1359f2060>
+dummy_classification_data = (       num_a     num_b
+0   0.304717 -0.378163
+1  -1.039984  1.299228
+2   0.750451 -0.356264
+3   0.940565  0.737516
+4 ...     1
+2     1
+3     1
+4     0
+     ..
+95    0
+96    0
+97    0
+98    1
+99    0
+Name: target, Length: 100, dtype: int64)
+passthrough_preprocessor = ColumnTransformer(transformers=[('num', StandardScaler(), ['num_a', 'num_b'])])
+
+    def test_none_param_grid_uses_default_and_trains(
+        self,
+        dummy_classification_data,
+        passthrough_preprocessor,
+    ):
+        """Passing param_grid=None must not raise; the default grid is used
+        instead. We mock GridSearchCV to avoid a slow full grid search in the
+        test suite."""
+        X_train, y_train = dummy_classification_data
+    
+        mock_pipeline = Pipeline(steps=[
+            ("preprocess", passthrough_preprocessor),
+            ("model", XGBClassifier(eval_metric="logloss", random_state=42)),
+        ])
+        mock_pipeline.fit(X_train, y_train)
+    
+        mock_gs = MagicMock()
+        mock_gs.best_estimator_ = mock_pipeline
+        mock_gs.best_params_ = {"model__max_depth": 3}
+        mock_gs.best_score_ = 0.75
+    
+>       with patch("src.train.GridSearchCV", return_value=mock_gs):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_train.py:489: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x13591c650>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.train'> does not have the attribute 'GridSearchCV'
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1437: AttributeError
+_ TestTrainModelDefaultParamGrid.test_none_param_grid_regression_uses_default __
+
+self = <test_train.TestTrainModelDefaultParamGrid object at 0x1359f1a60>
+dummy_regression_data = (       num_a     num_b
+0   0.304717 -0.378163
+1  -1.039984  1.299228
+2   0.750451 -0.356264
+3   0.940565  0.737516
+4 ... 
+95   -2.876574
+96   -2.615800
+97   -2.031685
+98    0.623876
+99   -1.778159
+Name: target, Length: 100, dtype: float64)
+passthrough_preprocessor = ColumnTransformer(transformers=[('num', StandardScaler(), ['num_a', 'num_b'])])
+
+    def test_none_param_grid_regression_uses_default(
+        self,
+        dummy_regression_data,
+        passthrough_preprocessor,
+    ):
+        """Passing param_grid=None for regression must also use the default
+        grid."""
+        X_train, y_train = dummy_regression_data
+    
+        mock_pipeline = Pipeline(steps=[
+            ("preprocess", passthrough_preprocessor),
+            ("model", XGBRegressor(eval_metric="rmse", random_state=42)),
+        ])
+        mock_pipeline.fit(X_train, y_train)
+    
+        mock_gs = MagicMock()
+        mock_gs.best_estimator_ = mock_pipeline
+        mock_gs.best_params_ = {"model__max_depth": 3}
+        mock_gs.best_score_ = -0.5  # neg_rmse
+    
+>       with patch("src.train.GridSearchCV", return_value=mock_gs):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_train.py:521: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x135bb7590>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.train'> does not have the attribute 'GridSearchCV'
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1437: AttributeError
+___ TestTrainModelCVConfig.test_classification_uses_stratified_kfold_and_f1 ____
+
+self = <test_train.TestTrainModelCVConfig object at 0x1359f16d0>
+dummy_classification_data = (       num_a     num_b
+0   0.304717 -0.378163
+1  -1.039984  1.299228
+2   0.750451 -0.356264
+3   0.940565  0.737516
+4 ...     1
+2     1
+3     1
+4     0
+     ..
+95    0
+96    0
+97    0
+98    1
+99    0
+Name: target, Length: 100, dtype: int64)
+passthrough_preprocessor = ColumnTransformer(transformers=[('num', StandardScaler(), ['num_a', 'num_b'])])
+minimal_param_grid = {'model__colsample_bytree': [1.0], 'model__gamma': [0], 'model__learning_rate': [0.1], 'model__max_depth': [3], ...}
+
+    def test_classification_uses_stratified_kfold_and_f1(
+        self, dummy_classification_data, passthrough_preprocessor,
+        minimal_param_grid
+    ):
+        """GridSearchCV for classification must receive StratifiedKFold
+        and scoring='f1'."""
+        from sklearn.model_selection import StratifiedKFold
+        X_train, y_train = dummy_classification_data
+    
+        captured_kwargs = {}
+    
+        original_gs = __import__(
+            "sklearn.model_selection", fromlist=["GridSearchCV"]
+        ).GridSearchCV
+    
+        def mock_gs_constructor(*args, **kwargs):
+            captured_kwargs.update(kwargs)
+            return original_gs(*args, **kwargs)
+    
+>       with patch("src.train.GridSearchCV", side_effect=mock_gs_constructor):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_train.py:561: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x135c21d30>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.train'> does not have the attribute 'GridSearchCV'
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1437: AttributeError
+________ TestTrainModelCVConfig.test_regression_uses_kfold_and_neg_rmse ________
+
+self = <test_train.TestTrainModelCVConfig object at 0x1359f0dd0>
+dummy_regression_data = (       num_a     num_b
+0   0.304717 -0.378163
+1  -1.039984  1.299228
+2   0.750451 -0.356264
+3   0.940565  0.737516
+4 ... 
+95   -2.876574
+96   -2.615800
+97   -2.031685
+98    0.623876
+99   -1.778159
+Name: target, Length: 100, dtype: float64)
+passthrough_preprocessor = ColumnTransformer(transformers=[('num', StandardScaler(), ['num_a', 'num_b'])])
+minimal_param_grid = {'model__colsample_bytree': [1.0], 'model__gamma': [0], 'model__learning_rate': [0.1], 'model__max_depth': [3], ...}
+
+    def test_regression_uses_kfold_and_neg_rmse(
+        self, dummy_regression_data, passthrough_preprocessor,
+        minimal_param_grid
+    ):
+        """GridSearchCV for regression must receive KFold
+        and neg_root_mean_squared_error."""
+        from sklearn.model_selection import KFold
+        X_train, y_train = dummy_regression_data
+    
+        captured_kwargs = {}
+    
+        original_gs = __import__(
+            "sklearn.model_selection", fromlist=["GridSearchCV"]
+        ).GridSearchCV
+    
+        def mock_gs_constructor(*args, **kwargs):
+            captured_kwargs.update(kwargs)
+            return original_gs(*args, **kwargs)
+    
+>       with patch("src.train.GridSearchCV", side_effect=mock_gs_constructor):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_train.py:592: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x135c5f890>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.train'> does not have the attribute 'GridSearchCV'
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1437: AttributeError
+__________________ TestTrainModelCVConfig.test_refit_is_true ___________________
+
+self = <test_train.TestTrainModelCVConfig object at 0x1359f39e0>
+dummy_classification_data = (       num_a     num_b
+0   0.304717 -0.378163
+1  -1.039984  1.299228
+2   0.750451 -0.356264
+3   0.940565  0.737516
+4 ...     1
+2     1
+3     1
+4     0
+     ..
+95    0
+96    0
+97    0
+98    1
+99    0
+Name: target, Length: 100, dtype: int64)
+passthrough_preprocessor = ColumnTransformer(transformers=[('num', StandardScaler(), ['num_a', 'num_b'])])
+minimal_param_grid = {'model__colsample_bytree': [1.0], 'model__gamma': [0], 'model__learning_rate': [0.1], 'model__max_depth': [3], ...}
+
+    def test_refit_is_true(
+        self, dummy_classification_data, passthrough_preprocessor,
+        minimal_param_grid
+    ):
+        """GridSearchCV must always be instantiated with refit=True."""
+        X_train, y_train = dummy_classification_data
+        captured_kwargs = {}
+    
+        original_gs = __import__(
+            "sklearn.model_selection", fromlist=["GridSearchCV"]
+        ).GridSearchCV
+    
+        def mock_gs_constructor(*args, **kwargs):
+            captured_kwargs.update(kwargs)
+            return original_gs(*args, **kwargs)
+    
+>       with patch("src.train.GridSearchCV", side_effect=mock_gs_constructor):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_train.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x135c5f830>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.train'> does not have the attribute 'GridSearchCV'
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py:1437: AttributeError
+=============================== warnings summary ===============================
+tests/test_clean_data.py::test_clean_dataframe_handles_all_nans_gracefully
+  /Users/juanjose/Library/CloudStorage/GoogleDrive-jj.rincon@student.ie.edu/My Drive/term 2/MLops/1-mlops-kickoff-repo/src/clean_data.py:74: RuntimeWarning: invalid value encountered in scalar divide
+    condition = (not_null_count_after / not_null_count_before) > 0.5
+
+tests/test_clean_data.py::test_clean_dataframe_handles_all_nans_gracefully
+  /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/numpy/lib/_nanfunctions_impl.py:1213: RuntimeWarning: Mean of empty slice
+    return np.nanmean(a, axis, out=out, keepdims=keepdims)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_train.py::TestTrainModelDefaultParamGrid::test_none_param_grid_uses_default_and_trains
+FAILED tests/test_train.py::TestTrainModelDefaultParamGrid::test_none_param_grid_regression_uses_default
+FAILED tests/test_train.py::TestTrainModelCVConfig::test_classification_uses_stratified_kfold_and_f1
+FAILED tests/test_train.py::TestTrainModelCVConfig::test_regression_uses_kfold_and_neg_rmse
+FAILED tests/test_train.py::TestTrainModelCVConfig::test_refit_is_true - Attr...
+=================== 5 failed, 66 passed, 2 warnings in 6.42s ===================
