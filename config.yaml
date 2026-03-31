@@ -1,10 +1,131 @@
 # MLOps Project Configuration
-# This file will eventually control paths, hyperparameters, and toggles.
+# Central pipeline configuration (YAML)
+# This file is meant to be the single place you adjust paths, targets, feature lists,
+# model search settings, logging, and experiment tracking options.
 
 data:
-  raw: "data/raw/dataset.csv"
-  processed: "data/processed/clean.csv"
+  raw_path: "data/raw/f1_all.parquet"
+  processed_path: "data/processed/clean.csv"
 
-train:
-  test_size: 0.2
-  seed: 42
+artifacts:
+  model_path: "models/model.joblib"
+  predictions_path: "reports/predictions.csv"
+
+task:
+  # Use: "regression" or "classification"
+  problem_type: "regression"
+  target_column: "milliseconds"
+  year_column: "year"
+  test_year: 2023
+
+features:
+  # StandardScaler will be applied to ALL numeric listed here
+  numeric_passthrough:
+    - lap
+    - grid
+    - Stint
+    - TyreLife
+    - TrackTemp
+    - Humidity
+    - Pressure
+    - Rainfall
+    - WindSpeed
+    - WindDirection
+
+  # OneHotEncoder(drop="first", handle_unknown="ignore")
+  categorical_onehot:
+    - round
+    - name
+    - constructorId
+    - code
+    - Compound
+    - FreshTyre
+
+cleaning:
+  # Notebook-aligned cleaning settings
+  dropna_subset:
+    - TyreLife
+    - milliseconds
+
+  # Leakage + ID columns to drop (exists in your parquet)
+  drop_columns:
+    - Driver
+    - LapNumber
+    - time
+    - circuitId
+    - driverId
+    - statusId
+    - raceId
+    - position_x
+    - position_y
+    - status
+    - AirTemp
+
+logging:
+  level: "INFO"
+  file_path: "logs/pipeline.log"
+
+training:
+  random_state: 42
+
+  regression:
+    # Cross-validation folds used for model comparison and grid search.
+    cv_folds: 5
+
+    # Keep feature selection enabled for the linear baseline only.
+    use_lasso_feature_selection: true
+
+    lasso:
+      cv: 5
+      n_alphas: 100
+      max_iter: 20000
+      threshold: 0.0
+
+    ridge:
+      alpha: 1.0
+      fit_intercept: true
+
+    random_forest:
+      enabled: true
+      cv: 2
+      n_jobs: 1
+      grid_search_n_jobs: 1
+      param_grid:
+        model__n_estimators: [50]
+        model__max_depth: [3,5]
+        model__min_samples_split: [5,7]
+        model__min_samples_leaf: [5,7]
+
+  classification:
+    logistic_regression:
+      max_iter: 500
+      C: 1.0
+      solver: "lbfgs"
+
+wandb:
+  enabled: true
+  project: "mlops-kickoff"
+
+  # These variable names are read from your .env file.
+  api_key_env: "WANDB_API_KEY"
+  entity_env: "WANDB_ENTITY"
+  model_registry_name: laptime-model
+  prod_candidate_name: laptime-model-linear_regression
+
+  watch_paths:
+    reports_dir: "reports"
+
+  # Optional sweep configuration for Random Forest.
+  # Run it explicitly from Python when you want a dedicated sweep job.
+  sweep:
+    method: "grid"
+    count: 8
+    parameters:
+      n_estimators:
+        values: [100, 200]
+      max_depth:
+        values: [null, 10, 20]
+      min_samples_split:
+        values: [2, 5]
+      min_samples_leaf:
+        values: [1, 2]

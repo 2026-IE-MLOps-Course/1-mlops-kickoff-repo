@@ -1,0 +1,24 @@
+name: mlops-student-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - scikit-learn
+  - joblib
+  - pyarrow
+  - jupyter
+  - ipykernel
+  - fastapi
+  - uvicorn
+  - pydantic
+  - pytest
+  - pytest-cov
+  - pip
+  - pyyaml
+  - pip:
+      - python-dotenv
+      - wandb
+      - conda-lock
