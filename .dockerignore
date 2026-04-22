@@ -1,0 +1,39 @@
+# Tests — not needed in production
+tests/
+
+# Notebooks — not needed in production
+notebooks/
+
+# GitHub workflows — not needed in container
+.github/
+
+# Raw data — model is already trained
+data/
+
+# Reports — build artifacts
+reports/
+
+# W&B local cache
+wandb/
+
+# Git
+.git/
+.gitignore
+
+# Dev artifacts
+.pytest_cache/
+__pycache__/
+*.pyc
+.coverage
+.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Docs
+*.md
+LICENSE

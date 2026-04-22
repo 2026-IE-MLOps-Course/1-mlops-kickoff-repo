@@ -1,10 +1,131 @@
-# MLOps Project Configuration
-# This file will eventually control paths, hyperparameters, and toggles.
+# ============================================================
+# VoyageIQ – Total Trip Cost Forecasting Pipeline
+# Central configuration file  (config.yaml)
+# Single source of truth for non-secret runtime settings
+# Secrets belong in .env only NOT HERE! (e.g. WANDB_API_KEY)
+# ============================================================
 
-data:
-  raw: "data/raw/dataset.csv"
-  processed: "data/processed/clean.csv"
+# ------ Project metadata ------------------------------------
+project:
+  name: "voyageiq-trip-cost-forecasting"
+  version: "2.0.0"
+  description: "End-to-end MLOps pipeline for predicting total travel trip cost"
+  problem_type: "regression"          # regression | classification
 
-train:
-  test_size: 0.2
-  seed: 42
+# ------ Paths -----------------------------------------------
+paths:
+  raw_data: "data/raw/travel_raw.csv"
+  processed_data: "data/processed/clean.csv"
+  inference_input: "data/inference/new_quotes.csv"
+  model_artifact: "models/model.joblib"
+  predictions_output: "reports/predictions.csv"
+  metrics_output: "reports/metrics.json"
+  log_file: "logs/pipeline.log"
+
+# ------ Data loading ----------------------------------------
+data_loading:
+  file_type: "csv"
+  encoding: "utf-8-sig"
+  separator: ","
+
+# ------ Schema definition -----------------------------------
+schema:
+  required_columns:
+    - "trip_id"
+    - "destination"
+    - "start_date"
+    - "end_date"
+    - "duration_days"
+    - "traveler_name"
+    - "traveler_age"
+    - "traveler_gender"
+    - "traveler_nationality"
+    - "accommodation_type"
+    - "accommodation_cost"
+    - "transportation_type"
+    - "transportation_cost"
+
+# ------ Cleaning rules --------------------------------------
+cleaning:
+  drop_columns:
+    - "trip_id"
+    - "traveler_name"
+  drop_duplicates: true
+  drop_na: true
+
+# ------ Validation rules ------------------------------------
+validation:
+  on_error: "raise"
+  numeric_ranges:
+    duration_days:
+      min: 1
+      max: 365
+    traveler_age:
+      min: 1
+      max: 120
+    accommodation_cost:
+      min: 0
+      max: 100000
+    transportation_cost:
+      min: 0
+      max: 100000
+
+# ------ Feature engineering ---------------------------------
+features:
+  target: "total_cost"
+  numeric_features:
+    - "duration_days"
+    - "traveler_age"
+  categorical_features:
+    - "destination_country"
+    - "traveler_gender"
+    - "traveler_nationality"
+    - "accommodation_type"
+    - "transportation_type"
+  date_derived_features:
+    - "travel_month"
+    - "day_of_week"
+  quantile_bin: []
+  n_bins: 3
+  numeric_imputer_strategy: "median"
+  categorical_imputer_strategy: "most_frequent"
+  scaler: "standard"
+
+# ------ Train / Val / Test split ----------------------------
+splitting:
+  test_size: 0.15
+  val_size: 0.15
+  random_seed: 42
+
+# ------ Model -----------------------------------------------
+model:
+  algorithm: "random_forest"
+  random_seed: 42
+  hyperparameters:
+    random_forest:
+      n_estimators: 200
+      max_depth: 12
+      min_samples_split: 5
+      min_samples_leaf: 2
+
+# ------ Evaluation ------------------------------------------
+evaluation:
+  primary_metric: "rmse"
+  metrics:
+    - "rmse"
+    - "mae"
+    - "r2"
+
+# ------ Logging ---------------------------------------------
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+  datefmt: "%Y-%m-%d %H:%M:%S"
+
+# ------ Weights & Biases (Experiment Tracking) ---------------
+wandb:
+  enabled: true
+  project: "voyageiq-trip-cost"
+  model_artifact_name: "voyageiq_model"
+  log_processed_data: true
+  log_predictions: true
